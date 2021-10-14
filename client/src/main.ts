@@ -8,6 +8,9 @@ if (environment.production) {
   enableProdMode();
 }
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
-  .catch((err) => console.error(err));
+async function bootstrapModule() {
+  await platformBrowserDynamic().bootstrapModule(AppModule);
+  Array.from(document.querySelectorAll("[ng-cloak]")).forEach((el) => el.removeAttribute("ng-cloak"));
+}
+
+bootstrapModule().catch((error) => console.error(error));
