@@ -5,4 +5,8 @@ import { Injectable } from "@angular/core";
 })
 export class SearchService {
   constructor() {}
+
+  getCodeFromDescription(description: string) {}
+
+  getDescriptionFromCode(code: string) {}
 }
