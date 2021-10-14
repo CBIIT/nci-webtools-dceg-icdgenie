@@ -1,4 +1,5 @@
 import { Component } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-root",
@@ -6,5 +7,11 @@ import { Component } from "@angular/core";
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
-  title = "client";
+  links = [
+    { title: "Home", target: "/home" },
+    { title: "Search", target: "/search" },
+    { title: "About", target: "/about" },
+  ];
+
+  constructor(public route: ActivatedRoute) {}
 }
