@@ -14,7 +14,7 @@ RUN mkdir -p /app/database /app/logs
 WORKDIR /app/database
 
 # use build cache for npm packages
-COPY database/package*.json /app/database/
+COPY database/package.json /app/database/
 
 RUN npm install
 
