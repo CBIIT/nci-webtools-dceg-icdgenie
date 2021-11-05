@@ -1,7 +1,5 @@
 FROM ${FRONTEND_BASE_IMAGE:-oraclelinux:8-slim}
 
-ARG APP_PATH icdgenie
-
 RUN microdnf -y update \
  && microdnf -y module enable nodejs:14 \
  && microdnf -y install \
@@ -26,7 +24,7 @@ RUN npm install
 COPY client /app/client/
 
 RUN npm run build \
- && mv /app/client/dist/icdgenie-client /var/www/html/${APP_PATH}
+ && mv /app/client/dist/icdgenie-client /var/www/html/icdgenie
 
 WORKDIR /var/www/html
 
