@@ -1,5 +1,7 @@
 FROM ${FRONTEND_BASE_IMAGE:-oraclelinux:8-slim}
 
+ARG APP_PATH icdgenie
+
 RUN microdnf -y update \
  && microdnf -y module enable nodejs:14 \
  && microdnf -y install \
