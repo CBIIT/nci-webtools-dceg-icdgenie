@@ -1,4 +1,4 @@
-const config = require("../../server/config.json");
+const config = require("../../database/config.json");
 
 module.exports = {
   "/api": {
