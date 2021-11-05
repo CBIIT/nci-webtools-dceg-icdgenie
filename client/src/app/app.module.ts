@@ -11,7 +11,14 @@ import { NavbarComponent } from "./components/navbar/navbar.component";
 import { FileValueAccessorDirective } from "./directives/file-value-accessor.directive";
 
 @NgModule({
-  declarations: [AppComponent, NavbarComponent, HomeComponent, SearchComponent, AboutComponent],
+  declarations: [
+    AppComponent,
+    NavbarComponent,
+    HomeComponent,
+    SearchComponent,
+    AboutComponent,
+    FileValueAccessorDirective,
+  ],
   imports: [BrowserModule, AppRoutingModule, NgbModule],
   providers: [SearchService],
   bootstrap: [AppComponent],
