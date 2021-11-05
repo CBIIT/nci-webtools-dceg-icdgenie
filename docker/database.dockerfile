@@ -9,7 +9,7 @@ RUN microdnf -y update \
     npm \
  && microdnf clean all 
 
-RUN mkdir -p /app/database /app/logs
+RUN mkdir -p /app/database /app/data /app/logs
 
 WORKDIR /app/database
 
