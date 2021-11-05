@@ -1,0 +1,19 @@
+{
+  "keep": {
+    "days": true,
+    "amount": 1
+  },
+  "auditLog": "E:\\Projects\\nci-softwaresolutions-tools\\analysistool-website-templates\\express-react\\server\\logs\\.43b446917da5e179b4ef9feebc61474e1bff830b-audit.json",
+  "files": [
+    {
+      "date": 1631555852098,
+      "name": "E:\\Projects\\nci-softwaresolutions-tools\\analysistool-website-templates\\express-react\\server\\logs\\app-name-2021-09-13-13.log",
+      "hash": "71c2dc319a754b10ec9eb10eaa704d4f"
+    },
+    {
+      "date": 1631556474786,
+      "name": "E:\\Projects\\nci-softwaresolutions-tools\\analysistool-website-templates\\express-react\\server\\logs\\app-name-2021-09-13-14.log",
+      "hash": "3b95f38ee017772690e781511fb83c7e"
+    }
+  ]
+}

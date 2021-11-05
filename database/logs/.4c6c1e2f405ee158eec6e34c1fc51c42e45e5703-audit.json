@@ -1,0 +1,14 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "E:\\Projects\\nci-webtools-dceg-icdgenie\\database\\logs\\.4c6c1e2f405ee158eec6e34c1fc51c42e45e5703-audit.json",
+    "files": [
+        {
+            "date": 1636146379243,
+            "name": "E:\\Projects\\nci-webtools-dceg-icdgenie\\database\\logs\\icdgenie-2021-11-05-17.log",
+            "hash": "e8161710afec5962fba9cf796a071fa8"
+        }
+    ]
+}

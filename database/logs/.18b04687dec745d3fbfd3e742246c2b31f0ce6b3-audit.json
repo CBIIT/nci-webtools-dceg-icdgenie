@@ -1,0 +1,14 @@
+{
+  "keep": {
+    "days": true,
+    "amount": 1
+  },
+  "auditLog": "E:\\Projects\\nci-softwaresolutions-tools\\analysistool-website-templates\\express-react\\server\\logs\\.18b04687dec745d3fbfd3e742246c2b31f0ce6b3-audit.json",
+  "files": [
+    {
+      "date": 1631557501158,
+      "name": "E:\\Projects\\nci-softwaresolutions-tools\\analysistool-website-templates\\express-react\\server\\logs\\test-2021-09-13-14.log",
+      "hash": "dd12f8969473f4654baeafa03026683a"
+    }
+  ]
+}
