@@ -1,7 +1,7 @@
 const path = require("path");
 const util = require("util");
 const fs = require("fs");
-const { createLogger, format, transports, info } = require("winston");
+const { createLogger, format, transports } = require("winston");
 const logConfig = require("../config.json").logs;
 require("winston-daily-rotate-file");
 
