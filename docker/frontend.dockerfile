@@ -1,33 +1,30 @@
-FROM quay.io/centos/centos:stream8
+FROM ${FRONTEND_BASE_IMAGE:-oraclelinux:8-slim}
 
-RUN dnf -y update \
- && dnf -y install \
-    dnf-plugins-core \
-    epel-release \
-    glibc-langpack-en \
- && dnf -y module enable nodejs:14 \
- && dnf -y install \
+RUN microdnf -y update \
+ && microdnf -y module enable nodejs:14 \
+ && microdnf -y install \
     gcc-c++ \
     httpd \
     make \
     nodejs \
- && dnf clean all
+    npm \
+ && microdnf clean all
 
 # Add custom httpd configuration
 COPY docker/frontend.conf /etc/httpd/conf.d/frontend.conf
 
-RUN mkdir /client
+RUN mkdir -p /app/client
 
-WORKDIR /client
+WORKDIR /app/client
 
-COPY client/package*.json /client/
+COPY client/package*.json /app/client/
 
 RUN npm install
 
-COPY client /client/
+COPY client /app/client/
 
 RUN npm run build \
- && mv /client/build /var/www/html/${APP_PATH}
+ && mv /app/client/build /var/www/html/${APP_PATH}
 
 WORKDIR /var/www/html
 
