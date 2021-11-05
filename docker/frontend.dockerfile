@@ -24,7 +24,7 @@ RUN npm install
 COPY client /app/client/
 
 RUN npm run build \
- && mv /app/client/build /var/www/html/${APP_PATH}
+ && mv /app/client/dist/icdgenie-client /var/www/html/${APP_PATH}
 
 WORKDIR /var/www/html
 
