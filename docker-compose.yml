@@ -1,0 +1,23 @@
+version: "3"
+services:
+  icdgenie-database:
+    build:
+      context: .
+      dockerfile: docker/database.dockerfile
+      args:
+        DATABASE_BASE_IMAGE: "oraclelinux:8-slim"
+    volumes:
+      - ./database/config.json:/app/database/config.json:ro
+      - ./database/logs:/app/logs
+  icdgenie-frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.dockerfile
+    environment:
+      APP_PATH: /icdgenie
+      API_HOST: http://icdgenie-database
+      API_PORT: 9000
+    links:
+      - icdgenie-database:icdgenie-database
+    ports:
+      - "8080:80"
