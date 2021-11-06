@@ -10,9 +10,6 @@ RUN microdnf -y update \
     npm \
  && microdnf clean all
 
-# Add custom httpd configuration
-COPY docker/frontend.conf /etc/httpd/conf.d/frontend.conf
-
 RUN mkdir -p /app/client
 
 WORKDIR /app/client
@@ -25,6 +22,8 @@ COPY client /app/client/
 
 RUN npm run build \
  && mv /app/client/dist/icdgenie-client /var/www/html/icdgenie
+
+COPY docker/frontend.conf /etc/httpd/conf.d/frontend.conf
 
 WORKDIR /var/www/html
 
