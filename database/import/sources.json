@@ -1,0 +1,18 @@
+[
+  {
+    "filePath": "data/icd10cm_neoplasm_2022.csv",
+    "table": "icd10",
+    "headers": [
+      "neoplasm",
+      "level",
+      "parent",
+      "malignantPrimary",
+      "malignantSecondary",
+      "carcinomaInSitu",
+      "benign",
+      "uncertainBehavior",
+      "unspecifiedBehavior",
+      "other"
+    ]
+  }
+]
