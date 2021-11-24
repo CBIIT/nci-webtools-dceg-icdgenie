@@ -9,7 +9,7 @@ const database = sqlite(config.database);
 api.use(json());
 
 api.get("/ping", (request, response) => {
-  const results = icdgenie.getStatus();
+  const results = icdgenie.getStatus(database);
   response.json(results);
 });
 

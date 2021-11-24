@@ -1,5 +1,5 @@
-function getStatus() {
-  return true;
+function getStatus(database) {
+  return database.prepare(`SELECT 1`).pluck().get() == 1;
 }
 
 function searchICD10ByCode(database, code) {
