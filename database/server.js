@@ -1,9 +1,10 @@
 const express = require("express");
+const sqlite = require("better-sqlite3");
 const { logRequests, logErrors } = require("./services/middleware");
 const { getLogger } = require("./services/logger");
 const { forkCluster } = require("./services/cluster");
 const { api } = require("./services/api");
-const { name, port, logs } = require("./config");
+const { name, port, logs, database } = require("./config");
 
 // if in master process, fork and return
 if (forkCluster()) return;
@@ -14,9 +15,9 @@ const app = express();
 // if behind a proxy, use the first x-forwarded-for address as the client's ip address
 app.set("trust proxy", true);
 
-// create and register logger
-const logger = getLogger(name, logs);
-app.locals.logger = logger;
+// register services as app locals
+app.locals.logger = getLogger(name, logs);
+app.locals.database = sqlite(database);
 
 // register middleware
 app.use(logRequests());
@@ -25,7 +26,7 @@ app.use(logErrors());
 
 // start app on specified port
 app.listen(port, () => {
-  logger.info(`${name} started on port ${port}`);
+  app.locals.logger.info(`${name} started on port ${port}`);
 });
 
 module.exports = app;
