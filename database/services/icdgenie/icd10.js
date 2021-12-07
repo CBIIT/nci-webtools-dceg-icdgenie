@@ -1,7 +1,3 @@
-function getStatus(database) {
-  return database.prepare(`SELECT 1`).pluck().get() == 1;
-}
-
 function searchInjuryTable(database, { code, description }) {
   if (code) {
     return database.prepare(`SELECT * FROM icd10_injury WHERE code LIKE :code order by code`).all({ code: `${code}%` });
@@ -85,5 +81,4 @@ function search(database, query) {
 
 module.exports = {
   search,
-  getStatus,
 };

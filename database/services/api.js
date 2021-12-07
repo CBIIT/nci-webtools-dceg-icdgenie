@@ -1,4 +1,5 @@
 const { Router, json } = require("express");
+const icdgenie = require("./icdgenie");
 const icd10 = require("./icdgenie/icd10");
 
 const api = Router();
