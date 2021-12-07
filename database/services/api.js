@@ -1,5 +1,5 @@
 const { Router, json } = require("express");
-const icdgenie = require("./icdgenie");
+const icd10 = require("./icdgenie/icd10");
 
 const api = Router();
 
@@ -12,10 +12,10 @@ api.get("/ping", (request, response) => {
   response.json(results);
 });
 
-api.get("/search", (request, response) => {
+api.get("/search/icd10", (request, response) => {
   const { logger, database } = request.app.locals;
   logger.debug("search: " + JSON.stringify(request.query));
-  const results = icdgenie.search(database, request.query);
+  const results = icd10.search(database, request.query);
   response.json(results);
 });
 
