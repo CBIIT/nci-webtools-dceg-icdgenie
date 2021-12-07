@@ -1,3 +1,5 @@
+const { asFlatTree, asTree } = require("./tree");
+
 function searchInjuryTable(database, { code, description }) {
   if (code) {
     return database
@@ -129,15 +131,31 @@ function searchIndexTable(database, { code, description }) {
 }
 
 function search(database, query) {
+  let results = [];
+
   switch (query.type) {
     case "drug":
-      return searchDrugTable(database, query);
+      results = searchDrugTable(database, query);
+      break;
     case "injury":
-      return searchInjuryTable(database, query);
+      results = searchInjuryTable(database, query);
+      break;
     case "neoplasm":
-      return searchNeoplasmTable(database, query);
+      results = searchNeoplasmTable(database, query);
+      break;
     default:
-      return searchIndexTable(database, query);
+      results = searchIndexTable(database, query);
+      break;
+  }
+
+  if (query.code || query.description) {
+    if (query.format === "tree") {
+      return asTree(results);
+    } else {
+      return asFlatTree(results);
+    }
+  } else {
+    return results;
   }
 }
 
