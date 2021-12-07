@@ -6,6 +6,8 @@
   "scripts": {
     "prepare": "husky install",
     "test": "npm run test:client && npm run test:server",
+    "install:database": "cd database && npm install",
+    "install:client": "cd client && npm install",
     "test:client": "cd client && npm test",
     "test:database": "cd database && npm test",
     "start:client": "cd client && npm start",
