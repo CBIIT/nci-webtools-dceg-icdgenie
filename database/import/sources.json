@@ -62,5 +62,15 @@
       "pathRef": "description",
       "levelRef": "level"
     }
+  },
+  {
+    "filePath": "data/icdo3_morphology_v22_20210719.csv",
+    "table": "icdo3_morphology",
+    "headers": ["histology", "behavior", "preferred", "description"]
+  },
+  {
+    "filePath": "data/icd10cm_icdo3_mapping.csv",
+    "table": "icd10_icdo3_mapping",
+    "headers": ["icd10", "icdo3"]
   }
 ]
