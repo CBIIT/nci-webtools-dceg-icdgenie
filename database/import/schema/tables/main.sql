@@ -1,3 +1,19 @@
+create table "icdo3_morphology"
+(
+    "id" integer primary key,
+    "histology" integer,
+    "behavior" integer,
+    "preferred" boolean,
+    "description" text
+);
+
+create table "icd10_icdo3_mapping"
+(
+    "id" integer primary key,
+    "icd10" text,
+    "icdo3" text
+);
+
 create table "icd10"
 (
     "id" integer primary key,
