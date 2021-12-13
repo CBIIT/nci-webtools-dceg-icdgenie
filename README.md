@@ -70,8 +70,8 @@ Parameters:
 
 Examples:
 
-- search for ICD-O-3 morphologies which contain the term "lung"
-  - `/api/search/icdo3?description=lung`
+- search for ICD-O-3 morphologies which contain the term "adenocarcinoma"
+  - `/api/search/icdo3?description=adenocarcinoma`
 - search for ICD-O-3 morphologies with a histology code of 8253 and a behavior code of 3
   - `/api/search/icdo3?code=8253/3`
 - search for ICD-O-3 morphologies with a histology code of 8964
