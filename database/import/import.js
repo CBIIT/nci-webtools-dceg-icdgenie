@@ -22,47 +22,49 @@ const timestamp = getTimestamp(([absolute, relative]) => `${absolute / 1000}s, $
 
   // import sources
   for (const { filePath, table, headers, treeRefs } of sources) {
-    const { nodeRef, parentRef, pathRef, levelRef } = treeRefs;
-
     console.log(`[${timestamp()}] started importing ${table}`);
     const rows = readFileAsIterable(filePath, headers);
     await importTable(database, table, headers, rows);
 
-    // update path
-    let records = database.prepare(`SELECT * FROM ${table}`).all();
+    // if tree refs exist, import them
+    if (treeRefs) {
+      const { nodeRef, parentRef, pathRef, levelRef } = treeRefs;
+      let records = database.prepare(`SELECT * FROM ${table}`).all();
 
-    database.exec("BEGIN TRANSACTION");
-    for (const record of records) {
-      let current = record;
-      let parentRecords = [];
+      database.exec("BEGIN TRANSACTION");
+      for (const record of records) {
+        let current = record;
+        let parentRecords = [];
 
-      // note: recursive cte is actually slower than a loop
-      while (current && current[parentRef]) {
-        parentRecords.push(current);
+        // note: recursive cte is actually slower than a loop
+        while (current && current[parentRef]) {
+          parentRecords.push(current);
 
-        current = records.find(
-          (r) =>
-            r[nodeRef].toLowerCase().includes(current[parentRef].toLowerCase()) &&
-            r[levelRef] === current[levelRef] - 1,
-        );
+          current = records.find(
+            (r) =>
+              r[nodeRef].toLowerCase().includes(current[parentRef].toLowerCase()) &&
+              r[levelRef] === current[levelRef] - 1,
+          );
+        }
+
+        if (current) parentRecords.push(current);
+
+        database.prepare(`UPDATE ${table} SET path = :path, parentId = :parentId WHERE id = :id`).run({
+          id: record.id,
+          parentId: parentRecords.length > 1 ? parentRecords[1].id : null,
+          path: parentRecords
+            .map((p) => p[pathRef])
+            .reverse()
+            .join("|"),
+        });
+
+        if (record.id % 1000 === 0 || record.id === records.length)
+          console.log(`[${timestamp()}] progress: ${record.id}/${records.length}`);
       }
 
-      if (current) parentRecords.push(current);
-
-      database.prepare(`UPDATE ${table} SET path = :path, parentId = :parentId WHERE id = :id`).run({
-        id: record.id,
-        parentId: parentRecords.length > 1 ? parentRecords[1].id : null,
-        path: parentRecords
-          .map((p) => p[pathRef])
-          .reverse()
-          .join("|"),
-      });
-
-      if (record.id % 1000 === 0 || record.id === records.length)
-        console.log(`[${timestamp()}] progress: ${record.id}/${records.length}`);
+      database.exec("COMMIT");
     }
 
-    database.exec("COMMIT");
     console.log(`[${timestamp()}] finished importing ${table}`);
   }
 
