@@ -71,6 +71,6 @@
   {
     "filePath": "data/icd10cm_icdo3_mapping.csv",
     "table": "icd10_icdo3_mapping",
-    "headers": ["icd10", "icdo3"]
+    "headers": ["icd10", "icd10Description", "icdo3", "icdo3Description"]
   }
 ]
