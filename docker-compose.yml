@@ -9,6 +9,12 @@ services:
     volumes:
       - ./database/config.json:/app/database/config.json:ro
       - ./database/logs:/app/logs
+    environment:
+      APP_NAME: icdgenie
+      API_PORT: 9000
+      DATABASE_PATH: import/database.db
+      LOG_FOLDER: logs
+      LOG_LEVEL: debug
   icdgenie-frontend:
     build:
       context: .
