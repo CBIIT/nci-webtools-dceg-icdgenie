@@ -4,7 +4,7 @@ const { logRequests, logErrors } = require("./services/middleware");
 const { getLogger } = require("./services/logger");
 const { forkCluster } = require("./services/cluster");
 const { api } = require("./services/api");
-const { name, port, logs, database } = require("./config");
+const { name, port, logs, database } = require("./loadConfig");
 
 // if in master process, fork and return
 if (forkCluster()) return;
