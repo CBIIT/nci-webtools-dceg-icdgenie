@@ -18,7 +18,6 @@ const timestamp = getTimestamp(([absolute, relative]) => `${absolute / 1000}s, $
   // create tables
   const database = sqlite(databaseFilePath);
   database.exec(mainTablesSql);
-  database.exec(mainIndexesSql);
 
   // import sources
   for (const { filePath, table, headers, treeRefs } of sources) {
@@ -68,5 +67,7 @@ const timestamp = getTimestamp(([absolute, relative]) => `${absolute / 1000}s, $
     console.log(`[${timestamp()}] finished importing ${table}`);
   }
 
+  // create indexes
+  database.exec(mainIndexesSql);
   database.close();
 })();
