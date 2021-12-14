@@ -11,7 +11,9 @@ create table "icd10_icdo3_mapping"
 (
     "id" integer primary key,
     "icd10" text,
-    "icdo3" text
+    "icdo3" text,
+    "icd10Description" text,
+    "icdo3Description" text
 );
 
 create table "icd10"
