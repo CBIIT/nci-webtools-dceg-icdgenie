@@ -7,7 +7,6 @@ services:
       args:
         DATABASE_BASE_IMAGE: "oraclelinux:8-slim"
     volumes:
-      - ./database/config.json:/app/database/config.json:ro
       - ./database/logs:/app/logs
     environment:
       APP_NAME: icdgenie
