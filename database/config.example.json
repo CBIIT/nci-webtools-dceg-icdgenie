@@ -1,9 +1,0 @@
-{
-  "name": "app-name",
-  "port": 9000,
-  "database": "import/database.db",
-  "logs": {
-    "folder": "logs",
-    "level": "debug"
-  }
-}
