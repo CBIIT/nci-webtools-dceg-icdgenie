@@ -2,3 +2,5 @@ node_modules
 config.json
 logs
 coverage
+dist
+.env
