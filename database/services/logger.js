@@ -2,7 +2,6 @@ const path = require("path");
 const util = require("util");
 const fs = require("fs");
 const { createLogger, format, transports } = require("winston");
-const logConfig = require("../config.json").logs;
 require("winston-daily-rotate-file");
 
 function formatLog({ label, timestamp, level, message }) {
@@ -16,7 +15,7 @@ function formatLog({ label, timestamp, level, message }) {
  * @param {object} config
  * @returns Logger
  */
-function getLogger(name = "app", config = logConfig, formatter = formatLog) {
+function getLogger(name = "app", config, formatter = formatLog) {
   const { folder, level } = {
     folder: "logs",
     level: "info",
