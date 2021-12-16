@@ -10,6 +10,7 @@ export class AppComponent {
   links = [
     { title: "Home", target: "/home" },
     { title: "Search", target: "/search" },
+    { title: "API Access", target: "/api-access" },
     { title: "About", target: "/about" },
   ];
 
