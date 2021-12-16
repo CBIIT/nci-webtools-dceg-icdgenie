@@ -127,28 +127,6 @@
     }
   },
   "definitions": {
-    "TranslateResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "icd10": {
-          "type": "string"
-        },
-        "icdo3": {
-          "type": "string"
-        },
-        "icd10Description": {
-          "type": "string"
-        },
-        "icdo3Description": {
-          "type": "string"
-        }
-      }
-    },
-
     "ICD10SearchResponse": {
       "type": "object",
       "properties": {
@@ -198,6 +176,28 @@
           "type": "integer"
         },
         "description": {
+          "type": "string"
+        }
+      }
+    },
+
+    "TranslateResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "icd10": {
+          "type": "string"
+        },
+        "icdo3": {
+          "type": "string"
+        },
+        "icd10Description": {
+          "type": "string"
+        },
+        "icdo3Description": {
           "type": "string"
         }
       }
