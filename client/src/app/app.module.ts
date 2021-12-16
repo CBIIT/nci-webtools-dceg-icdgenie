@@ -9,6 +9,7 @@ import { SearchService } from "./services/search/search.service";
 import { AppComponent } from "./app.component";
 import { NavbarComponent } from "./components/navbar/navbar.component";
 import { FileValueAccessorDirective } from "./directives/file-value-accessor.directive";
+import { ApiAccessComponent } from "./api-access/api-access.component";
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { FileValueAccessorDirective } from "./directives/file-value-accessor.dir
     SearchComponent,
     AboutComponent,
     FileValueAccessorDirective,
+    ApiAccessComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, NgbModule],
   providers: [SearchService],
