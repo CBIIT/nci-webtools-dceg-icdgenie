@@ -31,7 +31,7 @@ The database service exposes a query api using express.js.
 
 #### Getting Started
 
-1. Create `database/config.json` using `database/config.example.json` as a template
+1. Create `database/.env` using `database/.env.example` as a template
 2. Run `npm start` in the database folder
 
 #### Supported Queries
