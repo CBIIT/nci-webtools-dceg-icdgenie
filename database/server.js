@@ -18,6 +18,7 @@ const app = express();
 
 // if behind a proxy, use the first x-forwarded-for address as the client's ip address
 app.set("trust proxy", true);
+app.set("json spaces", 2);
 
 // register services as app locals
 app.locals.logger = getLogger(APP_NAME, { folder: LOG_FOLDER, level: LOG_LEVEL });
