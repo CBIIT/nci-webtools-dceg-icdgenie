@@ -20,8 +20,7 @@ services:
       dockerfile: docker/frontend.dockerfile
     environment:
       APP_PATH: /icdgenie
-      API_HOST: http://icdgenie-database
-      API_PORT: 9000
+      API_BASE_URL: http://icdgenie-database:9000
     links:
       - icdgenie-database:icdgenie-database
     ports:
