@@ -3,10 +3,14 @@ const icdgenie = require("./icdgenie");
 const icd10 = require("./icdgenie/icd10");
 const icdo3 = require("./icdgenie/icdo3");
 const translate = require("./icdgenie/translate");
-
+const spec = require("./icdgenie/spec");
 const api = Router();
 
 api.use(json());
+
+api.get("/", (request, response) => {
+  response.json(spec);
+});
 
 api.get("/ping", (request, response) => {
   const { logger, database } = request.app.locals;
