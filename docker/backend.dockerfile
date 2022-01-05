@@ -1,4 +1,4 @@
-FROM ${DATABASE_BASE_IMAGE:-oraclelinux:8-slim}
+FROM ${BASE_IMAGE:-oraclelinux:8-slim}
 
 RUN microdnf -y update \
  && microdnf -y module enable nodejs:14 \
@@ -9,16 +9,19 @@ RUN microdnf -y update \
     npm \
  && microdnf clean all 
 
-RUN mkdir -p /app/database /app/data /app/logs
+RUN mkdir -p /app/server /app/database /app/logs
 
-WORKDIR /app/database
+WORKDIR /app/server
 
 # use build cache for npm packages
-COPY database/package.json /app/database/
+COPY server/package.json /app/server/
 
 RUN npm install
 
 # copy the rest of the application
-COPY database /app/database/
+COPY server /app/server/
+
+# copy the database
+COPY database/database.db /app/database/
 
 CMD npm start
