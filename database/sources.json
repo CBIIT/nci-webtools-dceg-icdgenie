@@ -1,0 +1,76 @@
+[
+  {
+    "filePath": "data/icd10cm_neoplasm_2022.csv",
+    "table": "icd10_neoplasm",
+    "headers": [
+      "neoplasm",
+      "level",
+      "parentNeoplasm",
+      "malignantPrimary",
+      "malignantSecondary",
+      "carcinomaInSitu",
+      "benign",
+      "uncertainBehavior",
+      "unspecifiedBehavior"
+    ],
+    "treeRefs": {
+      "nodeRef": "neoplasm",
+      "parentRef": "parentNeoplasm",
+      "pathRef": "neoplasm",
+      "levelRef": "level"
+    }
+  },
+  {
+    "filePath": "data/icd10cm_drug_2022.csv",
+    "table": "icd10_drug",
+    "headers": [
+      "substance",
+      "level",
+      "parentSubstance",
+      "poisoningAccidental",
+      "poisoningIntentionalSelfHarm",
+      "poisoningAssault",
+      "poisoningUndetermined",
+      "adverseEffect",
+      "underdosing"
+    ],
+    "treeRefs": {
+      "nodeRef": "substance",
+      "parentRef": "parentSubstance",
+      "pathRef": "substance",
+      "levelRef": "level"
+    }
+  },
+  {
+    "filePath": "data/icd10cm_eindex_2022.csv",
+    "table": "icd10_injury",
+    "headers": ["description", "level", "parentDescription", "code"],
+    "treeRefs": {
+      "nodeRef": "description",
+      "parentRef": "parentDescription",
+      "pathRef": "description",
+      "levelRef": "level"
+    }
+  },
+  {
+    "filePath": "data/icd10cm_tabular_2022.csv",
+    "table": "icd10",
+    "headers": ["code", "description", "level", "parentCode"],
+    "treeRefs": {
+      "nodeRef": "code",
+      "parentRef": "parentCode",
+      "pathRef": "description",
+      "levelRef": "level"
+    }
+  },
+  {
+    "filePath": "data/icdo3_morphology_v22_20210719.csv",
+    "table": "icdo3_morphology",
+    "headers": ["histology", "behavior", "preferred", "description"]
+  },
+  {
+    "filePath": "data/icd10cm_icdo3_mapping.csv",
+    "table": "icd10_icdo3_mapping",
+    "headers": ["icd10", "icd10Description", "icdo3", "icdo3Description"]
+  }
+]
