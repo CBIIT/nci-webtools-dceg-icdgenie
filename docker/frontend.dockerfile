@@ -1,4 +1,4 @@
-FROM ${FRONTEND_BASE_IMAGE:-oraclelinux:8-slim}
+FROM ${BASE_IMAGE:-oraclelinux:8-slim}
 
 RUN microdnf -y update \
  && microdnf -y module enable nodejs:14 \
@@ -22,14 +22,17 @@ COPY client /app/client/
 
 RUN npm run build
 
-RUN mv /app/client/build /var/www/html/icdgenie
+ARG APP_PATH=/icdgenie
+
+RUN mkdir -p /var/www/html/${APP_PATH} \
+ && cp -r /app/client/build/* /var/www/html/${APP_PATH}
 
 COPY docker/frontend.conf /etc/httpd/conf.d/frontend.conf
 
-WORKDIR /var/www/html
-
 EXPOSE 80
 EXPOSE 443
+
+WORKDIR /var/www/html
 
 CMD rm -rf /run/httpd/* /tmp/httpd* \
  && exec /usr/sbin/apachectl -DFOREGROUND 
