@@ -1,17 +1,17 @@
 version: "3"
 services:
-  database:
+  backend:
     build:
       context: .
-      dockerfile: docker/database.dockerfile
+      dockerfile: docker/backend.dockerfile
       args:
         BASE_IMAGE: "oraclelinux:8-slim"
     volumes:
-      - ./database/logs:/app/logs
+      - ./database:/app/database
     environment:
       APP_NAME: icdgenie
       API_PORT: 9000
-      DATABASE_PATH: import/database.db
+      DATABASE_PATH: /app/database/database.db
       LOG_FOLDER: logs
       LOG_LEVEL: debug
   frontend:
@@ -23,8 +23,8 @@ services:
         APP_PATH: /icdgenie
     environment:
       APP_PATH: /icdgenie
-      API_BASE_URL: http://database:9000
+      API_BASE_URL: http://backend:9000
     links:
-      - database:database
+      - backend:backend
     ports:
       - "8080:80"
