@@ -20,8 +20,9 @@ RUN npm install
 
 COPY client /app/client/
 
-RUN npm run build \
- && mv /app/client/dist/icdgenie-client /var/www/html/icdgenie
+RUN npm run build
+
+RUN mv /app/client/build /var/www/html/icdgenie
 
 COPY docker/frontend.conf /etc/httpd/conf.d/frontend.conf
 
@@ -31,4 +32,4 @@ EXPOSE 80
 EXPOSE 443
 
 CMD rm -rf /run/httpd/* /tmp/httpd* \
- && exec /usr/sbin/apachectl -DFOREGROUND
+ && exec /usr/sbin/apachectl -DFOREGROUND 
