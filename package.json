@@ -6,12 +6,12 @@
   "scripts": {
     "prepare": "husky install",
     "test": "npm run test:client && npm run test:server",
-    "install:database": "cd database && npm install",
+    "install:server": "cd server && npm install",
     "install:client": "cd client && npm install",
     "test:client": "cd client && npm test",
-    "test:database": "cd database && npm test",
+    "test:server": "cd server && npm test",
     "start:client": "cd client && npm start",
-    "start:database": "cd database && npm start",
+    "start:server": "cd server && npm start",
     "build:client": "cd client && npm run build",
     "format": "prettier --write  --ignore-unknown ."
   },

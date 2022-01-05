@@ -18,21 +18,21 @@ cd nci-webtools-dceg-icdgenie
 # install git hooks
 npm install
 
-# install database dependencies
-npm run install:database
+# install server dependencies
+npm run install:server
 
 # install client dependencies
 npm run install:client
 ```
 
-### Database
+### Server
 
-The database service exposes a query api using express.js.
+The server exposes a query api using express.js.
 
 #### Getting Started
 
-1. Create `database/.env` using `database/.env.example` as a template
-2. Run `npm start` in the database folder
+1. Create `server/.env` using `server/.env.example` as a template
+2. Run `npm start` in the server folder
 
 #### Supported Queries
 
@@ -95,7 +95,7 @@ Examples:
 
 ### Client
 
-The client is an Angular PWA which allows users to perform and visualize queries against the ICD database service.
+The client is an Angular PWA which allows users to perform and visualize queries against the ICD server service.
 
 #### Getting Started
 
