@@ -7,8 +7,6 @@ import Tab from "react-bootstrap/Tab";
 import { TreeDataState, CustomTreeData } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
 
-import "../../../node_modules/@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css";
-
 export default function Search() {
   const [form, setForm] = useState(defaultFormState);
   const mergeForm = (obj) => setForm({ ...form, ...obj });
@@ -24,7 +22,7 @@ export default function Search() {
     { name: "unspecifiedBehavior", title: "Unspecified Behavior" },
   ];
 
-  const tableColumnExtensions = [{ columnName: "neoplasm", width: 300 }];
+  const tableColumnExtensions = [{ columnName: "neoplasm", width: 400 }];
 
   const getChildRows = (row, rootRows) => {
     return row ? row.children : rootRows;
