@@ -22,7 +22,7 @@ export default function Search() {
     { name: "unspecifiedBehavior", title: "Unspecified Behavior" },
   ];
 
-  const tableColumnExtensions = [{ columnName: "neoplasm", width: 400 }];
+  const tableColumnExtensions = [{ columnName: "neoplasm", width: 400, wordWrapEnabled: true }];
 
   const getChildRows = (row, rootRows) => {
     return row ? row.children : rootRows;
