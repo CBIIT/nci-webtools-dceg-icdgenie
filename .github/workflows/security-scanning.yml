@@ -18,11 +18,11 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
 
-  ScanDatabaseImage:
+  ScanBackendImage:
     runs-on: ubuntu-latest
     env:
       DOCKER_BUILDKIT: 1
-      IMAGE_NAME: database-${{ github.sha }}
+      IMAGE_NAME: backend-${{ github.sha }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
           docker build \
             -t ${{ env.IMAGE_NAME }} \
             --build-arg BUILDKIT_INLINE_CACHE=1 \
-            -f docker/database.dockerfile \
+            -f docker/backend.dockerfile \
             ${{ github.workspace }}
 
       - name: Scan image
@@ -46,12 +46,12 @@ jobs:
           vuln-type: "os,library"
           severity: "CRITICAL,HIGH"
           timeout: "30m"
-          output: "trivy-results-database.sarif"
+          output: "trivy-results-backend.sarif"
 
       - name: Upload Trivy scan results to GitHub Security
         uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: "trivy-results-database.sarif"
+          sarif_file: "trivy-results-backend.sarif"
 
   ScanFrontendImage:
     runs-on: ubuntu-latest
