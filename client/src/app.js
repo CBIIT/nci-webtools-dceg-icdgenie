@@ -1,13 +1,23 @@
+import { Suspense, lazy } from "react";
 import { RecoilRoot } from "recoil";
 import { HashRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
-import Home from "./modules/home/home";
-import Search from "./modules/search/search";
-import ApiAccess from "./modules/api-access/api-access";
-import About from "./modules/about/about";
+import Loader from "./modules/common/loader";
+import ErrorBoundary from "./modules/common/error-boundary";
 import "./styles/main.scss";
+
+// preload lazy-loaded page components
+const Home = preloadLazyComponent(() => import("./modules/home/home"));
+const Search = preloadLazyComponent(() => import("./modules/search/search"));
+const ApiAccess = preloadLazyComponent(() => import("./modules/api-access/api-access"));
+const About = preloadLazyComponent(() => import("./modules/about/about"));
+
+function preloadLazyComponent(factory) {
+  const loader = factory();
+  return lazy(() => loader);
+}
 
 export default function App() {
   const links = [
@@ -51,11 +61,15 @@ export default function App() {
           </Container>
         </Navbar>
         <div id="main-content" className="flex-grow-1">
-          <Routes>
-            {links.map((link, index) => (
-              <Route exact key={`route-${index}`} path={link.route} element={<link.component />} />
-            ))}
-          </Routes>
+          <ErrorBoundary fallback="">
+            <Suspense fallback={<Loader>Loading Page</Loader>}>
+              <Routes>
+                {links.map((link, index) => (
+                  <Route exact key={`route-${index}`} path={link.route} element={<link.component />} />
+                ))}
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </Router>
     </RecoilRoot>
