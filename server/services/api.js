@@ -6,7 +6,6 @@ const icdo3 = require("./icdgenie/icdo3");
 const translate = require("./icdgenie/translate");
 const spec = require("./icdgenie/spec");
 const { APP_BASE_URL } = process.env;
-
 const api = Router();
 
 api.use(cors());
