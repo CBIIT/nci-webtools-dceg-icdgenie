@@ -4,11 +4,14 @@ const icd10 = require("./icdgenie/icd10");
 const icdo3 = require("./icdgenie/icdo3");
 const translate = require("./icdgenie/translate");
 const spec = require("./icdgenie/spec");
+const { APP_BASE_URL } = process.env;
+
 const api = Router();
 
 api.use(json());
 
 api.get("/", (request, response) => {
+  spec.servers = [{ url: APP_BASE_URL || "." }];
   response.json(spec);
 });
 
