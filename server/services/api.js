@@ -1,4 +1,5 @@
 const { Router, json } = require("express");
+const cors = require("cors");
 const icdgenie = require("./icdgenie");
 const icd10 = require("./icdgenie/icd10");
 const icdo3 = require("./icdgenie/icdo3");
@@ -8,6 +9,7 @@ const { APP_BASE_URL } = process.env;
 
 const api = Router();
 
+api.use(cors());
 api.use(json());
 
 api.get("/", (request, response) => {
