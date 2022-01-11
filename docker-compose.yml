@@ -11,6 +11,7 @@ services:
     environment:
       APP_NAME: icdgenie
       API_PORT: 9000
+      APP_BASE_URL: http://localhost:8080/icdgenie
       DATABASE_PATH: /app/database/database.db
       LOG_FOLDER: logs
       LOG_LEVEL: debug
