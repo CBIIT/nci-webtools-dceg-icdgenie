@@ -72,7 +72,7 @@ export default function App() {
           </ErrorBoundary>
         </div>
       </Router>
-      <pre>{JSON.stringify(process.env, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(process.env, null, 2)}</pre> */}
     </RecoilRoot>
   );
 }
