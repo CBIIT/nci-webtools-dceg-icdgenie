@@ -1,7 +1,7 @@
 create index index__icdo3_morphology__histology on icdo3_morphology("histology");
 create index index__icdo3_morphology__behavior on icdo3_morphology("behavior");
 create index index__icdo3_morphology__description on icdo3_morphology("description");
-create index index__icdo3_morphology__code on icdo3_morphology("histology", "behavior");
+create index index__icdo3_morphology__code on icdo3_morphology("code");
 
 create index index__icd10_icdo3_mapping__icd10 on icd10_icdo3_mapping("icd10");
 create index index__icd10_icdo3_mapping__icdo3 on icd10_icdo3_mapping("icdo3");

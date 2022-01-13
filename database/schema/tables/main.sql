@@ -3,6 +3,7 @@ create table "icdo3_morphology"
     "id" integer primary key,
     "histology" integer,
     "behavior" integer,
+    "code" text generated always as (histology || '/' || behavior) stored,
     "preferred" boolean,
     "description" text
 );
