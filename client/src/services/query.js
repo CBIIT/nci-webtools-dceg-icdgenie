@@ -10,7 +10,11 @@ export function asQueryParams(params) {
     : "";
 }
 
-export async function query(url, params, options) {
+export async function query(url, params, options, prependApiRoot = true) {
+  if (prependApiRoot) {
+    url = [process.env.PUBLIC_URL, url].join("/");
+  }
+
   const fetchOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
