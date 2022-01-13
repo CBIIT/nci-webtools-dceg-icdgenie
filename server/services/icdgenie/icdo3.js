@@ -1,23 +1,21 @@
-function searchMorphologyTable(database, { code, description }) {
-  const [histology, behavior] = code?.split("/") || [];
-
-  if (histology && behavior) {
+function searchMorphologyTable(database, { code, description, query }) {
+  if (query) {
     return database
       .prepare(
         `select * from icdo3_morphology where 
-          histology = :histology and
-          behavior = :behavior
+          code like :queryPrefix or 
+          description like :query
         order by id`,
       )
-      .all({ histology, behavior });
-  } else if (histology) {
+      .all({ query: `%${query}%`, queryPrefix: `${query}%` });
+  } else if (code) {
     return database
       .prepare(
         `select * from icdo3_morphology where 
-          histology = :histology
+          code like :code
         order by id`,
       )
-      .all({ histology });
+      .all({ code: `${code}%` });
   } else if (description) {
     return database
       .prepare(
