@@ -1,7 +1,20 @@
 const { asFlatTree, asTree } = require("./tree");
 
-function searchInjuryTable(database, { code, description }) {
-  if (code) {
+function searchInjuryTable(database, { code, description, query }) {
+  if (query) {
+    return database
+      .prepare(
+        `with parents as (
+          select * from icd10_injury where
+            path like :query or
+            code like :queryPrefix
+          union all
+          select i.* from icd10_injury i
+            join parents p on i.id = p.parentId
+        ) select distinct * from parents order by level, code`,
+      )
+      .all({ query: `%${query}%`, queryPrefix: `${query}%` });
+  } else if (code) {
     return database
       .prepare(
         `with parents as (
@@ -30,8 +43,26 @@ function searchInjuryTable(database, { code, description }) {
   }
 }
 
-function searchDrugTable(database, { code, description }) {
-  if (code) {
+function searchDrugTable(database, { code, description, query }) {
+  if (query) {
+    return database
+      .prepare(
+        `with parents as (
+          select * from icd10_drug where
+            path like :query or
+            poisoningAccidental like :queryPrefix or
+            poisoningIntentionalSelfHarm like :queryPrefix or
+            poisoningAssault like :queryPrefix or
+            poisoningUndetermined like :queryPrefix or
+            adverseEffect like :queryPrefix or
+            underdosing like :queryPrefix
+          union all
+          select i.* from icd10_drug i
+            join parents p on i.id = p.parentId
+        ) select distinct * from parents order by level, path`,
+      )
+      .all({ query: `%${query}%`, queryPrefix: `${query}%` });
+  } else if (code) {
     return database
       .prepare(
         `with parents as (
@@ -65,8 +96,26 @@ function searchDrugTable(database, { code, description }) {
   }
 }
 
-function searchNeoplasmTable(database, { code, description }) {
-  if (code) {
+function searchNeoplasmTable(database, { code, description, query }) {
+  if (query) {
+    return database
+      .prepare(
+        `with parents as (
+          select * from icd10_neoplasm where
+            path like :query or
+            malignantPrimary like :queryPrefix or
+            malignantSecondary like :queryPrefix or
+            carcinomaInSitu like :queryPrefix or
+            benign like :queryPrefix or
+            uncertainBehavior like :queryPrefix or
+            unspecifiedBehavior like :queryPrefix
+          union all
+          select i.* from icd10_neoplasm i
+            join parents p on i.id = p.parentId
+        ) select distinct * from parents order by level, path`,
+      )
+      .all({ query: `%${query}%`, queryPrefix: `${query}%` });
+  } else if (code) {
     return database
       .prepare(
         `with parents as (
@@ -100,8 +149,21 @@ function searchNeoplasmTable(database, { code, description }) {
   }
 }
 
-function searchIndexTable(database, { code, description }) {
-  if (code) {
+function searchIndexTable(database, { code, description, query }) {
+  if (query) {
+    return database
+      .prepare(
+        `with parents as (
+          select * from icd10 where
+            code like :queryPrefix or
+            path like :query
+          union all
+          select i.* from icd10 i
+            join parents p on i.id = p.parentId
+        ) select distinct * from parents order by level, code`,
+      )
+      .all({ query: `%${query}%`, queryPrefix: `${query}%` });
+  } else if (code) {
     return database
       .prepare(
         `with parents as (
@@ -148,7 +210,7 @@ function search(database, query) {
       break;
   }
 
-  if (query.code || query.description) {
+  if (query.query || query.code || query.description) {
     if (query.format === "tree") {
       return asTree(results);
     } else {
