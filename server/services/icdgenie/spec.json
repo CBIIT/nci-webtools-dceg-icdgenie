@@ -19,6 +19,13 @@
         "produces": ["application/json"],
         "parameters": [
           {
+            "name": "query",
+            "in": "query",
+            "description": "ICD-10 code or partial description. If not specified, a code or description parameter is expected.",
+            "type": "string",
+            "example": "neoplasm"
+          },
+          {
             "name": "code",
             "in": "query",
             "description": "ICD-10 code or prefix. If not specified, a description is expected.",
@@ -66,6 +73,12 @@
         "summary": "Search ICD-O-3 by code or description",
         "produces": ["application/json"],
         "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "ICD-O-3 code or partial description. If not specified, a code or description parameter is expected.",
+            "type": "string"
+          },
           {
             "name": "code",
             "in": "query",
