@@ -49,61 +49,30 @@ export default function Search() {
     event.preventDefault();
 
     mergeForm({ ...form, loading: true });
-    var indexDesc = await query("api/search/icd10", {
-      description: form.search,
+
+    const index = await query("api/search/icd10", {
+      query: form.search,
       type: "index",
       format: "tree",
     });
 
-    var indexCode = await query("api/search/icd10", {
-      code: form.search,
-      type: "index",
-      format: "tree",
-    });
-
-    const index = indexDesc.concat(indexCode);
-
-    var neoplasmDesc = await query("api/search/icd10", {
-      description: form.search,
+    const neoplasm = await query("api/search/icd10", {
+      query: form.search,
       type: "neoplasm",
       format: "tree",
     });
 
-    var neoplasmCode = await query("api/search/icd10", {
-      code: form.search,
-      type: "neoplasm",
-      format: "tree",
-    });
-
-    const neoplasm = neoplasmDesc.concat(neoplasmCode);
-
-    var drugDesc = await query("api/search/icd10", {
-      description: form.search,
+    const drug = await query("api/search/icd10", {
+      query: form.search,
       type: "drug",
       format: "tree",
     });
 
-    var drugCode = await query("api/search/icd10", {
-      code: form.search,
-      type: "drug",
-      format: "tree",
-    });
-
-    const drug = drugDesc.concat(drugCode);
-
-    var injuryDesc = await query("api/search/icd10", {
-      description: form.search,
+    var injury = await query("api/search/icd10", {
+      query: form.search,
       type: "injury",
       format: "tree",
     });
-
-    var injuryCode = await query("api/search/icd10", {
-      code: form.search,
-      type: "injury",
-      format: "tree",
-    });
-
-    const injury = injuryDesc.concat(injuryCode);
 
     mergeForm({
       ...form,
