@@ -5,7 +5,7 @@ const { logRequests, logErrors } = require("./services/middleware");
 const { getLogger } = require("./services/logger");
 const { forkCluster } = require("./services/cluster");
 const { api } = require("./services/api");
-const { APP_NAME, API_PORT, DATABASE_PATH, LOG_FOLDER, LOG_LEVEL } = process.env;
+const { APP_NAME, API_PORT, DATABASE_PATH, LOG_LEVEL } = process.env;
 
 // ensure that all environment variables are set
 validateEnvironment();
@@ -22,7 +22,7 @@ app.set("json spaces", 2);
 app.set("x-powered-by", false);
 
 // register services as app locals
-app.locals.logger = getLogger(APP_NAME, { folder: LOG_FOLDER, level: LOG_LEVEL });
+app.locals.logger = getLogger(APP_NAME, { level: LOG_LEVEL });
 app.locals.database = sqlite(DATABASE_PATH);
 
 // register middleware
