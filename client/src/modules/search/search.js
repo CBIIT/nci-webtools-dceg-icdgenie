@@ -42,7 +42,7 @@ export default function Search() {
   const icdo3Columns = [
     { name: "code", title: "Code" },
     { name: "description", title: "Description" },
-    { name: "isPreferred", title: "Preferred" },
+    { name: "isPreferred", title: "Preferred?" },
   ];
 
   const tableColumnExtensions = [{ columnName: "neoplasm", width: 400, wordWrapEnabled: true }];
