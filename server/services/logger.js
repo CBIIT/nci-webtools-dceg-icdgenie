@@ -16,33 +16,14 @@ function formatLog({ label, timestamp, level, message }) {
  * @returns Logger
  */
 function getLogger(name = "app", config, formatter = formatLog) {
-  const { folder, level } = {
-    folder: "logs",
-    level: "info",
-    ...config,
-  };
-
-  fs.mkdirSync(folder, { recursive: true });
-
   return new createLogger({
-    level: level,
+    level: config.level || "info",
     format: format.combine(
       format.timestamp({ format: "isoDateTime" }),
       format.label({ label: name }),
       format.printf(formatter),
     ),
-    transports: [
-      new transports.Console(),
-      new transports.DailyRotateFile({
-        filename: path.resolve(folder, `${name}-%DATE%.log`),
-        datePattern: "YYYY-MM-DD-HH",
-        zippedArchive: false,
-        maxSize: "1024m",
-        timestamp: true,
-        maxFiles: "1d",
-        prepend: true,
-      }),
-    ],
+    transports: [new transports.Console()],
     exitOnError: false,
   });
 }

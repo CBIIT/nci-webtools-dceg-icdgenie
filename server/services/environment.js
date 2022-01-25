@@ -1,4 +1,4 @@
-const environmentVariables = ["APP_NAME", "API_PORT", "DATABASE_PATH", "LOG_FOLDER", "LOG_LEVEL"];
+const environmentVariables = ["APP_NAME", "API_PORT", "DATABASE_PATH"];
 
 function validateEnvironment() {
   for (const key of environmentVariables) {
