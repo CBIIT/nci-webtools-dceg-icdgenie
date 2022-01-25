@@ -39,6 +39,12 @@ export default function Search() {
     { name: "underdosing", title: "Underdosing" },
   ];
 
+  const icdo3Columns = [
+    { name: "code", title: "Code" },
+    { name: "description", title: "Description" },
+    { name: "isPreferred", title: "Preferred" },
+  ];
+
   const tableColumnExtensions = [{ columnName: "neoplasm", width: 400, wordWrapEnabled: true }];
 
   const getChildRows = (row, rootRows) => {
@@ -68,10 +74,21 @@ export default function Search() {
       format: "tree",
     });
 
-    var injury = await query("api/search/icd10", {
+    const injury = await query("api/search/icd10", {
       query: form.search,
       type: "injury",
       format: "tree",
+    });
+
+    var icdo3 = await query("api/search/icdo3", {
+      query: form.search,
+    });
+
+    icdo3 = icdo3.map((e) => {
+      return {
+        ...e,
+        isPreferred: e.preferred ? "Yes" : "No",
+      };
     });
 
     mergeForm({
@@ -80,6 +97,7 @@ export default function Search() {
       neoplasmData: neoplasm,
       drugData: drug,
       injuryData: injury,
+      icdo3Data: icdo3,
       loading: false,
       submitted: true,
     });
@@ -179,6 +197,15 @@ export default function Search() {
                 </Accordion.Body>
               </Accordion.Item>
             </Accordion>
+          </Tab>
+          <Tab eventKey="codeTree" title="ICD-O-3 Code Table">
+            <Grid rows={form.icdo3Data} columns={icdo3Columns}>
+              <TreeDataState />
+              <CustomTreeData getChildRows={getChildRows} />
+              <Table columnExtensions={[{ columnName: "description", wordWrapEnabled: true }]} />
+              <TableHeaderRow />
+              <TableTreeColumn for="code" />
+            </Grid>
           </Tab>
         </Tabs>
       </Container>

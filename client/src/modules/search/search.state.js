@@ -6,6 +6,7 @@ export const defaultFormState = {
   neoplasmData: [],
   drugData: [],
   injuryData: [],
+  icdo3Data: [],
   loading: false,
   submitted: false,
 };
