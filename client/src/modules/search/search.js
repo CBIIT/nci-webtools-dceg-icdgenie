@@ -5,47 +5,31 @@ import { query } from "../../services/query";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import Accordion from "react-bootstrap/Accordion";
-import { TreeDataState, CustomTreeData } from "@devexpress/dx-react-grid";
-import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
+import { TreeDataState, CustomTreeData, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
+import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
 import { LoadingOverlay } from "@cbiitss/react-components";
+import { Modal } from "react-bootstrap";
+import ICD10 from "./search.icd10";
+import ICDO3 from "./search.icdo3";
 
 export default function Search() {
   const [form, setForm] = useState(defaultFormState);
   const mergeForm = (obj) => setForm({ ...form, ...obj });
   const [tab, setTab] = useState("codeTable");
+  const [show, setShow] = useState(false);
+  const [modalData, setModalData] = useState([]);
 
-  const indexColumns = [
-    { name: "description", title: "Description" },
-    { name: "code", title: "Code" },
+  const handleClose = () => setShow(false);
+
+  const icdo3ModalColumns = [
+    { name: "icd10Description", title: "ICD-10 Description" },
+    { name: "icd10", title: "ICD-10 Code" },
   ];
 
-  const neoplasmColumns = [
-    { name: "neoplasm", title: "Neoplasm" },
-    { name: "malignantPrimary", title: "Malignant Primary" },
-    { name: "malignantSecondary", title: "Malignant Secondary" },
-    { name: "carcinomaInSitu", title: "Ca in situ" },
-    { name: "benign", title: "Benign" },
-    { name: "uncertainBehavior", title: "Uncertain Behavior" },
-    { name: "unspecifiedBehavior", title: "Unspecified Behavior" },
+  const icd10ModalColumns = [
+    { name: "icdo3Description", title: "ICD-O-3 Description" },
+    { name: "icdo3", title: "ICD-O-3 Code" },
   ];
-
-  const drugColumns = [
-    { name: "substance", title: "Substance" },
-    { name: "poisoningAccidental", title: "Accidental Poisoning" },
-    { name: "poisoningIntentionalSelfHarm", title: "Intentional Self Harm Poisoning" },
-    { name: "poisoningAssault", title: "Assault Poisoning" },
-    { name: "poisoningUndetermined", title: "Undetermined Poisoning" },
-    { name: "adverseEffect", title: "Adverse Effect" },
-    { name: "underdosing", title: "Underdosing" },
-  ];
-
-  const icdo3Columns = [
-    { name: "code", title: "Code" },
-    { name: "description", title: "Description" },
-    { name: "isPreferred", title: "Preferred?" },
-  ];
-
-  const tableColumnExtensions = [{ columnName: "neoplasm", width: 400, wordWrapEnabled: true }];
 
   const getChildRows = (row, rootRows) => {
     return row ? row.children : rootRows;
@@ -53,13 +37,30 @@ export default function Search() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-
     mergeForm({ ...form, loading: true });
 
-    const index = await query("api/search/icd10", {
+    var index = await query("api/search/icd10", {
       query: form.search,
       type: "index",
-      format: "tree",
+      format: "list",
+    });
+
+    index = index.map((e) => {
+      return {
+        ...e,
+        code: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icd10: e.code });
+              console.log(translate);
+              setModalData(translate);
+              await setShow("icd10");
+            }}
+            href="javascript:void(0)">
+            {e.code}
+          </a>
+        ),
+      };
     });
 
     const neoplasm = await query("api/search/icd10", {
@@ -87,12 +88,22 @@ export default function Search() {
     icdo3 = icdo3.map((e) => {
       return {
         ...e,
+        code: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icdo3: e.code });
+              setModalData(translate);
+              await setShow("icdo3");
+            }}
+            href="javascript:void(0)">
+            {e.code}
+          </a>
+        ),
         isPreferred: e.preferred ? "Yes" : "No",
       };
     });
 
     mergeForm({
-      ...form,
       indexData: index,
       neoplasmData: neoplasm,
       drugData: drug,
@@ -102,6 +113,8 @@ export default function Search() {
       submitted: true,
     });
   }
+
+  console.log(form);
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -116,6 +129,35 @@ export default function Search() {
 
   return (
     <>
+      <Modal show={show} size="xl" onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            {show === "icdo3"
+              ? `ICD-10 Translation for ICD-O-3 Code: ${modalData.length ? modalData[0].icdo3 : ""}`
+              : `ICD-O-3 Translation for ICD-10 Code: ${modalData.length ? modalData[0].icd10 : ""}`}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Grid rows={modalData} columns={show === "icdo3" ? icdo3ModalColumns : icd10ModalColumns}>
+            <PagingState defaultCurrentPage={0} pageSize={10} />
+            <IntegratedPaging />
+            <TreeDataState />
+            <CustomTreeData getChildRows={getChildRows} />
+            <Table
+              columnExtensions={[
+                {
+                  columnName: show === "icdo3" ? "icd10Description" : "icdo3Description",
+                  width: 700,
+                  wordWrapEnabled: true,
+                },
+              ]}
+            />
+            <TableHeaderRow />
+            <TableTreeColumn for="code" />
+            <PagingPanel />
+          </Grid>
+        </Modal.Body>
+      </Modal>
       <Container className="py-4 h-100">
         <div className="row justify-content-center">
           <div className="col-xl-5 mt-3">
@@ -139,73 +181,10 @@ export default function Search() {
         <LoadingOverlay active={form.loading} overlayStyle={{ position: "fixed" }} />
         <Tabs activeKey={tab} onSelect={(e) => setTab(e)} className="mb-3">
           <Tab eventKey="codeTable" title="ICD-10 Code Table">
-            <Accordion defaultActiveKey="0" alwaysOpen>
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>
-                  <b>Index Table</b>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <Grid rows={form.indexData} columns={indexColumns}>
-                    <TreeDataState />
-                    <CustomTreeData getChildRows={getChildRows} />
-                    <Table columnExtensions={tableColumnExtensions} />
-                    <TableHeaderRow />
-                    <TableTreeColumn for="description" />
-                  </Grid>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="1">
-                <Accordion.Header>
-                  <b>Neoplasm Table</b>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <Grid rows={form.neoplasmData} columns={neoplasmColumns}>
-                    <TreeDataState />
-                    <CustomTreeData getChildRows={getChildRows} />
-                    <Table columnExtensions={tableColumnExtensions} />
-                    <TableHeaderRow />
-                    <TableTreeColumn for="neoplasm" />
-                  </Grid>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="2">
-                <Accordion.Header>
-                  <b>Drug Table</b>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <Grid rows={form.drugData} columns={drugColumns}>
-                    <TreeDataState />
-                    <CustomTreeData getChildRows={getChildRows} />
-                    <Table columnExtensions={tableColumnExtensions} />
-                    <TableHeaderRow />
-                    <TableTreeColumn for="substance" />
-                  </Grid>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="3">
-                <Accordion.Header>
-                  <b>Injury Table</b>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <Grid rows={form.injuryData} columns={indexColumns}>
-                    <TreeDataState />
-                    <CustomTreeData getChildRows={getChildRows} />
-                    <Table columnExtensions={tableColumnExtensions} />
-                    <TableHeaderRow />
-                    <TableTreeColumn for="description" />
-                  </Grid>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
+            <ICD10 form={form} />
           </Tab>
           <Tab eventKey="codeTree" title="ICD-O-3 Code Table">
-            <Grid rows={form.icdo3Data} columns={icdo3Columns}>
-              <TreeDataState />
-              <CustomTreeData getChildRows={getChildRows} />
-              <Table columnExtensions={[{ columnName: "description", wordWrapEnabled: true }]} />
-              <TableHeaderRow />
-              <TableTreeColumn for="code" />
-            </Grid>
+            <ICDO3 form={form} />
           </Tab>
         </Tabs>
       </Container>
