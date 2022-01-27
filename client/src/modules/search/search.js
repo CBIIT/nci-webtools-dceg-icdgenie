@@ -52,7 +52,6 @@ export default function Search() {
           <a
             onClick={async () => {
               const translate = await query("api/translate", { icd10: e.code });
-              console.log(translate);
               setModalData(translate);
               await setShow("icd10");
             }}
@@ -63,22 +62,73 @@ export default function Search() {
       };
     });
 
-    const neoplasm = await query("api/search/icd10", {
+    var neoplasm = await query("api/search/icd10", {
       query: form.search,
       type: "neoplasm",
-      format: "tree",
+      format: "list",
     });
 
-    const drug = await query("api/search/icd10", {
+    neoplasm = neoplasm.map((e) => {
+      return {
+        ...e,
+        malignantPrimary: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icd10: e.malignantPrimary });
+              setModalData(translate);
+              await setShow("icd10");
+            }}
+            href="javascript:void(0)">
+            {e.malignantPrimary}
+          </a>
+        ),
+      };
+    });
+
+    var drug = await query("api/search/icd10", {
       query: form.search,
       type: "drug",
-      format: "tree",
+      format: "list",
     });
 
-    const injury = await query("api/search/icd10", {
+    drug = drug.map((e) => {
+      return {
+        ...e,
+        poisoningAccidental: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icd10: e.poisoningAccidental });
+              setModalData(translate);
+              await setShow("icd10");
+            }}
+            href="javascript:void(0)">
+            {e.poisoningAccidental}
+          </a>
+        ),
+      };
+    });
+
+    var injury = await query("api/search/icd10", {
       query: form.search,
       type: "injury",
       format: "tree",
+    });
+
+    injury = injury.map((e) => {
+      return {
+        ...e,
+        code: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icd10: e.code });
+              setModalData(translate);
+              await setShow("icd10");
+            }}
+            href="javascript:void(0)">
+            {e.code}
+          </a>
+        ),
+      };
     });
 
     var icdo3 = await query("api/search/icdo3", {

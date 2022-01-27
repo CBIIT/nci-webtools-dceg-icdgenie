@@ -36,9 +36,6 @@ export default function ICD10({ form }) {
   const tableColumnExtensions = [{ columnName: "neoplasm", width: 400, wordWrapEnabled: true }];
 
   const getChildRows = (row, rootRows) => {
-    return row ? row.children : rootRows;
-  };
-  const getIndexChild = (row, rootRows) => {
     const childRows = rootRows.filter((r) => r.parentId === (row ? row.id : null));
     return childRows.length ? childRows : null;
   };
@@ -52,7 +49,7 @@ export default function ICD10({ form }) {
         <Accordion.Body>
           <Grid rows={form.indexData} columns={indexColumns}>
             <TreeDataState />
-            <CustomTreeData getChildRows={getIndexChild} />
+            <CustomTreeData getChildRows={getChildRows} />
             <Table columnExtensions={tableColumnExtensions} />
             <TableHeaderRow />
             <TableTreeColumn for="description" />
