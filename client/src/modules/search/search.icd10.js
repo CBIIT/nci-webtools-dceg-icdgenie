@@ -64,7 +64,9 @@ export default function ICD10({ form }) {
           <Grid rows={form.neoplasmData} columns={neoplasmColumns}>
             <TreeDataState />
             <CustomTreeData getChildRows={getChildRows} />
-            <Table columnExtensions={tableColumnExtensions} />
+            <Table
+              columnExtensions={tableColumnExtensions.concat({ columnName: "malignantPrimary", wordWrapEnabled: true })}
+            />
             <TableHeaderRow />
             <TableTreeColumn for="neoplasm" />
           </Grid>

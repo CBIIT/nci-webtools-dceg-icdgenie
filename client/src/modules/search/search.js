@@ -18,6 +18,7 @@ export default function Search() {
   const [tab, setTab] = useState("codeTable");
   const [show, setShow] = useState(false);
   const [modalData, setModalData] = useState([]);
+  const [search, setSearch] = useState("");
 
   const handleClose = () => setShow(false);
 
@@ -40,7 +41,7 @@ export default function Search() {
     mergeForm({ ...form, loading: true });
 
     var index = await query("api/search/icd10", {
-      query: form.search,
+      query: search,
       type: "index",
       format: "list",
     });
@@ -63,7 +64,7 @@ export default function Search() {
     });
 
     var neoplasm = await query("api/search/icd10", {
-      query: form.search,
+      query: search,
       type: "neoplasm",
       format: "list",
     });
@@ -71,7 +72,7 @@ export default function Search() {
     neoplasm = neoplasm.map((e) => {
       return {
         ...e,
-        malignantPrimary: (
+        malignantPrimary: /\d/.test(e.malignantPrimary) ? (
           <a
             onClick={async () => {
               const translate = await query("api/translate", { icd10: e.malignantPrimary });
@@ -81,12 +82,69 @@ export default function Search() {
             href="javascript:void(0)">
             {e.malignantPrimary}
           </a>
+        ) : (
+          e.malignantPrimary
+        ),
+        malignantSecondary: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icd10: e.malignantSecondary });
+              setModalData(translate);
+              await setShow("icd10");
+            }}
+            href="javascript:void(0)">
+            {e.malignantSecondary}
+          </a>
+        ),
+        carcinomaInSitu: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icd10: e.carcinomaInSitu });
+              setModalData(translate);
+              await setShow("icd10");
+            }}
+            href="javascript:void(0)">
+            {e.carcinomaInSitu}
+          </a>
+        ),
+        benign: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icd10: e.benign });
+              setModalData(translate);
+              await setShow("icd10");
+            }}
+            href="javascript:void(0)">
+            {e.benign}
+          </a>
+        ),
+        uncertainBehavior: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icd10: e.uncertainBehavior });
+              setModalData(translate);
+              await setShow("icd10");
+            }}
+            href="javascript:void(0)">
+            {e.uncertainBehavior}
+          </a>
+        ),
+        unspecifiedBehavior: (
+          <a
+            onClick={async () => {
+              const translate = await query("api/translate", { icd10: e.unspecifiedBehavior });
+              setModalData(translate);
+              await setShow("icd10");
+            }}
+            href="javascript:void(0)">
+            {e.unspecifiedBehavior}
+          </a>
         ),
       };
     });
 
     var drug = await query("api/search/icd10", {
-      query: form.search,
+      query: search,
       type: "drug",
       format: "list",
     });
@@ -109,9 +167,9 @@ export default function Search() {
     });
 
     var injury = await query("api/search/icd10", {
-      query: form.search,
+      query: search,
       type: "injury",
-      format: "tree",
+      format: "list",
     });
 
     injury = injury.map((e) => {
@@ -132,7 +190,7 @@ export default function Search() {
     });
 
     var icdo3 = await query("api/search/icdo3", {
-      query: form.search,
+      query: search,
     });
 
     icdo3 = icdo3.map((e) => {
@@ -164,18 +222,11 @@ export default function Search() {
     });
   }
 
-  console.log(form);
-
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleSubmit(event);
     }
   };
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-    mergeForm({ [name]: value });
-  }
 
   return (
     <>
@@ -216,8 +267,8 @@ export default function Search() {
                 name="search"
                 type="text"
                 className="form-control"
-                value={form.search}
-                onChange={handleChange}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={handleKeyDown}
               />
               <div className="input-group-append">
