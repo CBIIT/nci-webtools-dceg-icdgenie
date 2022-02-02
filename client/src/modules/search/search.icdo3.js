@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { TreeDataState, CustomTreeData, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
-import { Modal } from "react-bootstrap";
 
 export default function ICDO3({ form }) {
   const icdo3Columns = [

@@ -1,24 +1,29 @@
 import Container from "react-bootstrap/Container";
 import { defaultFormState } from "./search.state";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { query } from "../../services/query";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
-import Accordion from "react-bootstrap/Accordion";
 import { TreeDataState, CustomTreeData, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
 import { LoadingOverlay } from "@cbiitss/react-components";
 import { Modal } from "react-bootstrap";
+import { Tree } from "../../components/Tree";
+import * as d3 from "d3";
 import ICD10 from "./search.icd10";
 import ICDO3 from "./search.icdo3";
 
 export default function Search() {
   const [form, setForm] = useState(defaultFormState);
   const mergeForm = (obj) => setForm({ ...form, ...obj });
-  const [tab, setTab] = useState("codeTable");
+  const [tab, setTab] = useState("icd10Table");
   const [show, setShow] = useState(false);
   const [modalData, setModalData] = useState([]);
   const [search, setSearch] = useState("");
+
+  const svg = useRef(null);
+
+  console.log(form);
 
   const handleClose = () => setShow(false);
 
@@ -142,6 +147,21 @@ export default function Search() {
         ),
       };
     });
+
+    if (neoplasm.length) {
+      if (svg.current.children.length) {
+        svg.current.removeChild(svg.current.children[0]);
+      }
+
+      svg.current.appendChild(
+        Tree(neoplasm, {
+          label: (d) => d.neoplasm,
+          tree: d3.cluster,
+          children: (d) => d.children,
+          width: 2000,
+        }),
+      );
+    }
 
     var drug = await query("api/search/icd10", {
       query: search,
@@ -281,11 +301,14 @@ export default function Search() {
         </div>
         <LoadingOverlay active={form.loading} overlayStyle={{ position: "fixed" }} />
         <Tabs activeKey={tab} onSelect={(e) => setTab(e)} className="mb-3">
-          <Tab eventKey="codeTable" title="ICD-10 Code Table">
+          <Tab eventKey="icd10Table" title="ICD-10 Code Table">
             <ICD10 form={form} />
           </Tab>
-          <Tab eventKey="codeTree" title="ICD-O-3 Code Table">
+          <Tab eventKey="icdo3Table" title="ICD-O-3 Code Table">
             <ICDO3 form={form} />
+          </Tab>
+          <Tab eventKey="icd10Cluster" title="ICD-10 Hierarchy">
+            <div ref={svg} style={{ maxHeight: "800px", overflowY: "auto" }} />
           </Tab>
         </Tabs>
       </Container>
