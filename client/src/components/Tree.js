@@ -19,7 +19,7 @@ export function Tree(
     width = 640, // outer width, in pixels
     height, // outer height, in pixels
     r = 3, // radius of nodes
-    padding = 1, // horizontal padding for first and last column
+    padding = 10, // horizontal padding for first and last column
     fill = "#999", // fill for nodes
     fillOpacity, // fill opacity for nodes
     stroke = "#555", // stroke for links
