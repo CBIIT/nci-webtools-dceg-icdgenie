@@ -10,7 +10,7 @@ export default function ICD10({ form }) {
 
   const indexColumns = [
     { name: "description", title: "Description" },
-    { name: "code", title: "Code" },
+    { name: "link", title: "Code" },
   ];
 
   const neoplasmColumns = [
@@ -80,7 +80,7 @@ export default function ICD10({ form }) {
           <Grid rows={form.drugData} columns={drugColumns}>
             <TreeDataState />
             <CustomTreeData getChildRows={getChildRows} />
-            <Table columnExtensions={tableColumnExtensions} />
+            <Table columnExtensions={[{ columnName: "substance", width: 400, wordWrapEnabled: true }]} />
             <TableHeaderRow />
             <TableTreeColumn for="substance" />
           </Grid>
