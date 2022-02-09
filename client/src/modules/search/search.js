@@ -283,12 +283,6 @@ export default function Search() {
       );
     }
 
-    var neoplasm = await query("api/search/icd10", {
-      query: search,
-      type: "neoplasm",
-      format: "list",
-    });
-
     var icdo3 = await query("api/search/icdo3", {
       query: search,
     });
