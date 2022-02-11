@@ -22,10 +22,7 @@ COPY client /app/client/
 
 RUN npm run build
 
-ARG APP_PATH=/icdgenie
-
-RUN mkdir -p /var/www/html/${APP_PATH} \
- && cp -r /app/client/build/* /var/www/html/${APP_PATH}
+RUN cp -r /app/client/build/* /var/www/html
 
 COPY docker/frontend.conf /etc/httpd/conf.d/frontend.conf
 
