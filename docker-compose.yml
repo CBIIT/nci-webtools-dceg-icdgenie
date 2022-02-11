@@ -21,9 +21,7 @@ services:
       dockerfile: docker/frontend.dockerfile
       args:
         BASE_IMAGE: "oraclelinux:8-slim"
-        APP_PATH: /
     environment:
-      APP_PATH: /
       API_BASE_URL: http://backend:9000
     links:
       - backend:backend
