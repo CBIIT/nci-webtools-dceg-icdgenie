@@ -1,5 +1,6 @@
 const { Router, json } = require("express");
 const cors = require("cors");
+const { stringify } = require("csv-stringify/sync");
 const icdgenie = require("./icdgenie");
 const icd10 = require("./icdgenie/icd10");
 const icdo3 = require("./icdgenie/icdo3");
@@ -49,7 +50,14 @@ api.post("/batch", (request, response) => {
   const { logger, database } = request.app.locals;
   logger.debug("batch: " + JSON.stringify(request.body));
   const results = batch.batchExport(database, request.body);
-  response.json(results);
+
+  if (request.body.outputFormat === "csv") {
+    response.set("Content-Type", "text/csv");
+    response.set("Content-Disposition", `attachment; filename=icdgenie_batch_export.csv`);
+    response.send(stringify(results, { header: true }));
+  } else {
+    response.json(results);
+  }
 });
 
 module.exports = { api };
