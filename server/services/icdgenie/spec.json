@@ -287,6 +287,12 @@
           "description": "Specifies the type of output data.",
           "enum": ["icdo3", "icd10"],
           "default": "icdo3"
+        },
+        "outputFormat": {
+          "type": "string",
+          "description": "Specifies the output data format. Use 'csv' to export data as a csv file.",
+          "enum": ["json", "csv"],
+          "default": "json"
         }
       }
     },
