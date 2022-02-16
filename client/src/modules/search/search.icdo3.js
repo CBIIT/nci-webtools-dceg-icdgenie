@@ -4,9 +4,9 @@ import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@deve
 
 export default function ICDO3({ form }) {
   const icdo3Columns = [
+    { name: "code", title: "ICD-O-3 Code" },
     { name: "description", title: "Description" },
-    { name: "code", title: "Code" },
-    { name: "isPreferred", title: "Preferred?" },
+    { name: "isPreferred", title: "Preferred Term?" },
   ];
 
   const getChildRows = (row, rootRows) => {
