@@ -1,11 +1,12 @@
 import Container from "react-bootstrap/Container";
-import { defaultFormState } from "./search.state";
-import { useState, useRef, useEffect } from "react";
+import { defaultFormState, formState } from "./search.state";
+import { useState, useRef } from "react";
+import { useRecoilState } from "recoil";
 import { query } from "../../services/query";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
-import { TreeDataState, CustomTreeData, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
-import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
+import { TreeDataState, CustomTreeData } from "@devexpress/dx-react-grid";
+import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
 import { LoadingOverlay } from "@cbiitss/react-components";
 import { Modal } from "react-bootstrap";
 import { Tree } from "../../components/Tree";
@@ -15,7 +16,7 @@ import ICDO3 from "./search.icdo3";
 import Accordion from "react-bootstrap/Accordion";
 
 export default function Search() {
-  const [form, setForm] = useState(defaultFormState);
+  const [form, setForm] = useRecoilState(formState);
   const mergeForm = (obj) => setForm({ ...form, ...obj });
   const [tab, setTab] = useState("icd10Table");
   const [show, setShow] = useState(false);
@@ -333,24 +334,23 @@ export default function Search() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Grid rows={modalData} columns={show === "icdo3" ? icdo3ModalColumns : icd10ModalColumns}>
-            <PagingState defaultCurrentPage={0} pageSize={10} />
-            <IntegratedPaging />
-            <TreeDataState />
-            <CustomTreeData getChildRows={getChildRows} />
-            <Table
-              columnExtensions={[
-                {
-                  columnName: show === "icdo3" ? "icd10Description" : "icdo3Description",
-                  width: 700,
-                  wordWrapEnabled: true,
-                },
-              ]}
-            />
-            <TableHeaderRow />
-            <TableTreeColumn for="code" />
-            <PagingPanel />
-          </Grid>
+          <div style={{ maxHeight: "800px", overflow: "auto" }}>
+            <Grid rows={modalData} columns={show === "icdo3" ? icdo3ModalColumns : icd10ModalColumns}>
+              <TreeDataState />
+              <CustomTreeData getChildRows={getChildRows} />
+              <Table
+                columnExtensions={[
+                  {
+                    columnName: show === "icdo3" ? "icd10Description" : "icdo3Description",
+                    width: 700,
+                    wordWrapEnabled: true,
+                  },
+                ]}
+              />
+              <TableHeaderRow />
+              <TableTreeColumn for="code" />
+            </Grid>
+          </div>
         </Modal.Body>
       </Modal>
       <Container className="py-4 h-100">
@@ -364,6 +364,7 @@ export default function Search() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={handleKeyDown}
+                placeholder={"Search by Keywords, ICD-10 code, or ICD-O-3 code"}
               />
               <div className="input-group-append">
                 <button className="btn btn-outline-primary" type="button" onClick={handleSubmit}>
