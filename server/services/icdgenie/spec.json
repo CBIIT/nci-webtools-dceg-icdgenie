@@ -140,6 +140,34 @@
           }
         }
       }
+    },
+    "/api/batch": {
+      "post": {
+        "tags": ["Batch Export"],
+        "summary": "Batch export search and/or translation results for ICD-10 and ICD-O-3 codes",
+        "produces": ["application/json"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/BatchExportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/BatchExportResponse"
+            }
+          },
+          "400": {
+            "description": "Invalid parameters supplied"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -174,7 +202,6 @@
         }
       }
     },
-
     "ICDO3SearchResponse": {
       "type": "object",
       "properties": {
@@ -196,13 +223,84 @@
         }
       }
     },
-
     "TranslateResponse": {
       "type": "object",
       "properties": {
         "id": {
           "type": "integer",
           "format": "int64"
+        },
+        "icd10": {
+          "type": "string"
+        },
+        "icdo3": {
+          "type": "string"
+        },
+        "icd10Description": {
+          "type": "string"
+        },
+        "icdo3Description": {
+          "type": "string"
+        }
+      }
+    },
+
+    "parameters": [
+      {
+        "name": "inputType",
+        "in": "body",
+        "description": "Specifies the type of input data.",
+        "type": "string",
+        "enum": ["keywords", "icdo3", "icd10"],
+        "default": "keywords"
+      },
+      {
+        "name": "input",
+        "in": "body",
+        "description": "A newline-delimited list of input entries to search or translate.",
+        "type": "string"
+      },
+      {
+        "name": "inputType",
+        "in": "body",
+        "description": "Specifies the type of output data.",
+        "type": "string",
+        "enum": ["icdo3", "icd10"],
+        "default": "icdo3"
+      }
+    ],
+    "BatchExportRequest": {
+      "type": "object",
+      "properties": {
+        "inputType": {
+          "type": "string",
+          "description": "Specifies the type of input data.",
+          "enum": ["keywords", "icdo3", "icd10"],
+          "default": "keywords"
+        },
+        "input": {
+          "type": "string",
+          "description": "A newline-delimited list of input entries to search or translate."
+        },
+        "outputType": {
+          "type": "string",
+          "description": "Specifies the type of output data.",
+          "enum": ["icdo3", "icd10"],
+          "default": "icdo3"
+        },
+        "outputFormat": {
+          "type": "string",
+          "description": "Specifies the output data format. Use 'csv' to export data as a csv file.",
+          "enum": ["json", "csv"],
+          "default": "json"
+        }
+      }
+    },
+    "BatchExportResponse": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "string"
         },
         "icd10": {
           "type": "string"

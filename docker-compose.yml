@@ -11,7 +11,7 @@ services:
     environment:
       APP_NAME: icdgenie
       API_PORT: 9000
-      APP_BASE_URL: http://localhost:8080/icdgenie
+      APP_BASE_URL: http://localhost:8080/
       DATABASE_PATH: /app/database/database.db
       LOG_FOLDER: logs
       LOG_LEVEL: debug
@@ -21,9 +21,7 @@ services:
       dockerfile: docker/frontend.dockerfile
       args:
         BASE_IMAGE: "oraclelinux:8-slim"
-        APP_PATH: /icdgenie
     environment:
-      APP_PATH: /icdgenie
       API_BASE_URL: http://backend:9000
     links:
       - backend:backend
