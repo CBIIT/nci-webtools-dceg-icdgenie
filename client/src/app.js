@@ -13,6 +13,7 @@ const Home = preloadLazyComponent(() => import("./modules/home/home"));
 const Search = preloadLazyComponent(() => import("./modules/search/search"));
 const ApiAccess = preloadLazyComponent(() => import("./modules/api-access/api-access"));
 const About = preloadLazyComponent(() => import("./modules/about/about"));
+const Export = preloadLazyComponent(() => import("./modules/export/export"));
 
 function preloadLazyComponent(factory) {
   const loader = factory();
@@ -30,6 +31,11 @@ export default function App() {
       route: "/search",
       title: "Search",
       component: Search,
+    },
+    {
+      route: "/export",
+      title: "Batch Export",
+      component: Export,
     },
     {
       route: "/api-access",
