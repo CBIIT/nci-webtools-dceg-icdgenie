@@ -1,10 +1,12 @@
 import { atom } from "recoil";
 
 export const defaultFormState = {
-  type: "",
+  type: "keywords",
   input: "",
   output: [],
-  outputType: 'icd10',
+  csv: '',
+  outputType: "icd10",
+  columns: [],
   columnExtension: [],
   loading: false,
   submitted: false,

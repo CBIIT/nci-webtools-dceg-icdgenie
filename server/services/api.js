@@ -58,6 +58,7 @@ api.post("/batch", (request, response) => {
   } else {
     response.json(results);
   }
+
 });
 
 module.exports = { api };
