@@ -69,94 +69,118 @@ export default function Export() {
         reader.readAsText(e.target.files[0])
     }
 
-    function exportCSV(){
-        const blob = new Blob([form.csv], {type: "text/csv;charset=utf-8"})
+    function exportCSV() {
+        const blob = new Blob([form.csv], { type: "text/csv;charset=utf-8" })
         saveAs(blob, 'icdgenie_batch_export.csv')
     }
 
     return (
-        <Container className="py-4 h-100">
-            <LoadingOverlay active={form.loading} overlayStyle={{ position: "fixed" }} />
-            <Row>
-                <Col xl={3}>
-                    <Form.Group className="mb-3">
-                        <Form.Check
-                            label="Keywords"
-                            name="type"
-                            type="radio"
-                            id="keywords"
-                            value="keywords"
-                            checked={form.type === 'keywords'}
-                            onChange={handleChange}
-                        />
-                        <Form.Check
-                            label="ICD-10 Codes"
-                            name="type"
-                            type="radio"
-                            id="icd10Input"
-                            value="icd10"
-                            checked={form.type === 'icd10'}
-                            onChange={handleChange}
-                        />
+        <>
+            <Container className="pt-4">
+                <LoadingOverlay active={form.loading} overlayStyle={{ position: "fixed" }} />
+                <Row>
+                    <Col xl={3}></Col>
+                    <Col xl={3}>
+                        <Form.Group className="mb-3">
+                            <Form.Label><b>Select searchable type</b></Form.Label>
+                            <Form.Check
+                                label="Keywords"
+                                name="type"
+                                type="radio"
+                                id="keywords"
+                                value="keywords"
+                                checked={form.type === 'keywords'}
+                                onChange={handleChange}
+                            />
+                            <Form.Check
+                                label="ICD-10 Codes"
+                                name="type"
+                                type="radio"
+                                id="icd10Input"
+                                value="icd10"
+                                checked={form.type === 'icd10'}
+                                onChange={handleChange}
+                            />
 
-                        <Form.Check
-                            label="ICD-O-3 Codes"
-                            name="type"
-                            type="radio"
-                            id="icdo3Input"
-                            value="icdo3"
-                            checked={form.type === 'icdo3'}
-                            onChange={handleChange}
-                        />
+                            <Form.Check
+                                label="ICD-O-3 Codes"
+                                name="type"
+                                type="radio"
+                                id="icdo3Input"
+                                value="icdo3"
+                                checked={form.type === 'icdo3'}
+                                onChange={handleChange}
+                            />
 
-                    </Form.Group>
-                    <Form.Group className="mb-3">
-                        <textarea className="form-control" name="input" placeholder="ICD-10 Codes, ICD-O-3 Codes, or Keywords" onChange={handleChange}></textarea>
-                    </Form.Group>
-                </Col>
-                <Col xl={3}>
-                    <b>Ouput Type</b>
-                    <Form.Check
-                        label="ICD-10 Codes"
-                        name="outputType"
-                        type="radio"
-                        id="icd10Output"
-                        value="icd10"
-                        checked={form.outputType === 'icd10'}
-                        onChange={handleChange}
-                    />
+                        </Form.Group>
+                    </Col>
+                    <Col xl={3}>
+                        <Form.Group className="mb-3">
+                            <Form.Label><b>Select output type</b></Form.Label>
+                            <Form.Check
+                                label="ICD-10 Codes"
+                                name="outputType"
+                                type="radio"
+                                id="icd10Output"
+                                value="icd10"
+                                checked={form.outputType === 'icd10'}
+                                onChange={handleChange}
+                            />
 
-                    <Form.Check
-                        label="ICD-O-3 Codes"
-                        name="outputType"
-                        type="radio"
-                        id="icdo3Output"
-                        value="icdo3"
-                        checked={form.outputType === 'icdo3'}
-                        onChange={handleChange}
-                    />
-                </Col>
-                <Col xl={3}>
-                    <Form.Group className="mb-3">
-                        <input className="form-control" type="file" id='fileInput' onChange={(e) => readFile(e)} />
-                    </Form.Group>
-                </Col>
-                <Col xl={3}>
-                    <button className="btn btn-outline-primary" type="button" onClick={handleSubmit}>
-                        Translate
-                    </button>
-                </Col>
-            </Row>
-            {form.submitted ? <div className="d-flex mb-3" style={{ justifyContent: "flex-end" }}>
-                <button className="btn btn-outline-primary" onClick={exportCSV}>Export</button>
-            </div> : []}
-            <Row style={{ maxHeight: "800px", overflowY: "auto" }}>
-                {form.submitted ? <Grid rows={form.output} columns={form.columns}>
-                    <Table columnExtensions={form.columnExtension} />
-                    <TableHeaderRow />
+                            <Form.Check
+                                label="ICD-O-3 Codes"
+                                name="outputType"
+                                type="radio"
+                                id="icdo3Output"
+                                value="icdo3"
+                                checked={form.outputType === 'icdo3'}
+                                onChange={handleChange}
+                            />
+                        </Form.Group>
+                    </Col>
+                </Row>
 
-                </Grid> : <></>}
-            </Row>
-        </Container>
+                <Row>
+                    <Col xl={3}></Col>
+                    <Col xl={5}>
+                        <Form.Group className="mb-3">
+                            <Form.Label><b>Please upload or enter a list of keywords, ICD-10 or ICD-O-3 code for batch query:</b></Form.Label>
+                            <textarea className="form-control" name="input" placeholder="ICD-10 Codes, ICD-O-3 Codes, or Keywords" onChange={handleChange}></textarea>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xl={3}></Col>
+                    <Col xl={5}>
+                        <Form.Group className="mb-3">
+                            <input className="form-control" type="file" id='fileInput' onChange={(e) => readFile(e)} />
+                        </Form.Group>
+                    </Col>
+
+                </Row>
+                <Row>
+                    <Col xl={3}></Col>
+                    <Col xl={3}>
+                        <button className="btn btn-primary" type="button" onClick={handleSubmit}>
+                            Translate
+                        </button>
+                    </Col>
+                </Row>
+            </Container>
+            <hr className="mt-5" />
+            {form.submitted ? <Container className="py-4 h-100">
+                <div className="d-flex mb-3">
+                    <b className="me-auto p-2">{form.output.length} Results Found</b>
+                    <button className="btn btn-outline-primary p-2" onClick={exportCSV}>Export</button>
+                </div>
+                <Row style={{ maxHeight: "800px", overflowY: "auto" }}>
+                    <Grid rows={form.output} columns={form.columns}>
+                        <Table columnExtensions={form.columnExtension} />
+                        <TableHeaderRow />
+
+                    </Grid>
+                </Row>
+            </Container> : []}
+        </>
     )
 }
