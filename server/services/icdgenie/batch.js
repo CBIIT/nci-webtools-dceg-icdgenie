@@ -27,8 +27,8 @@ function batchExport(database, query) {
         results = results.concat(
           translate.translateCode(database, { icdo3: code }).map((result) => ({
             input: code,
-            icdo10: result.icd10,
-            icdo10Description: result.icd10Description,
+            icd10: result.icd10,
+            icd10Description: result.icd10Description,
           })),
         );
       }
