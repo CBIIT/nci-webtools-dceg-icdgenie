@@ -9,3 +9,23 @@
 .dx-rg-bs4-table-header-title {
   font-weight: bold;
 }
+
+table{
+  box-sizing: border-box;
+  border: 1px solid #97B4CB;
+}
+
+thead{
+  background-color: #5A6B91;
+  background: linear-gradient(270deg, #3F95B1 0%, #52445D 100%)
+}
+
+th{
+  color: #F4FCFF;
+  font-style: italic;
+  font-size: 15px;
+}
+
+.form-check-input:checked{
+  background-color: #0396E3;
+}
