@@ -6,7 +6,7 @@ import { query } from "../../services/query";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
 import { TreeDataState, CustomTreeData } from "@devexpress/dx-react-grid";
-import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
+import { Grid, Table, VirtualTable, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
 import { LoadingOverlay } from "@cbiitss/react-components";
 import { Modal } from "react-bootstrap";
 import { Tree } from "../../components/Tree";
@@ -334,23 +334,21 @@ export default function Search() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div style={{ maxHeight: "800px", overflow: "auto" }}>
-            <Grid rows={modalData} columns={show === "icdo3" ? icdo3ModalColumns : icd10ModalColumns}>
-              <TreeDataState />
-              <CustomTreeData getChildRows={getChildRows} />
-              <Table
-                columnExtensions={[
-                  {
-                    columnName: show === "icdo3" ? "icd10Description" : "icdo3Description",
-                    width: 700,
-                    wordWrapEnabled: true,
-                  },
-                ]}
-              />
-              <TableHeaderRow />
-              <TableTreeColumn for="code" />
-            </Grid>
-          </div>
+          <Grid rows={modalData} columns={show === "icdo3" ? icdo3ModalColumns : icd10ModalColumns}>
+            <TreeDataState />
+            <CustomTreeData getChildRows={getChildRows} />
+            <VirtualTable
+              columnExtensions={[
+                {
+                  columnName: show === "icdo3" ? "icd10Description" : "icdo3Description",
+                  width: 700,
+                  wordWrapEnabled: true,
+                },
+              ]}
+            />
+            <TableHeaderRow />
+            <TableTreeColumn for="code" />
+          </Grid>
         </Modal.Body>
       </Modal>
       <Container className="py-4 h-100">
