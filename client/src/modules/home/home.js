@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import HomeImage from "./images/landing-page.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { Row, Col } from "react-bootstrap";
 
 export default function Home() {
   return (
@@ -10,12 +13,22 @@ export default function Home() {
           <div style={{ fontSize: '45px', color: 'white', fontWeight: '300', letterSpacing: '7px' }}>ICDGENIE</div>
 
 
-          <NavLink className="col-xl-4 col-xs-11 btn btn-outline-primary mt-5 py-3" to="search" style={{ color: 'white', boxSizing: 'border-box', border: '5px solid white', backgroundColor: 'rgba(62,63,66,0.72)' }}>
-            <div style={{ fontSize: '28px', letterSpacing: '2px', fontWeight: '300' }}>EXPLORE THE DATABASE</div>
+          <NavLink className="col-xl-4 col-sm-11 btn btn-outline-primary mt-5 py-3" to="search" style={{ color: 'white', boxSizing: 'border-box', border: '5px solid white', backgroundColor: 'rgba(62,63,66,0.72)' }}>
+            <Row style={{display: 'inline'}}>
+              <Col xl={10} style={{ fontSize: '28px', letterSpacing: '2px', fontWeight: '300', display:'inline' }}>EXPLORE THE DATABASE</Col>
+              <Col xl={2} style={{ display: 'inline'}}>
+                <FontAwesomeIcon
+                  className="mt-1"
+                  icon={faCaretRight}
+                  style={{ fontSize: "30px"}}
+                  title="Show Configuration Panel"
+                />
+              </Col>
+            </Row>
           </NavLink>
 
         </Container>
-        <div className="d-flex flex-grow-1  justify-content-center mt-4" style={{  backgroundColor: 'white', background: 'linear-gradient(270deg, #F1A193 0%, #A9E0FB 100%)' }}>
+        <div className="d-flex flex-grow-1  justify-content-center mt-4" style={{ backgroundColor: 'white', background: 'linear-gradient(270deg, #F1A193 0%, #A9E0FB 100%)' }}>
           <p className="col-xl-7 col-md-11 align-self-center mx-1 py-3" style={{ fontSize: '18px', lineHeight: '36px' }}>
             Accurate histological classification is important for facilitating studies of cancer epidemiology and
             etiologic heterogeneity. ICDgenie is a web-based tool that can assist epidemiologists, pathologists,
