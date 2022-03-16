@@ -351,9 +351,9 @@ export default function Search() {
           </Grid>
         </Modal.Body>
       </Modal>
-      <Container className="py-4 h-100">
+      <div className="h-100">
         <div className="row justify-content-center">
-          <div className="col-xl-5 mt-3">
+          <div className="col-xl-3 mt-3">
             <div className="input-group mb-3">
               <input
                 name="search"
@@ -373,51 +373,63 @@ export default function Search() {
           </div>
         </div>
         <LoadingOverlay active={form.loading} overlayStyle={{ position: "fixed" }} />
-        <Tabs activeKey={tab} onSelect={(e) => setTab(e)} className="mb-3">
+
+        <Tabs activeKey={tab} onSelect={(e) => setTab(e)} style={{ backgroundColor: 'rgba(158,199,226,0.52)' }}>
           <Tab eventKey="icd10Table" title="ICD-10 Code Table">
-            <ICD10 form={form} />
+            <div style={{ backgroundColor: '#9EBBC9' }}>
+              <ICD10 form={form} />
+            </div>
           </Tab>
           <Tab eventKey="icdo3Table" title="ICD-O-3 Code Table">
-            <ICDO3 form={form} />
+            <div style={{ backgroundColor: '#9EBBC9' }}>
+              <ICDO3 form={form} />
+            </div>
           </Tab>
           <Tab eventKey="icd10Cluster" title="ICD-10 Hierarchy">
-            <Accordion defaultActiveKey="index" alwaysOpen>
-              <Accordion.Item eventKey="index">
-                <Accordion.Header>
-                  <b>Index Hierarchy</b>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <div ref={indexICD10} style={{ maxWidth: "100%", maxHeight: "800px", overflow: "auto" }} />
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="neoplasm">
-                <Accordion.Header>
-                  <b>Neoplasm Hierarchy</b>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <div ref={neoplasmICD10} style={{ maxHeight: "800px", overflow: "auto" }} />
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="drug">
-                <Accordion.Header>
-                  <b>Drug Hierarchy</b>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <div ref={drugICD10} style={{ maxHeight: "800px", overflow: "auto" }} />
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="injury">
-                <Accordion.Header>
-                  <b>Injury Hierarchy</b>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <div ref={injuryICD10} style={{ maxHeight: "800px", overflow: "auto" }} />
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
+            <div style={{ backgroundColor: '#9EBBC9' }}>
+              <Container className="py-5 col-xl-8 col-sm-12">
+                <Accordion defaultActiveKey="index" alwaysOpen>
+                  <Accordion.Item eventKey="index">
+                    <Accordion.Header>
+                      <b>Index Hierarchy</b>
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      <div ref={indexICD10} style={{ maxWidth: "100%", maxHeight: "800px", overflow: "auto" }} />
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="neoplasm">
+                    <Accordion.Header>
+                      <b>Neoplasm Hierarchy</b>
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      <div ref={neoplasmICD10} style={{ maxHeight: "800px", overflow: "auto" }} />
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="drug">
+                    <Accordion.Header>
+                      <b>Drug Hierarchy</b>
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      <div ref={drugICD10} style={{ maxHeight: "800px", overflow: "auto" }} />
+                    </Accordion.Body>
+                  </Accordion.Item>
+                  <Accordion.Item eventKey="injury">
+
+                    <Accordion.Header>
+                      <b>Injury Hierarchy</b>
+                    </Accordion.Header>
+                    <Accordion.Body>
+                      <div ref={injuryICD10} style={{ maxHeight: "800px", overflow: "auto" }} />
+                    </Accordion.Body>
+
+                  </Accordion.Item>
+                </Accordion>
+              </Container>
+            </div>
           </Tab>
+
         </Tabs>
-      </Container>
+      </div>
     </>
   );
 }

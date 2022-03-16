@@ -29,3 +29,66 @@ th{
 .form-check-input:checked{
   background-color: #0396E3;
 }
+
+.nav-tabs {
+  justify-content: center;
+}
+
+.nav-tabs .nav-link{
+  color: #608AA6;
+}
+
+.nav-tabs .nav-link.active{
+  background-color: rgba(158, 199, 226, 0);
+  color: #194778;
+  border-bottom-color: #194778;
+}
+
+.nav-item {
+  padding-inline: 10px;
+}
+
+.accordion-item {
+  border-radius: 1% !important;
+}
+
+.accordion-button{
+  border-top-right-radius: 50px !important;
+  border-top-left-radius: 10px !important;
+  width: 30%;
+  margin-top: -1em;
+  margin-left: 0.5em;
+}
+.accordion-font{
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.index > .accordion-button{
+  background-color: #7B658B !important;
+  color: white;
+}
+
+.neoplasm > .accordion-button{
+  background-color: #DF7B54 !important;
+  color: white;
+}
+
+.drug > .accordion-button{
+  background-color: #9B4E2F !important;
+  color: white;
+}
+
+.injury > .accordion-button{
+  background-color: #1B979B !important;
+  color: white;
+}
+
+.accordion-button:not(.collapsed)::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23AFB5BD'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+}
+
+.accordion-button::after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill='%23AFB5BD'%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e");;
+}

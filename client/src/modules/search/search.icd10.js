@@ -1,9 +1,9 @@
-import { formState } from "./search.state";
 import { useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
+import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { TreeDataState, CustomTreeData, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
-import { Modal } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
 
 export default function ICD10({ form }) {
   const [show, setShow] = useState(false);
@@ -40,66 +40,89 @@ export default function ICD10({ form }) {
     return childRows.length ? childRows : null;
   };
 
+  const neoplasmRowComponent = ({ tableRow, ...restProps }) => {
+    return <Table.Row {...restProps} style={{ border: '0.75px solid #97B4CB', backgroundColor: "#5A6B91", background: 'linear-gradient(270deg, #3F95B1 0%, #D14E1A 100%)' }} />;
+  };
+
+  const drugRowComponent = ({ tableRow, ...restProps }) => {
+    return <Table.Row {...restProps} style={{ border: '0.75px solid #97B4CB', backgroundColor: "#5A6B91", background: 'linear-gradient(270deg, #3F95B1 0%, #682306 100%)' }} />;
+  };
+
+  const injuryRowComponent = ({ tableRow, ...restProps }) => {
+    return <Table.Row {...restProps} style={{ border: '0.75px solid #97B4CB', backgroundColor: "#5A6B91", background: 'linear-gradient(270deg, #3F95B1 0%, #00686D 100%)' }} />;
+  };
+
   return (
-    <Accordion defaultActiveKey="0" alwaysOpen>
-      <Accordion.Item eventKey="0">
-        <Accordion.Header>
-          <b>Index Table</b>
-        </Accordion.Header>
-        <Accordion.Body>
-          <Grid rows={form.indexData} columns={indexColumns}>
-            <TreeDataState />
-            <CustomTreeData getChildRows={getChildRows} />
-            <Table columnExtensions={tableColumnExtensions} />
-            <TableHeaderRow />
-            <TableTreeColumn for="description" />
-          </Grid>
-        </Accordion.Body>
-      </Accordion.Item>
-      <Accordion.Item eventKey="1">
-        <Accordion.Header>
-          <b>Neoplasm Table</b>
-        </Accordion.Header>
-        <Accordion.Body>
-          <Grid rows={form.neoplasmData} columns={neoplasmColumns}>
-            <TreeDataState />
-            <CustomTreeData getChildRows={getChildRows} />
-            <Table
-              columnExtensions={tableColumnExtensions.concat({ columnName: "malignantPrimary", wordWrapEnabled: true })}
-            />
-            <TableHeaderRow />
-            <TableTreeColumn for="neoplasm" />
-          </Grid>
-        </Accordion.Body>
-      </Accordion.Item>
-      <Accordion.Item eventKey="2">
-        <Accordion.Header>
-          <b>Drug Table</b>
-        </Accordion.Header>
-        <Accordion.Body>
-          <Grid rows={form.drugData} columns={drugColumns}>
-            <TreeDataState />
-            <CustomTreeData getChildRows={getChildRows} />
-            <Table columnExtensions={[{ columnName: "substance", width: 400, wordWrapEnabled: true }]} />
-            <TableHeaderRow />
-            <TableTreeColumn for="substance" />
-          </Grid>
-        </Accordion.Body>
-      </Accordion.Item>
-      <Accordion.Item eventKey="3">
-        <Accordion.Header>
-          <b>Injury Table</b>
-        </Accordion.Header>
-        <Accordion.Body>
-          <Grid rows={form.injuryData} columns={indexColumns}>
-            <TreeDataState />
-            <CustomTreeData getChildRows={getChildRows} />
-            <Table columnExtensions={tableColumnExtensions} />
-            <TableHeaderRow />
-            <TableTreeColumn for="description" />
-          </Grid>
-        </Accordion.Body>
-      </Accordion.Item>
-    </Accordion>
+    <Container className="py-5 col-xl-8 col-sm-12">
+      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header className="index">
+            <span className="accordion-font">INDEX TABLE</span>
+          </Accordion.Header>
+          <Accordion.Body>
+            <Grid rows={form.indexData} columns={indexColumns}>
+              <TreeDataState />
+              <CustomTreeData getChildRows={getChildRows} />
+              <Table columnExtensions={tableColumnExtensions} />
+              <TableHeaderRow />
+              <TableTreeColumn for="description" />
+            </Grid>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+
+      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header className="neoplasm">
+            <span className="accordion-font">NEOPLASM TABLE</span>
+          </Accordion.Header>
+          <Accordion.Body>
+            <Grid rows={form.neoplasmData} columns={neoplasmColumns}>
+              <TreeDataState />
+              <CustomTreeData getChildRows={getChildRows} />
+              <Table
+                columnExtensions={tableColumnExtensions.concat({ columnName: "malignantPrimary", wordWrapEnabled: true })}
+              />
+              <TableHeaderRow rowComponent={neoplasmRowComponent}/>
+              <TableTreeColumn for="neoplasm" />
+            </Grid>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+
+      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header className="drug">
+            <span className="accordion-font">DRUG TABLE</span>
+          </Accordion.Header>
+          <Accordion.Body>
+            <Grid rows={form.drugData} columns={drugColumns}>
+              <TreeDataState />
+              <CustomTreeData getChildRows={getChildRows} />
+              <Table columnExtensions={[{ columnName: "substance", width: 400, wordWrapEnabled: true }]} />
+              <TableHeaderRow rowComponent={drugRowComponent}/>
+              <TableTreeColumn for="substance" />
+            </Grid>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+
+      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4">
+        <Accordion.Item eventKey="0">
+          <Accordion.Header className="injury">
+            <span className="accordion-font">INJURY TABLE</span>
+          </Accordion.Header>
+          <Accordion.Body>
+            <Grid rows={form.injuryData} columns={indexColumns}>
+              <TreeDataState />
+              <CustomTreeData getChildRows={getChildRows} />
+              <Table columnExtensions={tableColumnExtensions} />
+              <TableHeaderRow rowComponent={injuryRowComponent}/>
+              <TableTreeColumn for="description" />
+            </Grid>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+    </Container>
   );
 }

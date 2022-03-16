@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { TreeDataState, CustomTreeData, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
+import Container from "react-bootstrap/Container";
 
 export default function ICDO3({ form }) {
   const icdo3Columns = [
@@ -14,12 +15,14 @@ export default function ICDO3({ form }) {
   };
 
   return (
-    <Grid rows={form.icdo3Data} columns={icdo3Columns}>
-      <TreeDataState />
-      <CustomTreeData getChildRows={getChildRows} />
-      <Table columnExtensions={[{ columnName: "description", width: 700, wordWrapEnabled: true }]} />
-      <TableHeaderRow />
-      <TableTreeColumn for="description" />
-    </Grid>
+    <Container className="py-5 h-100 col-xl-8 col-sm-12">
+      <Grid rows={form.icdo3Data} columns={icdo3Columns}>
+        <TreeDataState />
+        <CustomTreeData getChildRows={getChildRows} />
+        <Table columnExtensions={[{ columnName: "description", width: 700, wordWrapEnabled: true }]} />
+        <TableHeaderRow />
+        <TableTreeColumn for="description" />
+      </Grid>
+    </Container>
   );
 }
