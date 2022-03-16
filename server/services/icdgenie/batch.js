@@ -4,7 +4,10 @@ const translate = require("./translate");
 
 function batchExport(database, query) {
   const { inputType, input, outputType } = query;
-  const inputs = input.split(/\n/g).map((input) => input.trim());
+  const inputs = input
+    .split(/\n/g)
+    .map((input) => input.trim())
+    .filter((input) => input.length > 0);
   let results = [];
 
   if (inputType === "icdo3") {
