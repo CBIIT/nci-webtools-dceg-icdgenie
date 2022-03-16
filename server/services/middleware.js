@@ -63,7 +63,7 @@ function logErrors() {
 
     // defer logging until after the response has been sent
     response.on("finish", () => {
-      logger.error(error);
+      logger.error(error.stack ? error.stack : error);
     });
   };
 }
