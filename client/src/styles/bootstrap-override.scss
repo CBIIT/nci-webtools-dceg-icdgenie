@@ -13,12 +13,14 @@
 table{
   box-sizing: border-box;
   border: 1px solid #97B4CB;
+  background-color: white;
 }
 
 thead{
   background-color: #5A6B91;
   background: linear-gradient(270deg, #3F95B1 0%, #52445D 100%)
 }
+
 
 th{
   color: #F4FCFF;
@@ -50,6 +52,11 @@ th{
 
 .accordion-item {
   border-radius: 1% !important;
+}
+
+.tab-content {
+  min-height: 60vh;
+  background-color: #9EBBC9;
 }
 
 .accordion-button{
