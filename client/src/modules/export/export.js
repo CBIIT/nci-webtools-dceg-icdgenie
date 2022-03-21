@@ -21,7 +21,7 @@ export default function Export() {
 
         const response = await post('api/batch', {
             inputType: form.type,
-            input: form.input.replace(/\n$/,''),
+            input: form.input.replace(/\n$/, ''),
             outputType: form.outputType,
             outputFormat: "json",
         })
@@ -76,8 +76,8 @@ export default function Export() {
 
     return (
         <>
-            <div className="d-flex justify-content-center align-self-center mt-5" style={{ fontWeight: '300', color: '#3D9ABE', fontSize: '28px', letterSpacing: '4px'}}>BATCH QUERY</div>
-            <hr className="mt-5" style={{ height: '3px', color: '#77B6D6'}}/>
+            <div className="d-flex justify-content-center align-self-center mt-5" style={{ fontWeight: '300', color: '#3D9ABE', fontSize: '28px', letterSpacing: '4px' }}>BATCH QUERY</div>
+            <hr className="mt-5" style={{ height: '3px', color: '#77B6D6' }} />
             <Container className="py-4">
                 <LoadingOverlay active={form.loading} overlayStyle={{ position: "fixed" }} />
                 <Row>
@@ -116,10 +116,6 @@ export default function Export() {
 
                         </Form.Group>
                     </Col>
-
-                </Row>
-                <Row>
-                    <Col xl={3}></Col>
                     <Col xl={3}>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Select output type</b></Form.Label>
@@ -143,8 +139,9 @@ export default function Export() {
                                 onChange={handleChange}
                             />
                         </Form.Group>
-                    </Col> 
+                    </Col>
                 </Row>
+
 
                 <Row>
                     <Col xl={3}></Col>
@@ -173,16 +170,16 @@ export default function Export() {
                     </Col>
                 </Row>
             </Container>
-            {form.submitted ? <hr className="mt-5" style={{ height: '3px', color: '#77B6D6'}}/> : []}
+            {form.submitted ? <hr className="mt-5" style={{ height: '3px', color: '#77B6D6' }} /> : []}
             {form.submitted ? <Container className="py-4 h-100">
                 <div className="d-flex mb-3">
-                    <div className="me-auto p-2" style={{ letterSpacing: '1.5px'}}><b>{form.output.length}</b> RESULTS FOUND</div>
+                    <div className="me-auto p-2" style={{ letterSpacing: '1.5px' }}><b>{form.output.length}</b> RESULTS FOUND</div>
                     <button className="btn btn-outline p-2" onClick={exportCSV} style={{ color: '#0396E3', border: '1px solid #0396E3' }}>Export</button>
                 </div>
                 <Row className="table-container">
                     <Grid rows={form.output} columns={form.columns}>
                         <VirtualTable columnExtensions={form.columnExtension} />
-                        <TableHeaderRow/>
+                        <TableHeaderRow />
 
                     </Grid>
                 </Row>
