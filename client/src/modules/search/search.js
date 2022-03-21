@@ -355,7 +355,7 @@ export default function Search() {
       </Modal>
       <div className="h-100">
         <div className="row justify-content-center">
-          <div className="col-xl-3 col-sm-6 mt-5">
+          <div className="col-xl-4 col-sm-6 mt-5">
             <div className="d-flex align-items-center input-group search-box">
               <input
                 name="search"
