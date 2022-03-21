@@ -15,7 +15,7 @@ import ICD10 from "./search.icd10";
 import ICDO3 from "./search.icdo3";
 import Accordion from "react-bootstrap/Accordion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function Search() {
   const [form, setForm] = useRecoilState(formState);
@@ -355,8 +355,8 @@ export default function Search() {
       </Modal>
       <div className="h-100">
         <div className="row justify-content-center">
-          <div className="col-xl-4 my-5">
-            <div className="input-group">
+          <div className="col-xl-3 col-sm-6 mt-5">
+            <div className="d-flex align-items-center input-group search-box">
               <input
                 name="search"
                 type="text"
@@ -365,18 +365,24 @@ export default function Search() {
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder={"Search ICDGenie"}
+                style={{ border: 0, boxShadow: 'none', fontSize: '20px' }}
               />
               <div className="input-group-append">
-                <button className="btn btn-outline-primary" type="button" onClick={handleSubmit}>
-                  Search
-                </button>
+                <FontAwesomeIcon
+                  className="mt-3 mr-3"
+                  icon={faArrowRight}
+                  style={{ fontSize: "20px", cursor: 'pointer', color: '#97B4CB' }}
+                  onClick={handleSubmit}
+
+                />
               </div>
             </div>
-            <div className="mt-2" style={{ textAlign: 'center', color: '#6F91A7', letterSpacing: '1.5px', whiteSpace: 'nowrap' }}>
-              SEARCH BY KEYWORDS, ICD-10 CODE, OR ICD-0-3 CODE
-            </div>
           </div>
-
+        </div>
+        <div className="row justify-content-center mb-5 mt-2">
+          <div style={{ textAlign: 'center', color: '#6F91A7', letterSpacing: '1.5px', whiteSpace: 'nowrap' }}>
+            SEARCH BY KEYWORDS, ICD-10 CODE, OR ICD-0-3 CODE
+          </div>
         </div>
         <LoadingOverlay active={form.loading} overlayStyle={{ position: "fixed" }} />
 
