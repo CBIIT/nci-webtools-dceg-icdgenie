@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <>
       <div className="d-flex flex-column cover-image h-100 shadow-sm" style={{ backgroundImage: `url(${HomeImage})` }}>
-        <Container className="d-flex h-50 flex-column justify-content-center align-items-center py-5">
+        <Container className="d-flex h-75 flex-column justify-content-center align-items-center py-5">
           <div style={{ fontSize: '45px', color: 'white', fontWeight: '300', letterSpacing: '7px' }}>ICDGENIE</div>
 
 
@@ -21,7 +21,6 @@ export default function Home() {
                   className="mt-1"
                   icon={faCaretRight}
                   style={{ fontSize: "30px"}}
-                  title="Show Configuration Panel"
                 />
               </Col>
             </Row>
