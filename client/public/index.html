@@ -11,19 +11,26 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXXXX"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
+      function gtag () {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
       gtag("config", "UA-XXXXXXXXXX");
+
+      function handle(e){
+        text=document.getElementById('doc_search').value;
+        if(e.keyCode === 13){
+          window.open("https://www.google.com/search?q=" + text, "_blank");
+        }
+      }
     </script>
   </head>
 
   <body class="d-flex flex-column vh-100" react-cloak>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <header class="flex-grow-0">
-      <div class="container">
-        <a href="https://dceg.cancer.gov/" target="_blank" class="h5 mb-1">
+    <header class="d-flex justify-content-center align-items-center flex-column flex-grow-0">
+      <div class="row container  align-items-center">
+        <a href="https://dceg.cancer.gov/" target="_blank" class="col-lg-9 h5 mb-1">
           <img
             src="%PUBLIC_URL%/images/nci-dceg-logo.svg"
             class="img-fluid my-3"
@@ -32,10 +39,16 @@
           />
           <span class="visually-hidden">Division of Cancer Epidemiology and Genetics</span>
         </a>
+        <div className="d-flex col-lg-3 mt-5 search-box" style="width: auto !important;">
+          <input id="doc_search" onkeypress="handle(event)" name="search" type="text" className="form-control" placeholder="Documentation Search"/>
+  
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
       </div>
-      <div class="bg-primary text-light py-2 d-none d-md-block">
+
+      <div class="bg-primary text-light py-2 d-none d-md-block w-100">
         <div class="container">
-          <h1 class="h5">ICDGenie</h1>
+          <h1 class="px-5 h5">ICDGenie</h1>
         </div>
       </div>
     </header>
