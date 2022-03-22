@@ -17,9 +17,9 @@
       gtag("js", new Date());
       gtag("config", "UA-XXXXXXXXXX");
 
-      function handle(e){
-        text=document.getElementById('doc_search').value;
-        if(e.keyCode === 13){
+      function handle (e) {
+        text = document.getElementById("doc_search").value;
+        if (e.keyCode === 13) {
           window.open("https://www.google.com/search?q=" + text, "_blank");
         }
       }
@@ -39,10 +39,17 @@
           />
           <span class="visually-hidden">Division of Cancer Epidemiology and Genetics</span>
         </a>
-        <div className="d-flex col-lg-3 mt-5 search-box" style="width: auto !important;">
-          <input id="doc_search" onkeypress="handle(event)" name="search" type="text" className="form-control" placeholder="Documentation Search"/>
-  
-            <i class="fa-solid fa-magnifying-glass"></i>
+        <div class="d-flex col-lg-3 mb-2 pr-2" style="width: auto !important;">
+          <input
+            id="doc_search"
+            onkeypress="handle(event)"
+            name="search"
+            type="text"
+            className="form-control"
+            placeholder="Documentation Search"
+          />
+
+          <i class="fa-solid fa-magnifying-glass"></i>
         </div>
       </div>
 
