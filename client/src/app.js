@@ -6,6 +6,7 @@ import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import Loader from "./modules/common/loader";
 import ErrorBoundary from "./modules/common/error-boundary";
+import HomeImage from "./modules/home/images/landing-page.png";
 import "./styles/main.scss";
 
 // preload lazy-loaded page components
@@ -52,13 +53,14 @@ export default function App() {
   return (
     <RecoilRoot>
       <Router basename={process.env.PUBLIC_URL}>
-        <Navbar expand="sm" className="navbar-light shadow-sm py-0 flex-none-auto">
+        <div className="d-flex flex-column flex-grow-1" style={{ backgroundImage: `url(${HomeImage})` }}>
+        <Navbar expand="sm" className="navbar-light py-0 flex-none-auto">
           <Container>
             <Navbar.Toggle aria-controls="app-navbar" />
             <Navbar.Collapse id="app-navbar">
               <Nav>
                 {links.map((link, index) => (
-                  <NavLink key={`navlink-${index}`} to={link.route} className="nav-link">
+                  <NavLink key={`navlink-${index}`} to={link.route} className="nav-link my-2 mx-3">
                     {link.title}
                   </NavLink>
                 ))}
@@ -76,6 +78,7 @@ export default function App() {
               </Routes>
             </Suspense>
           </ErrorBoundary>
+        </div>
         </div>
       </Router>
       {/* <pre>{JSON.stringify(process.env, null, 2)}</pre> */}

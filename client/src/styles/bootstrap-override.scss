@@ -31,6 +31,17 @@ th{
 .form-check-input:checked{
   background-color: #0396E3;
 }
+.navbar-collapse {
+  justify-content: center;
+}
+
+.navbar-nav .nav-link{
+  color: white !important;
+}
+
+.navbar-nav .nav-link.active{
+  border-bottom-color: #01C6FF !important;
+}
 
 .nav-tabs {
   justify-content: center;

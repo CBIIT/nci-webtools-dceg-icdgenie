@@ -8,7 +8,7 @@ import { Row, Col } from "react-bootstrap";
 export default function Home() {
   return (
     <>
-      <div className="d-flex flex-column cover-image h-100 shadow-sm" style={{ backgroundImage: `url(${HomeImage})` }}>
+      <div className="d-flex flex-column cover-image h-100 shadow-sm" >
         <Container className="d-flex h-75 flex-column justify-content-center align-items-center py-5">
           <div style={{ fontSize: '45px', color: 'white', fontWeight: '300', letterSpacing: '7px' }}>ICDGENIE</div>
 
@@ -27,8 +27,8 @@ export default function Home() {
           </NavLink>
 
         </Container>
-        <div className="d-flex flex-grow-1  justify-content-center mt-4" style={{ backgroundColor: 'white', background: 'linear-gradient(270deg, #F1A193 0%, #A9E0FB 100%)' }}>
-          <p className="col-xl-7 col-md-11 align-self-center mx-1 py-3" style={{ fontSize: '18px', lineHeight: '36px' }}>
+        <div className="d-flex flex-grow-1 justify-content-center mt-4" style={{ backgroundColor: 'white', background: 'linear-gradient(270deg, #F1A193 0%, #A9E0FB 100%)' }}>
+          <p className="col-xl-7 col-lg-11 align-self-center mx-1 pt-3" style={{ fontSize: '18px', lineHeight: '36px' }}>
             Accurate histological classification is important for facilitating studies of cancer epidemiology and
             etiologic heterogeneity. ICDgenie is a web-based tool that can assist epidemiologists, pathologists,
             research assistants, and data scientists to more easily access, translate and validate codes and text

@@ -3,7 +3,7 @@ import SwaggerUI from "swagger-ui-react";
 
 export default function ApiAccess() {
   return (
-    <>
+    <div style={{backgroundColor: 'white'}}>
       <Container className="py-4 shadow-sm h-100">
         <h2 className="text-primary">API Access</h2>
         <hr />
@@ -14,6 +14,6 @@ export default function ApiAccess() {
         </p>
         <SwaggerUI url={process.env.PUBLIC_URL + "/api"} />
       </Container>
-    </>
+    </div>
   );
 }

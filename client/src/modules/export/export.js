@@ -75,8 +75,8 @@ export default function Export() {
     }
 
     return (
-        <>
-            <div className="d-flex justify-content-center align-self-center mt-5" style={{ fontWeight: '300', color: '#3D9ABE', fontSize: '28px', letterSpacing: '4px' }}>BATCH QUERY</div>
+        <div style={{backgroundColor: 'white'}}>
+            <div className="d-flex justify-content-center align-self-center pt-5" style={{ fontWeight: '300', color: '#3D9ABE', fontSize: '28px', letterSpacing: '4px' }}>BATCH QUERY</div>
             <hr className="mt-5" style={{ height: '3px', color: '#77B6D6' }} />
             <Container className="py-4">
                 <LoadingOverlay active={form.loading} overlayStyle={{ position: "fixed" }} />
@@ -184,6 +184,6 @@ export default function Export() {
                     </Grid>
                 </Row>
             </Container> : []}
-        </>
+        </div>
     )
 }
