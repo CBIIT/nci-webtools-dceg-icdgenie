@@ -37,7 +37,7 @@ export default function ICD10({ form }) {
     { columnName: "malignantPrimary", wordWrapEnabled: true },
     { columnName: "malignantSecondary", wordWrapEnabled: true },
     { columnName: "uncertainBehavior", wordWrapEnabled: true },
-    { columnName: "uncertaiunspecifiedBehaviornBehavior", wordWrapEnabled: true }
+    { columnName: "unspecifiedBehavior", wordWrapEnabled: true }
   ]
 
   const drugColumnExtension = [
