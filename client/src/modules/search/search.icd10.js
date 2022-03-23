@@ -1,12 +1,9 @@
-import { useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
-import { useAccordionButton } from 'react-bootstrap/AccordionButton';
 import { TreeDataState, CustomTreeData, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
 
 export default function ICD10({ form }) {
-  const [show, setShow] = useState(false);
 
   const indexColumns = [
     { name: "description", title: "Description" },
@@ -33,7 +30,23 @@ export default function ICD10({ form }) {
     { name: "underdosing", title: "Underdosing" },
   ];
 
-  const tableColumnExtensions = [{ columnName: "neoplasm", width: 400, wordWrapEnabled: true }];
+  const indexColumnExtension = [{ columnName: "description", width: 800, wordWrapEnabled: true }];
+
+  const neoplasmColumnExtension = [
+    { columnName: "neoplasm", width: 400, wordWrapEnabled: true },
+    { columnName: "malignantPrimary", wordWrapEnabled: true },
+    { columnName: "malignantSecondary", wordWrapEnabled: true },
+    { columnName: "uncertainBehavior", wordWrapEnabled: true },
+    { columnName: "uncertaiunspecifiedBehaviornBehavior", wordWrapEnabled: true }
+  ]
+
+  const drugColumnExtension = [
+    { columnName: "substance", width: 400, wordWrapEnabled: true },
+    { columnName: "poisoningAccidental", wordWrapEnabled: true },
+    { columnName: "poisoningIntentionalSelfHarm", wordWrapEnabled: true },
+    { columnName: "poisoningAssault", wordWrapEnabled: true },
+    { columnName: "poisoningUndetermined", wordWrapEnabled: true },
+  ]
 
   const getChildRows = (row, rootRows) => {
     const childRows = rootRows.filter((r) => r.parentId === (row ? row.id : null));
@@ -63,7 +76,7 @@ export default function ICD10({ form }) {
             <Grid rows={form.indexData} columns={indexColumns}>
               <TreeDataState />
               <CustomTreeData getChildRows={getChildRows} />
-              <Table columnExtensions={tableColumnExtensions} />
+              <Table columnExtensions={indexColumnExtension} />
               <TableHeaderRow />
               <TableTreeColumn for="description" />
             </Grid>
@@ -81,7 +94,7 @@ export default function ICD10({ form }) {
               <TreeDataState />
               <CustomTreeData getChildRows={getChildRows} />
               <Table
-                columnExtensions={tableColumnExtensions.concat({ columnName: "malignantPrimary", wordWrapEnabled: true })}
+                columnExtensions={neoplasmColumnExtension}
               />
               <TableHeaderRow rowComponent={neoplasmRowComponent}/>
               <TableTreeColumn for="neoplasm" />
@@ -99,7 +112,7 @@ export default function ICD10({ form }) {
             <Grid rows={form.drugData} columns={drugColumns}>
               <TreeDataState />
               <CustomTreeData getChildRows={getChildRows} />
-              <Table columnExtensions={[{ columnName: "substance", width: 400, wordWrapEnabled: true }]} />
+              <Table columnExtensions={drugColumnExtension} />
               <TableHeaderRow rowComponent={drugRowComponent}/>
               <TableTreeColumn for="substance" />
             </Grid>
@@ -116,7 +129,7 @@ export default function ICD10({ form }) {
             <Grid rows={form.injuryData} columns={indexColumns}>
               <TreeDataState />
               <CustomTreeData getChildRows={getChildRows} />
-              <Table columnExtensions={tableColumnExtensions} />
+              <Table columnExtensions={indexColumnExtension} />
               <TableHeaderRow rowComponent={injuryRowComponent}/>
               <TableTreeColumn for="description" />
             </Grid>
