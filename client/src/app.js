@@ -53,7 +53,7 @@ export default function App() {
   return (
     <RecoilRoot>
       <Router basename={process.env.PUBLIC_URL}>
-        <div className="d-flex flex-column flex-grow-1" style={{ backgroundImage: `url(${HomeImage})` }}>
+        <div className="d-flex flex-column flex-grow-1" style={{ backgroundImage: `url(${HomeImage})`, backgroundSize: 'cover' }}>
         <Navbar expand="sm" className="navbar-light py-0 flex-none-auto">
           <Container>
             <Navbar.Toggle aria-controls="app-navbar" />
