@@ -25,7 +25,7 @@ function batchExport(database, query) {
       results = database
         .prepare(
           `select input, code as icdo3, description as icdo3Description
-        from input join icdo3_morphology on icdo3_morphology.code like input.input || '%'`,
+          from input join icdo3_morphology on icdo3_morphology.code like input.input || '%'`,
         )
         .all();
     }
@@ -35,7 +35,7 @@ function batchExport(database, query) {
       results = database
         .prepare(
           `select input, icd10, icd10Description
-        from input join icd10_icdo3_mapping on icd10_icdo3_mapping.icdo3 like input.input || '%'`,
+          from input join icd10_icdo3_mapping on icd10_icdo3_mapping.icdo3 like input.input || '%'`,
         )
         .all();
     }
@@ -45,7 +45,7 @@ function batchExport(database, query) {
       results = database
         .prepare(
           `select input, icdo3, icdo3Description
-        from input join icd10_icdo3_mapping on icd10_icdo3_mapping.icd10 like input.input || '%'`,
+          from input join icd10_icdo3_mapping on icd10_icdo3_mapping.icd10 like input.input || '%'`,
         )
         .all();
     }
@@ -55,7 +55,7 @@ function batchExport(database, query) {
       results = database
         .prepare(
           `select input, code as icd10, description as icd10Description
-        from input join icd10 on icd10.code like input.input || '%'`,
+          from input join icd10 on icd10.code like input.input || '%'`,
         )
         .all();
     }
@@ -65,7 +65,7 @@ function batchExport(database, query) {
       results = database
         .prepare(
           `select input, code as icdo3, description as icdo3Description 
-        from input join icdo3_morphology on icdo3_morphology.description like '%' || input.input || '%'`,
+          from input join icdo3_morphology on icdo3_morphology.description like '%' || input.input || '%'`,
         )
         .all();
     }
@@ -75,7 +75,7 @@ function batchExport(database, query) {
       results = database
         .prepare(
           `select input, code as icd10, description as icd10Description 
-        from input join icd10 on icd10.path like '%' || input.input || '%'`,
+          from input join icd10 on icd10.path like '%' || input.input || '%'`,
         )
         .all();
     }
