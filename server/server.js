@@ -1,10 +1,10 @@
 const express = require("express");
-const sqlite = require("better-sqlite3");
 const { validateEnvironment } = require("./services/environment");
 const { logRequests, logErrors } = require("./services/middleware");
 const { getLogger } = require("./services/logger");
 const { forkCluster } = require("./services/cluster");
 const { api } = require("./services/api");
+const { loadDatabaseInMemory } = require("./services/database");
 const { APP_NAME, API_PORT, DATABASE_PATH, LOG_LEVEL } = process.env;
 
 // ensure that all environment variables are set
@@ -23,7 +23,7 @@ app.set("x-powered-by", false);
 
 // register services as app locals
 app.locals.logger = getLogger(APP_NAME, { level: LOG_LEVEL });
-app.locals.database = sqlite(DATABASE_PATH);
+app.locals.database = loadDatabaseInMemory(DATABASE_PATH);
 
 // register middleware
 app.use(logRequests());
