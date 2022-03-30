@@ -1,21 +1,19 @@
-import Container from "react-bootstrap/Container";
-import { defaultFormState, formState } from "./search.state";
 import { useState, useRef } from "react";
 import { useRecoilState } from "recoil";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { query } from "../../services/query";
-import Tabs from "react-bootstrap/Tabs";
-import Tab from "react-bootstrap/Tab";
-import { TreeDataState, CustomTreeData } from "@devexpress/dx-react-grid";
-import { Grid, Table, VirtualTable, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
+import { Modal, Container, Tabs, Tab, Accordion } from "react-bootstrap";
+import { formState } from "./search.state";
+import { Grid, VirtualTable, TableHeaderRow } from "@devexpress/dx-react-grid-bootstrap4";
 import { LoadingOverlay } from "@cbiitss/react-components";
-import { Modal } from "react-bootstrap";
 import { Tree } from "../../components/Tree";
 import * as d3 from "d3";
 import ICD10 from "./search.icd10";
 import ICDO3 from "./search.icdo3";
-import Accordion from "react-bootstrap/Accordion";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+
 
 export default function Search() {
   const [form, setForm] = useRecoilState(formState);
@@ -23,14 +21,20 @@ export default function Search() {
   const [tab, setTab] = useState("icd10Table");
   const [show, setShow] = useState(false);
   const [modalData, setModalData] = useState([]);
-  const [search, setSearch] = useState("");
-
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+  
   const indexICD10 = useRef(null);
   const neoplasmICD10 = useRef(null);
   const drugICD10 = useRef(null);
   const injuryICD10 = useRef(null);
 
   const handleClose = () => setShow(false);
+
+  if(searchParams.get("query") !== null){
+    navigate('/search', { replace: true})
+    handleSubmit()
+  }
 
   const icdo3ModalColumns = [
     { name: "icd10Description", title: "ICD-10 Description" },
@@ -46,12 +50,11 @@ export default function Search() {
     return row ? row.children : rootRows;
   };
 
-  async function handleSubmit(event) {
-    event.preventDefault();
+  async function handleSubmit() {
     mergeForm({ ...form, loading: true });
 
     var index = await query("api/search/icd10", {
-      query: search,
+      query: form.search,
       type: "index",
       format: "list",
     });
@@ -98,7 +101,7 @@ export default function Search() {
     }
 
     var neoplasm = await query("api/search/icd10", {
-      query: search,
+      query: form.search,
       type: "neoplasm",
       format: "list",
     });
@@ -193,7 +196,7 @@ export default function Search() {
     }
 
     var drug = await query("api/search/icd10", {
-      query: search,
+      query: form.search,
       type: "drug",
       format: "list",
     });
@@ -240,7 +243,7 @@ export default function Search() {
     }
 
     var injury = await query("api/search/icd10", {
-      query: search,
+      query: form.search,
       type: "injury",
       format: "list",
     });
@@ -287,7 +290,7 @@ export default function Search() {
     }
 
     var icdo3 = await query("api/search/icdo3", {
-      query: search,
+      query: form.search,
     });
 
     icdo3 = icdo3.map((e) => {
@@ -321,13 +324,17 @@ export default function Search() {
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
-      handleSubmit(event);
+      handleSubmit();
     }
   };
 
+  const handleChange = (event) => {
+    mergeForm({search: event.target.value})
+  }
+
   return (
     <>
-      <Modal show={show} size="xl" onHide={handleClose}>
+      <Modal show={show} size="xl" onHide={handleClose} style={{height: '50vh'}}>
         <Modal.Header closeButton>
           <Modal.Title>
             {show === "icdo3"
@@ -336,10 +343,9 @@ export default function Search() {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Grid rows={modalData} columns={show === "icdo3" ? icdo3ModalColumns : icd10ModalColumns}>
-            <TreeDataState />
-            <CustomTreeData getChildRows={getChildRows} />
+          <Grid rows={modalData} columns={show === "icdo3" ? icdo3ModalColumns : icd10ModalColumns} > 
             <VirtualTable
+              estimatedRowHeight={49}
               columnExtensions={[
                 {
                   columnName: show === "icdo3" ? "icd10Description" : "icdo3Description",
@@ -349,7 +355,6 @@ export default function Search() {
               ]}
             />
             <TableHeaderRow />
-            <TableTreeColumn for="code" />
           </Grid>
         </Modal.Body>
       </Modal>
@@ -361,8 +366,8 @@ export default function Search() {
                 name="search"
                 type="text"
                 className="form-control"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={form.search}
+                onChange={handleChange}
                 onKeyDown={handleKeyDown}
                 placeholder={"Search ICDGenie"}
                 style={{ border: 0, boxShadow: 'none', fontSize: '20px' }}
@@ -373,7 +378,6 @@ export default function Search() {
                   icon={faArrowRight}
                   style={{ fontSize: "20px", cursor: 'pointer', color: '#97B4CB' }}
                   onClick={handleSubmit}
-
                 />
               </div>
             </div>

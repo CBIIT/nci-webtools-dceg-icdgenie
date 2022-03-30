@@ -1,11 +1,31 @@
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { formState } from "../search/search.state";
+import { useState } from "react";
 import Container from "react-bootstrap/Container";
-import HomeImage from "./images/landing-page.png";
+import { useRecoilState } from "recoil";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
-import { Row, Col } from "react-bootstrap";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+
 
 export default function Home() {
+
+  const [form, setForm] = useRecoilState(formState);
+  const mergeForm = (obj) => setForm({ ...form, ...obj });
+  const navigate = useNavigate()
+  const [search, setSearch] = useState('')
+
+  async function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      await mergeForm({ search: search })
+      navigate('/search?query=' + form.search)
+    }
+  };
+
+  async function handleClick(event){
+    await mergeForm({ search: search })
+    navigate('/search?query=' + form.search)
+  }
+
   return (
     <>
       <div className="d-flex flex-column cover-image h-100 shadow-sm" >
@@ -13,18 +33,26 @@ export default function Home() {
           <div style={{ fontSize: '45px', color: 'white', fontWeight: '300', letterSpacing: '7px' }}>ICDGENIE</div>
 
 
-          <NavLink className="col-xl-4 col-sm-11 btn btn-outline-primary mt-5 py-3" to="search" style={{ color: 'white', boxSizing: 'border-box', border: '5px solid white', backgroundColor: 'rgba(62,63,66,0.72)' }}>
-            <Row style={{display: 'inline'}}>
-              <Col xl={10} style={{ fontSize: '28px', letterSpacing: '2px', fontWeight: '300', display:'inline' }}>EXPLORE THE DATABASE</Col>
-              <Col xl={2} style={{ display: 'inline'}}>
-                <FontAwesomeIcon
-                  className="mt-1"
-                  icon={faCaretRight}
-                  style={{ fontSize: "30px"}}
-                />
-              </Col>
-            </Row>
-          </NavLink>
+          <div className="w-50 mt-5 align-items-center input-group search-box">
+            <input
+              name="search"
+              type="text"
+              className="form-control"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={"Search ICDGenie"}
+              style={{ border: 0, boxShadow: 'none', fontSize: '20px' }}
+            />
+            <div className="input-group-append">
+              <FontAwesomeIcon
+                className="mt-3 mr-3"
+                icon={faArrowRight}
+                style={{ fontSize: "20px", cursor: 'pointer', color: '#97B4CB' }}
+                onClick={handleClick}
+              />
+            </div>
+          </div>
 
         </Container>
         <div className="d-flex flex-grow-1 justify-content-center mt-4" style={{ backgroundColor: 'white', background: 'linear-gradient(270deg, #F1A193 0%, #A9E0FB 100%)' }}>
