@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --setupFiles dotenv/config",
     "start": "node --require dotenv/config server.js"
   },
   "author": "",
@@ -15,8 +15,7 @@
     "csv": "^6.0.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "winston": "^3.6.0",
-    "winston-daily-rotate-file": "^4.6.1"
+    "winston": "^3.6.0"
   },
   "devDependencies": {
     "jest": "^27.5.1",
