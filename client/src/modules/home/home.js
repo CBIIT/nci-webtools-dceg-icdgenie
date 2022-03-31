@@ -1,71 +1,53 @@
-import { useNavigate } from "react-router-dom";
-import { formState } from "../search/search.state";
 import { useState } from "react";
+import { useNavigate, createSearchParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
-import { useRecoilState } from "recoil";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import SearchForm from "../common/search-form";
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
 
-  const [form, setForm] = useRecoilState(formState);
-  const mergeForm = (obj) => setForm({ ...form, ...obj });
-  const navigate = useNavigate()
-  const [search, setSearch] = useState('')
-
-  async function handleKeyDown(event) {
-    if (event.key === "Enter") {
-      await mergeForm({ search: search })
-      navigate('/search?query=' + form.search)
-    }
-  };
-
-  async function handleClick(event){
-    await mergeForm({ search: search })
-    navigate('/search?query=' + form.search)
+  function handleSubmit(event) {
+    event.preventDefault();
+    const params = createSearchParams({ query: search });
+    navigate(`/search?${params}`);
   }
 
   return (
     <>
-      <div className="d-flex flex-column cover-image h-100 shadow-sm" >
-        <Container className="d-flex h-75 flex-column justify-content-center align-items-center py-5">
-          <div style={{ fontSize: '45px', color: 'white', fontWeight: '300', letterSpacing: '7px' }}>ICDGENIE</div>
-
-
-          <div className="w-50 mt-5 align-items-center input-group search-box">
-            <input
-              name="search"
-              type="text"
-              className="form-control"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder={"Search ICDGenie"}
-              style={{ border: 0, boxShadow: 'none', fontSize: '20px' }}
+      <Container className="flex-grow-1 py-5">
+        <Row className="h-100 justify-content-center align-items-center">
+          <Col md={8}>
+            <h1 className="display-4 mb-5 text-light text-center text-uppercase">ICD Genie</h1>
+            <SearchForm
+              className="shadow"
+              search={search}
+              setSearch={setSearch}
+              handleSubmit={handleSubmit}
+              placeholder="Search ICD Genie"
             />
-            <div className="input-group-append">
-              <FontAwesomeIcon
-                className="mt-3 mr-3"
-                icon={faArrowRight}
-                style={{ fontSize: "20px", cursor: 'pointer', color: '#97B4CB' }}
-                onClick={handleClick}
-              />
-            </div>
-          </div>
+          </Col>
+        </Row>
+      </Container>
 
+      <div className="bg-white bg-gradient-main">
+        <Container className="py-5">
+          <Row className="justify-content-center">
+            <Col>
+              <p className="lead fw-normal m-0">
+                Accurate histological classification is important for facilitating studies of cancer epidemiology and
+                etiologic heterogeneity. ICD Genie is a web-based tool that can assist epidemiologists, pathologists,
+                research assistants, and data scientists to more easily access, translate and validate codes and text
+                descriptions from the International Classification of Diseases (10th Edition) and International
+                Classification of Diseases for Oncology, 3rd Edition (ICD-O-3). By improving accessibility and making
+                existing cancer classification and coding schemes to be more readily understandable and searchable, ICD
+                Genie will help accelerate descriptive and molecular epidemiological studies of cancer.
+              </p>
+            </Col>
+          </Row>
         </Container>
-        <div className="d-flex flex-grow-1 justify-content-center mt-4" style={{ backgroundColor: 'white', background: 'linear-gradient(270deg, #F1A193 0%, #A9E0FB 100%)' }}>
-          <p className="col-xl-7 col-lg-11 align-self-center mx-1 pt-3" style={{ fontSize: '18px', lineHeight: '36px' }}>
-            Accurate histological classification is important for facilitating studies of cancer epidemiology and
-            etiologic heterogeneity. ICDgenie is a web-based tool that can assist epidemiologists, pathologists,
-            research assistants, and data scientists to more easily access, translate and validate codes and text
-            descriptions from the International Classification of Diseases (10th Edition) and International
-            Classification of Diseases for Oncology, 3rd Edition (ICD-O-3). By improving accessibility and making
-            existing cancer classification and coding schemes to be more readily understandable and searchable,
-            ICDgenie will help accelerate descriptive and molecular epidemiological studies of cancer.
-          </p>
-        </div>
       </div>
     </>
   );
