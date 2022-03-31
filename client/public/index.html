@@ -5,19 +5,19 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ICDGenie</title>
+    <title>ICD Genie</title>
     <meta name="description" content="A search, translation, and validation service for ICD codes and descriptions" />
     <meta name="keywords" content="ICDGenie" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXXXX"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag () {
+      function gtag() {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
       gtag("config", "UA-XXXXXXXXXX");
 
-      function handle (e) {
+      function handle(e) {
         text = document.getElementById("doc_search").value;
         if (e.keyCode === 13) {
           window.open("https://www.google.com/search?q=site:https://icdgenie.cancer.gov " + text, "_blank");
@@ -29,7 +29,7 @@
   <body class="d-flex flex-column vh-100" react-cloak>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <header class="d-flex justify-content-center align-items-center flex-column flex-grow-0">
-      <div class="row container  align-items-center">
+      <div class="row container align-items-center">
         <a href="https://dceg.cancer.gov/" target="_blank" class="col-lg-9 h5 mb-1">
           <img
             src="%PUBLIC_URL%/images/nci-icdgenie-logo.svg"
@@ -39,7 +39,7 @@
           />
           <span class="visually-hidden">Division of Cancer Epidemiology and Genetics</span>
         </a>
-        <div class="d-flex col-lg-3 mb-2 pr-2" style="width: auto !important;">
+        <div class="d-flex col-lg-3 mb-2 pr-2" style="width: auto !important">
           <input
             id="doc_search"
             onkeypress="handle(event)"
