@@ -1,27 +1,70 @@
 import { useState } from "react";
-import { TreeDataState, CustomTreeData, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
-import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
+import axios from "axios";
+import { DataTypeProvider } from "@devexpress/dx-react-grid";
+import { Grid, VirtualTable, TableHeaderRow } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
+import ICDTranslations from "./search.translations";
+import Loader from "../common/loader";
+import { modalState } from "./search.state";
+import { useSetRecoilState } from "recoil";
 
 export default function ICDO3({ form }) {
+  const [loading, setLoading] = useState(false);
+  const setModal = useSetRecoilState(modalState);
+
   const icdo3Columns = [
     { name: "code", title: "ICD-O-3 Code" },
     { name: "description", title: "Description" },
-    { name: "isPreferred", title: "Preferred Term?" },
+    { name: "preferred", title: "Preferred Term?" },
   ];
 
-  const getChildRows = (row, rootRows) => {
-    return row ? row.children : rootRows;
-  };
+  const columnExtensions = [{ columnName: "description", width: 700, wordWrapEnabled: true }];
+
+  async function showTranslationModal(icdo3) {
+    try {
+      setLoading(true);
+      const rows = await axios.get("api/translate", { params: { icdo3 } });
+      setModal({
+        show: true,
+        title: `ICD-10 Translation for ICD-O-3 Code: ${icdo3}`,
+        body: <ICDTranslations rows={rows.data} type="icdo3" />,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function icdCodeFormatter({ value }) {
+    return (
+      <Button className="p-0" variant="link" onClick={() => showTranslationModal(value)}>
+        {value}
+      </Button>
+    );
+  }
+
+  function preferredTermFormatter({ value }) {
+    return value === 1 ? "Yes" : "No";
+  }
+
+  function IcdCodeTypeProvider(props) {
+    return <DataTypeProvider formatterComponent={icdCodeFormatter} {...props} />;
+  }
+
+  function PreferredTermTypeProvider(props) {
+    return <DataTypeProvider formatterComponent={preferredTermFormatter} {...props} />;
+  }
 
   return (
-    <Container className="py-5 h-100 col-xl-8 col-sm-12">
+    <Container className="py-5 h-100 col-xl-8 col-sm-12 index">
+      <Loader show={loading} fullscreen />
       <Grid rows={form.icdo3Data} columns={icdo3Columns}>
-        <TreeDataState />
-        <CustomTreeData getChildRows={getChildRows} />
-        <Table columnExtensions={[{ columnName: "description", width: 700, wordWrapEnabled: true }]} />
+        <IcdCodeTypeProvider for={["code"]} />
+        <PreferredTermTypeProvider for={["preferred"]} />
+        <VirtualTable columnExtensions={columnExtensions} />
         <TableHeaderRow />
-        <TableTreeColumn for="description" />
       </Grid>
     </Container>
   );
