@@ -54,7 +54,7 @@ api.post("/batch", (request, response) => {
   if (request.body.outputFormat === "csv") {
     response.set("Content-Type", "text/csv");
     response.set("Content-Disposition", `attachment; filename=icdgenie_batch_export.csv`);
-    response.send(stringify(results, { header: true }));
+    stringify(results, { header: true }).pipe(response);
   } else {
     response.json(results);
   }
