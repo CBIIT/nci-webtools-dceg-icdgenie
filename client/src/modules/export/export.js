@@ -148,7 +148,7 @@ export default function Export() {
                     <Col xl={5}>
                         <Form.Group className="mb-3">
                             <Form.Label><b>Please upload or enter a list of keywords, ICD-10 or ICD-O-3 code for batch query:</b></Form.Label>
-                            <textarea className="form-control" name="input" placeholder="ICD-10 Codes, ICD-O-3 Codes, or Keywords" onChange={handleChange}></textarea>
+                            <textarea className="form-control" name="input" placeholder="Keywords (Ex. stomach), ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2)" onChange={handleChange}></textarea>
                         </Form.Group>
                     </Col>
                 </Row>
@@ -174,7 +174,7 @@ export default function Export() {
             {form.submitted ? <Container className="py-4 h-100">
                 <div className="d-flex mb-3">
                     <div className="me-auto p-2" style={{ letterSpacing: '1.5px' }}><b>{form.output.length}</b> RESULTS FOUND</div>
-                    <button className="btn btn-outline p-2" onClick={exportCSV} style={{ color: '#0396E3', border: '1px solid #0396E3' }}>Export</button>
+                    <button className="btn btn-primary p-2" onClick={exportCSV}>Export</button>
                 </div>
                 <Row className="table-container">
                     <Grid rows={form.output} columns={form.columns}>
