@@ -10,29 +10,36 @@ const { APP_NAME, API_PORT, DATABASE_PATH, LOG_LEVEL } = process.env;
 // ensure that all environment variables are set
 validateEnvironment();
 
-// if in master process, fork and return
-if (forkCluster()) return;
+const isMasterProcess = forkCluster();
 
 // if in child process, create express application
-const app = express();
+if (!isMasterProcess) {
+  const app = createApp();
 
-// if behind a proxy, use the first x-forwarded-for address as the client's ip address
-app.set("trust proxy", true);
-app.set("json spaces", 2);
-app.set("x-powered-by", false);
+  // start app on specified port
+  app.listen(API_PORT, () => {
+    app.locals.logger.info(`${APP_NAME} started on port ${API_PORT}`);
+  });
+}
 
-// register services as app locals
-app.locals.logger = getLogger(APP_NAME, { level: LOG_LEVEL });
-app.locals.database = loadDatabaseInMemory(DATABASE_PATH);
+function createApp() {
+  const app = express();
 
-// register middleware
-app.use(logRequests());
-app.use("/api", api);
-app.use(logErrors());
+  // if behind a proxy, use the first x-forwarded-for address as the client's ip address
+  app.set("trust proxy", true);
+  app.set("json spaces", 2);
+  app.set("x-powered-by", false);
 
-// start app on specified port
-app.listen(API_PORT, () => {
-  app.locals.logger.info(`${APP_NAME} started on port ${API_PORT}`);
-});
+  // register services as app locals
+  app.locals.logger = getLogger(APP_NAME, { level: LOG_LEVEL });
+  app.locals.database = loadDatabaseInMemory(DATABASE_PATH);
 
-module.exports = app;
+  // register middleware
+  app.use(logRequests());
+  app.use("/api", api);
+  app.use(logErrors());
+
+  return app;
+}
+
+module.exports = createApp;
