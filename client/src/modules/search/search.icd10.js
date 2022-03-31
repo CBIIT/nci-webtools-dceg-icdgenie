@@ -1,15 +1,8 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
-import Modal from "react-bootstrap/Modal";
-import {
-  TreeDataState,
-  CustomTreeData,
-  PagingState,
-  IntegratedPaging,
-  DataTypeProvider,
-} from "@devexpress/dx-react-grid";
-import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
+import { TreeDataState, CustomTreeData, DataTypeProvider } from "@devexpress/dx-react-grid";
+import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
 import { useSetRecoilState } from "recoil";
 import { modalState } from "./search.state";
