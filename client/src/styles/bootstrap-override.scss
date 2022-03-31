@@ -1,106 +1,18 @@
-.mr-4 {
-  margin-right: 1.5rem;
-}
-
-.mr-3 {
-  margin-right: 1rem;
-}
-
-.dx-rg-bs4-table-header-title {
-  font-weight: bold;
-}
-
-table{
-  box-sizing: border-box;
-  border: 1px solid #97B4CB;
-  background-color: white;
-}
-
-thead{
-  background-color: #5A6B91;
-  background: linear-gradient(270deg, #3F95B1 0%, #52445D 100%)
-}
-
-
-th{
-  color: #F4FCFF;
-  font-style: italic;
-  font-size: 15px;
-}
-
-.form-check-input:checked{
-  background-color: #0396E3;
-}
-.navbar-collapse {
-  justify-content: center;
-}
-
-.navbar-nav .nav-link{
-  color: white !important;
-}
-
-.navbar-nav .nav-link.active{
-  border-bottom-color: #01C6FF !important;
-}
-
-.nav-tabs {
-  justify-content: center;
-}
-
-.nav-tabs .nav-link{
-  color: #608AA6;
-}
-
-.nav-tabs .nav-link.active{
-  background-color: rgba(158, 199, 226, 0);
-  color: #194778;
-  border-bottom-color: #194778;
-}
-
-.nav-item {
-  padding-inline: 10px;
-}
-
 .accordion-item {
   border-radius: 1% !important;
 }
 
 .tab-content {
   min-height: 60vh;
-  background-color: #9EBBC9;
+  background-color: #9ebbc9;
 }
 
-.accordion-button{
+.accordion-button {
   border-top-right-radius: 50px !important;
   border-top-left-radius: 10px !important;
   width: 30%;
   margin-top: -1em;
   margin-left: 0.5em;
-}
-.accordion-font{
-  font-size: 18px;
-  font-weight: 600;
-  letter-spacing: 1px;
-}
-
-.index > .accordion-button{
-  background-color: #7B658B !important;
-  color: white;
-}
-
-.neoplasm > .accordion-button{
-  background-color: #DF7B54 !important;
-  color: white;
-}
-
-.drug > .accordion-button{
-  background-color: #9B4E2F !important;
-  color: white;
-}
-
-.injury > .accordion-button{
-  background-color: #1B979B !important;
-  color: white;
 }
 
 .accordion-button:not(.collapsed)::after {
@@ -108,12 +20,87 @@ th{
 }
 
 .accordion-button::after {
-  background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill='%23AFB5BD'%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e");;
+  background-image: url("data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27 fill='%23AFB5BD'%3e%3cpath fill-rule=%27evenodd%27 d=%27M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z%27/%3e%3c/svg%3e");
+}
+
+.accordion-font {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.dx-g-bs4-table {
+  background-color: white;
+
+  th {
+    color: #f4fcff;
+    font-style: italic;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .mr-4 {
+    margin-right: 1.5rem !important;
+  }
+
+  .mr-3 {
+    margin-right: 1rem !important;
+  }
+}
+
+.index {
+  .accordion-button {
+    background-color: #7b658b !important;
+    color: white;
+  }
+  table thead tr {
+    border: 0.75px solid #97b4cb;
+    background-color: #5a6b91;
+    background: linear-gradient(270deg, #3f95b1 0%, #52445d 100%);
+  }
+}
+
+.neoplasm {
+  .accordion-button {
+    background-color: #df7b54 !important;
+    color: white;
+  }
+
+  table thead tr {
+    border: 0.75px solid #97b4cb;
+    background-color: #5a6b91;
+    background: linear-gradient(270deg, #3f95b1 0%, #d14e1a 100%);
+  }
+}
+
+.drug {
+  .accordion-button {
+    background-color: #9b4e2f !important;
+    color: white;
+  }
+
+  table thead tr {
+    border: 0.75px solid #97b4cb;
+    background-color: #5a6b91;
+    background: linear-gradient(270deg, #3f95b1 0%, #682306 100%);
+  }
+}
+
+.injury {
+  .accordion-button {
+    background-color: #1b979b !important;
+    color: white;
+  }
+
+  table thead tr {
+    border: 0.75px solid #97b4cb;
+    background-color: #5a6b91;
+    background: linear-gradient(270deg, #3f95b1 0%, #00686d 100%);
+  }
 }
 
 .search-box {
   background-color: white;
-  line-height: 3em;
-  border: #97B4CB solid 2px;
+  border: #97b4cb solid 2px;
   border-radius: 8px;
 }
