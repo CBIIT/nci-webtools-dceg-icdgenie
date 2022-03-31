@@ -1,7 +1,3 @@
-const icdo3 = require("./icdo3");
-const icd10 = require("./icd10");
-const translate = require("./translate");
-
 function batchExport(database, query) {
   const { inputType, input, outputType } = query;
   const inputs = input

@@ -1,6 +1,6 @@
 const { Router, json } = require("express");
 const cors = require("cors");
-const { stringify } = require("csv-stringify/sync");
+const { stringify } = require("csv-stringify");
 const icdgenie = require("./icdgenie");
 const icd10 = require("./icdgenie/icd10");
 const icdo3 = require("./icdgenie/icdo3");
@@ -58,7 +58,6 @@ api.post("/batch", (request, response) => {
   } else {
     response.json(results);
   }
-
 });
 
 module.exports = { api };
