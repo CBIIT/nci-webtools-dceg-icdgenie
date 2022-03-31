@@ -1,13 +1,29 @@
+import { useState } from "react";
+import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
-import { TreeDataState, CustomTreeData, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
+import Modal from "react-bootstrap/Modal";
+import {
+  TreeDataState,
+  CustomTreeData,
+  PagingState,
+  IntegratedPaging,
+  DataTypeProvider,
+} from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
+import { useSetRecoilState } from "recoil";
+import { modalState } from "./search.state";
+import ICDTranslations from "./search.translations";
+import axios from "axios";
+import Loader from "../common/loader";
 
 export default function ICD10({ form }) {
+  const setModal = useSetRecoilState(modalState);
+  const [loading, setLoading] = useState(false);
 
   const indexColumns = [
     { name: "description", title: "Description" },
-    { name: "link", title: "Code" },
+    { name: "code", title: "Code" },
   ];
 
   const neoplasmColumns = [
@@ -37,8 +53,8 @@ export default function ICD10({ form }) {
     { columnName: "malignantPrimary", wordWrapEnabled: true },
     { columnName: "malignantSecondary", wordWrapEnabled: true },
     { columnName: "uncertainBehavior", wordWrapEnabled: true },
-    { columnName: "unspecifiedBehavior", wordWrapEnabled: true }
-  ]
+    { columnName: "unspecifiedBehavior", wordWrapEnabled: true },
+  ];
 
   const drugColumnExtension = [
     { columnName: "substance", width: 400, wordWrapEnabled: true },
@@ -46,34 +62,55 @@ export default function ICD10({ form }) {
     { columnName: "poisoningIntentionalSelfHarm", wordWrapEnabled: true },
     { columnName: "poisoningAssault", wordWrapEnabled: true },
     { columnName: "poisoningUndetermined", wordWrapEnabled: true },
-  ]
+  ];
 
-  const getChildRows = (row, rootRows) => {
-    const childRows = rootRows.filter((r) => r.parentId === (row ? row.id : null));
-    return childRows.length ? childRows : null;
-  };
+  function getChildRows(row, rootRows) {
+    return row ? row.children : rootRows;
+  }
 
-  const neoplasmRowComponent = ({ tableRow, ...restProps }) => {
-    return <Table.Row {...restProps} style={{ border: '0.75px solid #97B4CB', backgroundColor: "#5A6B91", background: 'linear-gradient(270deg, #3F95B1 0%, #D14E1A 100%)' }} />;
-  };
+  async function showTranslationModal(icd10) {
+    try {
+      setLoading(true);
+      icd10 = icd10.replace(/-$/, "");
+      const rows = await axios.get("api/translate", { params: { icd10 } });
+      setModal({
+        show: true,
+        title: `ICD-O-3 Translation for ICD10 Code: ${icd10}`,
+        body: <ICDTranslations rows={rows.data} type="icd10" />,
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-  const drugRowComponent = ({ tableRow, ...restProps }) => {
-    return <Table.Row {...restProps} style={{ border: '0.75px solid #97B4CB', backgroundColor: "#5A6B91", background: 'linear-gradient(270deg, #3F95B1 0%, #682306 100%)' }} />;
-  };
+  function icdCodeFormatter({ value }) {
+    const isValidCode = /[A-Z]+\d+(\.\d+)?/i.test(value);
+    return isValidCode ? (
+      <Button className="p-0" variant="link" onClick={() => showTranslationModal(value)}>
+        {value}
+      </Button>
+    ) : (
+      value
+    );
+  }
 
-  const injuryRowComponent = ({ tableRow, ...restProps }) => {
-    return <Table.Row {...restProps} style={{ border: '0.75px solid #97B4CB', backgroundColor: "#5A6B91", background: 'linear-gradient(270deg, #3F95B1 0%, #00686D 100%)' }} />;
-  };
+  function IcdCodeTypeProvider(props) {
+    return <DataTypeProvider formatterComponent={icdCodeFormatter} {...props} />;
+  }
 
   return (
     <Container className="py-5 col-xl-8 col-sm-12">
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4">
+      <Loader show={loading} fullscreen />
+      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 index">
         <Accordion.Item eventKey="0">
-          <Accordion.Header className="index">
+          <Accordion.Header>
             <span className="accordion-font">INDEX TABLE</span>
           </Accordion.Header>
           <Accordion.Body>
             <Grid rows={form.indexData} columns={indexColumns}>
+              <IcdCodeTypeProvider for={["code"]} />
               <TreeDataState />
               <CustomTreeData getChildRows={getChildRows} />
               <Table columnExtensions={indexColumnExtension} />
@@ -84,53 +121,72 @@ export default function ICD10({ form }) {
         </Accordion.Item>
       </Accordion>
 
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4">
+      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 neoplasm">
         <Accordion.Item eventKey="0">
-          <Accordion.Header className="neoplasm">
+          <Accordion.Header>
             <span className="accordion-font">NEOPLASM TABLE</span>
           </Accordion.Header>
           <Accordion.Body>
             <Grid rows={form.neoplasmData} columns={neoplasmColumns}>
+              <IcdCodeTypeProvider
+                for={[
+                  "malignantPrimary",
+                  "malignantSecondary",
+                  "carcinomaInSitu",
+                  "benign",
+                  "uncertainBehavior",
+                  "unspecifiedBehavior",
+                ]}
+              />
               <TreeDataState />
               <CustomTreeData getChildRows={getChildRows} />
-              <Table
-                columnExtensions={neoplasmColumnExtension}
-              />
-              <TableHeaderRow rowComponent={neoplasmRowComponent}/>
+              <Table columnExtensions={neoplasmColumnExtension} />
+              <TableHeaderRow />
               <TableTreeColumn for="neoplasm" />
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
 
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4">
+      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 drug">
         <Accordion.Item eventKey="0">
-          <Accordion.Header className="drug">
+          <Accordion.Header>
             <span className="accordion-font">DRUG TABLE</span>
           </Accordion.Header>
           <Accordion.Body>
             <Grid rows={form.drugData} columns={drugColumns}>
+              <IcdCodeTypeProvider
+                for={[
+                  "poisoningAccidental",
+                  "poisoningIntentionalSelfHarm",
+                  "poisoningAssault",
+                  "poisoningUndetermined",
+                  "adverseEffect",
+                  "underdosing",
+                ]}
+              />
               <TreeDataState />
               <CustomTreeData getChildRows={getChildRows} />
               <Table columnExtensions={drugColumnExtension} />
-              <TableHeaderRow rowComponent={drugRowComponent}/>
+              <TableHeaderRow />
               <TableTreeColumn for="substance" />
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
 
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4">
+      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 injury">
         <Accordion.Item eventKey="0">
-          <Accordion.Header className="injury">
+          <Accordion.Header>
             <span className="accordion-font">INJURY TABLE</span>
           </Accordion.Header>
           <Accordion.Body>
             <Grid rows={form.injuryData} columns={indexColumns}>
+              <IcdCodeTypeProvider for={["code"]} />
               <TreeDataState />
               <CustomTreeData getChildRows={getChildRows} />
               <Table columnExtensions={indexColumnExtension} />
-              <TableHeaderRow rowComponent={injuryRowComponent}/>
+              <TableHeaderRow />
               <TableTreeColumn for="description" />
             </Grid>
           </Accordion.Body>
