@@ -1,448 +1,66 @@
-import { useState, useRef } from "react";
+import { Suspense, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { query } from "../../services/query";
-import { Modal, Container, Tabs, Tab, Accordion } from "react-bootstrap";
-import { formState } from "./search.state";
-import { Grid, VirtualTable, TableHeaderRow } from "@devexpress/dx-react-grid-bootstrap4";
-import { LoadingOverlay } from "@cbiitss/react-components";
-import { Tree } from "../../components/Tree";
-import * as d3 from "d3";
-import ICD10 from "./search.icd10";
-import ICDO3 from "./search.icdo3";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-
+import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Modal from "react-bootstrap/Modal";
+import Loader from "../common/loader";
+import SearchForm from "../common/search-form";
+import SearchResults from "./search.results";
+import { modalState, searchState } from "./search.state";
+import ErrorBoundary from "../common/error-boundary";
 
 export default function Search() {
-  const [form, setForm] = useRecoilState(formState);
-  const mergeForm = (obj) => setForm({ ...form, ...obj });
-  const [tab, setTab] = useState("icd10Table");
-  const [show, setShow] = useState(false);
-  const [modalData, setModalData] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams()
-  const navigate = useNavigate()
-  
-  const indexICD10 = useRef(null);
-  const neoplasmICD10 = useRef(null);
-  const drugICD10 = useRef(null);
-  const injuryICD10 = useRef(null);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useRecoilState(searchState);
+  const [modal, setModal] = useRecoilState(modalState);
+  const query = searchParams.get("query");
 
-  const handleClose = () => setShow(false);
+  useEffect(() => setSearch(query || ""), [query, setSearch]);
 
-  if(searchParams.get("query") !== null){
-    navigate('/search', { replace: true})
-    handleSubmit()
+  async function handleSubmit(event) {
+    event.preventDefault();
+    const params = createSearchParams({ query: search });
+    navigate(`/search?${params}`);
   }
 
-  const icdo3ModalColumns = [
-    { name: "icd10Description", title: "ICD-10 Description" },
-    { name: "icd10", title: "ICD-10 Code" },
-  ];
-
-  const icd10ModalColumns = [
-    { name: "icdo3Description", title: "ICD-O-3 Description" },
-    { name: "icdo3", title: "ICD-O-3 Code" },
-  ];
-
-  const getChildRows = (row, rootRows) => {
-    return row ? row.children : rootRows;
-  };
-
-  async function handleSubmit() {
-    mergeForm({ ...form, loading: true });
-
-    var index = await query("api/search/icd10", {
-      query: form.search,
-      type: "index",
-      format: "list",
-    });
-
-    index = index.map((e) => {
-      return {
-        ...e,
-        link: (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icd10: e.code });
-              setModalData(translate);
-              await setShow("icd10");
-            }}
-            href="javascript:void(0)">
-            {e.code}
-          </a>
-        ),
-      };
-    });
-
-    var rootIndex = index.map((e) => {
-      return {
-        ...e,
-        parentId: e.parentId === null ? 1 : e.parentId,
-      };
-    });
-
-    rootIndex = [{ description: "Index", code: "", id: 1, parentId: null, parentCode: null }].concat(rootIndex);
-
-    if (index.length) {
-      if (indexICD10.current.children.length) {
-        indexICD10.current.removeChild(indexICD10.current.children[0]);
-      }
-
-      indexICD10.current.appendChild(
-        Tree(rootIndex, {
-          label: (d) => d.description + " " + d.code,
-          tree: d3.cluster,
-          children: (d) => d.children,
-          width: 2000,
-        }),
-      );
-    }
-
-    var neoplasm = await query("api/search/icd10", {
-      query: form.search,
-      type: "neoplasm",
-      format: "list",
-    });
-
-    neoplasm = neoplasm.map((e) => {
-      return {
-        ...e,
-        malignantPrimary: /\d/.test(e.malignantPrimary) ? (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icd10: e.malignantPrimary });
-              setModalData(translate);
-              await setShow("icd10");
-            }}
-            href="javascript:void(0)">
-            {e.malignantPrimary}
-          </a>
-        ) : (
-          e.malignantPrimary
-        ),
-        malignantSecondary: (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icd10: e.malignantSecondary });
-              setModalData(translate);
-              await setShow("icd10");
-            }}
-            href="javascript:void(0)">
-            {e.malignantSecondary}
-          </a>
-        ),
-        carcinomaInSitu: (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icd10: e.carcinomaInSitu });
-              setModalData(translate);
-              await setShow("icd10");
-            }}
-            href="javascript:void(0)">
-            {e.carcinomaInSitu}
-          </a>
-        ),
-        benign: (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icd10: e.benign });
-              setModalData(translate);
-              await setShow("icd10");
-            }}
-            href="javascript:void(0)">
-            {e.benign}
-          </a>
-        ),
-        uncertainBehavior: (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icd10: e.uncertainBehavior });
-              setModalData(translate);
-              await setShow("icd10");
-            }}
-            href="javascript:void(0)">
-            {e.uncertainBehavior}
-          </a>
-        ),
-        unspecifiedBehavior: (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icd10: e.unspecifiedBehavior });
-              setModalData(translate);
-              await setShow("icd10");
-            }}
-            href="javascript:void(0)">
-            {e.unspecifiedBehavior}
-          </a>
-        ),
-      };
-    });
-
-    if (neoplasm.length) {
-      if (neoplasmICD10.current.children.length) {
-        neoplasmICD10.current.removeChild(neoplasmICD10.current.children[0]);
-      }
-
-      neoplasmICD10.current.appendChild(
-        Tree(neoplasm, {
-          label: (d) => d.neoplasm,
-          tree: d3.cluster,
-          children: (d) => d.children,
-          width: 2000,
-        }),
-      );
-    }
-
-    var drug = await query("api/search/icd10", {
-      query: form.search,
-      type: "drug",
-      format: "list",
-    });
-
-    drug = drug.map((e) => {
-      return {
-        ...e,
-        poisoningAccidental: (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icd10: e.poisoningAccidental });
-              setModalData(translate);
-              await setShow("icd10");
-            }}
-            href="javascript:void(0)">
-            {e.poisoningAccidental}
-          </a>
-        ),
-      };
-    });
-
-    var rootDrug = drug.map((e) => {
-      return {
-        ...e,
-        parentId: e.parentId === null ? 1 : e.parentId,
-      };
-    });
-
-    rootDrug = [{ substance: "Drug", id: 1, parentId: null }].concat(rootDrug);
-
-    if (drug.length) {
-      if (drugICD10.current.children.length) {
-        drugICD10.current.removeChild(drugICD10.current.children[0]);
-      }
-
-      drugICD10.current.appendChild(
-        Tree(rootDrug, {
-          label: (d) => d.substance,
-          tree: d3.cluster,
-          children: (d) => d.children,
-          width: 2000,
-        }),
-      );
-    }
-
-    var injury = await query("api/search/icd10", {
-      query: form.search,
-      type: "injury",
-      format: "list",
-    });
-
-    injury = injury.map((e) => {
-      return {
-        ...e,
-        link: (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icd10: e.code });
-              setModalData(translate);
-              await setShow("icd10");
-            }}
-            href="javascript:void(0)">
-            {e.code}
-          </a>
-        ),
-      };
-    });
-
-    var rootInjury = index.map((e) => {
-      return {
-        ...e,
-        parentId: e.parentId === null ? 1 : e.parentId,
-      };
-    });
-
-    rootInjury = [{ description: "Injury", code: "", id: 1, parentId: null, parentCode: null }].concat(rootInjury);
-
-    if (index.length) {
-      if (injuryICD10.current.children.length) {
-        injuryICD10.current.removeChild(injuryICD10.current.children[0]);
-      }
-
-      injuryICD10.current.appendChild(
-        Tree(rootInjury, {
-          label: (d) => d.description + " " + d.code,
-          tree: d3.cluster,
-          children: (d) => d.children,
-          width: 2000,
-        }),
-      );
-    }
-
-    var icdo3 = await query("api/search/icdo3", {
-      query: form.search,
-    });
-
-    icdo3 = icdo3.map((e) => {
-      return {
-        ...e,
-        code: (
-          <a
-            onClick={async () => {
-              const translate = await query("api/translate", { icdo3: e.code });
-              setModalData(translate);
-              await setShow("icdo3");
-            }}
-            href="javascript:void(0)">
-            {e.code}
-          </a>
-        ),
-        isPreferred: e.preferred ? "Yes" : "No",
-      };
-    });
-
-    mergeForm({
-      indexData: index,
-      neoplasmData: neoplasm,
-      drugData: drug,
-      injuryData: injury,
-      icdo3Data: icdo3,
-      loading: false,
-      submitted: true,
-    });
-  }
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      handleSubmit();
-    }
-  };
-
-  const handleChange = (event) => {
-    mergeForm({search: event.target.value})
+  function hideModal() {
+    setModal((state) => ({ ...state, show: false }));
   }
 
   return (
     <>
-      <Modal show={show} size="xl" onHide={handleClose} style={{height: '50vh'}}>
+      <Modal show={modal.show} size="xl" onHide={hideModal}>
         <Modal.Header closeButton>
-          <Modal.Title>
-            {show === "icdo3"
-              ? `ICD-10 Translation for ICD-O-3 Code: ${modalData.length ? modalData[0].icdo3 : ""}`
-              : `ICD-O-3 Translation for ICD-10 Code: ${modalData.length ? modalData[0].icd10 : ""}`}
-          </Modal.Title>
+          <Modal.Title>{modal.title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <Grid rows={modalData} columns={show === "icdo3" ? icdo3ModalColumns : icd10ModalColumns} > 
-            <VirtualTable
-              estimatedRowHeight={49}
-              columnExtensions={[
-                {
-                  columnName: show === "icdo3" ? "icd10Description" : "icdo3Description",
-                  width: 700,
-                  wordWrapEnabled: true,
-                },
-              ]}
-            />
-            <TableHeaderRow />
-          </Grid>
-        </Modal.Body>
+        <Modal.Body>{modal.body}</Modal.Body>
       </Modal>
-      <div className="h-100" style={{background: 'white'}}>
-        <div className="row justify-content-center">
-          <div className="col-xl-4 col-sm-6 mt-5">
-            <div className="d-flex align-items-center input-group search-box">
-              <input
-                name="search"
-                type="text"
-                className="form-control"
-                value={form.search}
-                onChange={handleChange}
-                onKeyDown={handleKeyDown}
-                placeholder={"Search ICDGenie"}
-                style={{ border: 0, boxShadow: 'none', fontSize: '20px' }}
+      <div className="h-100 bg-white">
+        <Container className="flex-grow-1 py-5">
+          <Row className="h-100 justify-content-center align-items-center">
+            <Col md={8}>
+              <SearchForm
+                className="search-box mb-3"
+                search={search}
+                setSearch={setSearch}
+                handleSubmit={handleSubmit}
+                placeholder="Search ICD Genie"
               />
-              <div className="input-group-append">
-                <FontAwesomeIcon
-                  className="mt-3 mr-3"
-                  icon={faArrowRight}
-                  style={{ fontSize: "20px", cursor: 'pointer', color: '#97B4CB' }}
-                  onClick={handleSubmit}
-                />
+              <div className="text-uppercase text-muted text-center">
+                Search by Keywords, ICD-10 code, or ICD-O-3 code
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="row justify-content-center mb-5 mt-2">
-          <div style={{ textAlign: 'center', color: '#6F91A7', letterSpacing: '1.5px', whiteSpace: 'nowrap' }}>
-            SEARCH BY KEYWORDS, ICD-10 CODE, OR ICD-0-3 CODE
-          </div>
-        </div>
-        <LoadingOverlay active={form.loading} overlayStyle={{ position: "fixed" }} />
+            </Col>
+          </Row>
+        </Container>
 
-        <Tabs activeKey={tab} onSelect={(e) => setTab(e)} style={{ backgroundColor: 'rgba(158,199,226,0.52)' }}>
-          <Tab tabAttrs="h-100" eventKey="icd10Table" title="ICD-10 Code Table">
-            <ICD10 form={form} />
-          </Tab>
-          <Tab eventKey="icdo3Table" title="ICD-O-3 Code Table">
-            <ICDO3 form={form} />
-          </Tab>
-          <Tab eventKey="icd10Cluster" title="ICD-10 Hierarchy">
-            <Container className="py-5 col-xl-8 col-sm-12">
-              <Accordion defaultActiveKey="0" className="mb-4" alwaysOpen>
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header className="index">
-                    <span className="accordion-font">INDEX HIERARCHY</span>
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <div ref={indexICD10} style={{ maxWidth: "100%", maxHeight: "800px", overflow: "auto" }} />
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion defaultActiveKey="0" className="mb-4" alwaysOpen>
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header className="neoplasm">
-                    <span className="accordion-font">NEOPLASM HIERARCHY</span>
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <div ref={neoplasmICD10} style={{ maxHeight: "800px", overflow: "auto" }} />
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion defaultActiveKey="0" className="mb-4" alwaysOpen>
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header className="drug">
-                    <span className="accordion-font">DRUG HIERARCHY</span>
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <div ref={drugICD10} style={{ maxHeight: "800px", overflow: "auto" }} />
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
-              <Accordion defaultActiveKey="0" className="mb-4" alwaysOpen>
-                <Accordion.Item eventKey="0">
-                  <Accordion.Header className="injury">
-                    <span className="accordion-font">INJURY HIERARCHY</span>
-                  </Accordion.Header>
-                  <Accordion.Body>
-                    <div ref={injuryICD10} style={{ maxHeight: "800px", overflow: "auto" }} />
-                  </Accordion.Body>
-
-                </Accordion.Item>
-              </Accordion>
-            </Container>
-          </Tab>
-        </Tabs>
+        <ErrorBoundary fallback="">
+          <Suspense fallback={<Loader show fullscreen />}>
+            <SearchResults query={query} />
+          </Suspense>
+        </ErrorBoundary>
       </div>
     </>
   );
