@@ -1,5 +1,6 @@
 /** Colors */
 $blue: rgb(24, 83, 148);
+$secondary: #9ebbc9;
 
 /** Headings */
 $headings-font-weight: 700;
@@ -31,7 +32,7 @@ $grid-breakpoints: (
   xl: 1200px,
   xxl: 1400px,
   xxxl: 1600px,
-  xxxxl: 1920px,
+  // xxxxl: 1920px,
 );
 
 $container-max-widths: (
@@ -41,7 +42,7 @@ $container-max-widths: (
   xl: 1140px,
   xxl: 1320px,
   xxxl: 1500px,
-  xxxxl: 1800px,
+  // xxxxl: 1800px,
 );
 
 /** Responsive Breakpoints */
@@ -53,7 +54,7 @@ $grid-breakpoints: (
   xl: 1200px,
   xxl: 1400px,
   xxxl: 1600px,
-  xxxxl: 1920px,
+  // xxxxl: 1920px,
 ) !default;
 
 $utilities: (
