@@ -35,7 +35,7 @@ export default function App() {
     },
     {
       route: "/export",
-      title: "Batch Export",
+      title: "Batch Query",
       component: Export,
     },
     {
