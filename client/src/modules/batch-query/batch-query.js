@@ -140,7 +140,7 @@ export default function BatchQuery() {
                   name="input"
                   rows={5}
                   value={form.input}
-                  placeholder="ICD-10 Codes, ICD-O-3 Codes, or Keywords"
+                  placeholder="Keywords (Ex. stomach), ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2)"
                   onChange={handleChange}
                 />
                 <input
