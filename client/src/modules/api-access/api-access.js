@@ -9,7 +9,7 @@ export default function ApiAccess() {
         <hr />
 
         <p>
-          The ICDGenie API provides programmatic access to endpoints which allow users to search and translate ICD-10
+          The ICD Genie API provides programmatic access to endpoints which allow users to search and translate ICD-10
           and ICD-O-3 codes. The following resources are available:
         </p>
         <SwaggerUI url={process.env.PUBLIC_URL + "/api"} />

@@ -369,7 +369,7 @@ export default function Search() {
                 value={form.search}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
-                placeholder={"Search ICDGenie"}
+                placeholder={"Search ICD Genie"}
                 style={{ border: 0, boxShadow: 'none', fontSize: '20px' }}
               />
               <div className="input-group-append">

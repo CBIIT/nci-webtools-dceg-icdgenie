@@ -30,7 +30,7 @@ export default function Home() {
     <>
       <div className="d-flex flex-column cover-image h-100 shadow-sm" >
         <Container className="d-flex h-75 flex-column justify-content-center align-items-center py-5">
-          <div style={{ fontSize: '45px', color: 'white', fontWeight: '300', letterSpacing: '7px' }}>ICDGENIE</div>
+          <div style={{ fontSize: '45px', color: 'white', fontWeight: '300', letterSpacing: '7px' }}>ICD GENIE</div>
 
 
           <div className="w-50 mt-5 align-items-center input-group search-box">
@@ -41,7 +41,7 @@ export default function Home() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={"Search ICDGenie"}
+              placeholder={"Search ICD Genie"}
               style={{ border: 0, boxShadow: 'none', fontSize: '20px' }}
             />
             <div className="input-group-append">
@@ -58,12 +58,12 @@ export default function Home() {
         <div className="d-flex flex-grow-1 justify-content-center mt-4" style={{ backgroundColor: 'white', background: 'linear-gradient(270deg, #F1A193 0%, #A9E0FB 100%)' }}>
           <p className="col-xl-7 col-lg-11 align-self-center mx-1 pt-3" style={{ fontSize: '18px', lineHeight: '36px' }}>
             Accurate histological classification is important for facilitating studies of cancer epidemiology and
-            etiologic heterogeneity. ICDgenie is a web-based tool that can assist epidemiologists, pathologists,
+            etiologic heterogeneity. ICD Genie is a web-based tool that can assist epidemiologists, pathologists,
             research assistants, and data scientists to more easily access, translate and validate codes and text
             descriptions from the International Classification of Diseases (10th Edition) and International
             Classification of Diseases for Oncology, 3rd Edition (ICD-O-3). By improving accessibility and making
             existing cancer classification and coding schemes to be more readily understandable and searchable,
-            ICDgenie will help accelerate descriptive and molecular epidemiological studies of cancer.
+            ICD Genie will help accelerate descriptive and molecular epidemiological studies of cancer.
           </p>
         </div>
       </div>
