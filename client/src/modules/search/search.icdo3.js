@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { DataTypeProvider } from "@devexpress/dx-react-grid";
-import { Grid, VirtualTable, TableHeaderRow } from "@devexpress/dx-react-grid-bootstrap4";
+import { Grid, Table, TableHeaderRow, VirtualTable } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import ICDTranslations from "./search.translations";
@@ -16,7 +16,7 @@ export default function ICDO3({ form }) {
   const icdo3Columns = [
     { name: "code", title: "ICD-O-3 Code" },
     { name: "description", title: "Description" },
-    { name: "preferred", title: "Preferred Term?" },
+    { name: "preferred", title: "Preferred Term" },
   ];
 
   const columnExtensions = [{ columnName: "description", width: 700, wordWrapEnabled: true }];
@@ -63,7 +63,7 @@ export default function ICDO3({ form }) {
       <Grid rows={form.icdo3Data} columns={icdo3Columns}>
         <IcdCodeTypeProvider for={["code"]} />
         <PreferredTermTypeProvider for={["preferred"]} />
-        <VirtualTable columnExtensions={columnExtensions} />
+        <Table columnExtensions={columnExtensions} />
         <TableHeaderRow />
       </Grid>
     </Container>
