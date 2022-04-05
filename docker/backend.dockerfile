@@ -1,13 +1,11 @@
-FROM ${BASE_IMAGE:-oraclelinux:8-slim}
+# FROM ${BASE_IMAGE:-oraclelinux:8-slim}
+FROM quay.io/centos/centos:stream9
 
-RUN microdnf -y update \
- && microdnf -y module enable nodejs:14 \
- && microdnf -y install \
-    gcc-c++ \
-    make \
+RUN dnf -y update \
+ && dnf -y install \
     nodejs \
     npm \
- && microdnf clean all 
+ && dnf clean all
 
 RUN mkdir -p /app/server /app/database /app/logs
 
