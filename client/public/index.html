@@ -17,11 +17,16 @@
       gtag("js", new Date());
       gtag("config", "UA-XXXXXXXXXX");
 
-      function handle(e) {
+      function handleKey(e) {
+        console.log('hi')
         text = document.getElementById("doc_search").value;
         if (e.keyCode === 13) {
           window.open("https://www.google.com/search?q=site:https://icdgenie.cancer.gov " + text, "_blank");
         }
+      }
+      function handleClick() {
+        text = document.getElementById("doc_search").value;
+        window.open("https://www.google.com/search?q=site:https://icdgenie.cancer.gov " + text, "_blank");
       }
     </script>
   </head>
@@ -42,14 +47,18 @@
         <div class="d-flex col-lg-3 mb-2 pr-2" style="width: auto !important">
           <input
             id="doc_search"
-            onkeypress="handle(event)"
+            onkeypress="handleKey(event)"
             name="search"
             type="text"
-            className="form-control"
+            class="form-control"
             placeholder="Documentation Search"
+            style="border-top-left-radius: 20px;border-bottom-left-radius: 20px; border-bottom-right-radius: 0;border-top-right-radius: 0"
           />
-
-          <i class="fa-solid fa-magnifying-glass"></i>
+          <div class="input-group-text" onclick="handleClick()" style="border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 0;border-top-left-radius: 0;margin-left: -1px;cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1em" height="1em">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+            </svg>
+          </div>
         </div>
       </div>
     </header>
