@@ -6,6 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Loader from "../common/loader";
+import Modal from "react-bootstrap/Modal";
 import { Grid, VirtualTable, TableHeaderRow } from "@devexpress/dx-react-grid-bootstrap4";
 import { formState, resultsState } from "./batch-query.state";
 import { readFileAsText, exportCsv } from "./batch-query.utils";
@@ -164,7 +165,7 @@ export default function BatchQuery() {
           </Row>
         </Container>
       </Form>
-      {results.output.length && (
+      {results.columns.length && (
         <>
           <hr />
           <Container className="my-5">
