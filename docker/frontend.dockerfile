@@ -30,4 +30,4 @@ EXPOSE 443
 WORKDIR /var/www/html
 
 CMD rm -rf /run/httpd/* /tmp/httpd* \
- && exec /usr/sbin/apachectl -DFOREGROUND 
+ && exec /usr/sbin/httpd -DFOREGROUND 
