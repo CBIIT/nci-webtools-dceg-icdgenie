@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: docker/backend.dockerfile
       args:
-        BASE_IMAGE: "oraclelinux:8-slim"
+        BASE_IMAGE: "quay.io/centos/centos:stream9"
     volumes:
       - ./database:/app/database
     environment:
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: docker/frontend.dockerfile
       args:
-        BASE_IMAGE: "oraclelinux:8-slim"
+        BASE_IMAGE: "quay.io/centos/centos:stream9"
     environment:
       API_BASE_URL: http://backend:9000
     links:
