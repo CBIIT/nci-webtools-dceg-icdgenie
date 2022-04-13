@@ -18,7 +18,12 @@ export default function ICD10Hierarchy({ form }) {
             <span className="accordion-font">INDEX HIERARCHY</span>
           </Accordion.Header>
           <Accordion.Body className="overflow-auto">
-            <D3Tree {...indexTree} className="mw-100" style={{ maxHeight: "800px" }} />
+            {indexData.length ?
+              <D3Tree {...indexTree} className="mw-100" style={{ maxHeight: "800px" }} />
+              :
+              <big className="d-flex justify-content-center my-4 text-muted" >
+                No Data
+              </big>}
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
@@ -29,7 +34,12 @@ export default function ICD10Hierarchy({ form }) {
             <span className="accordion-font">NEOPLASM HIERARCHY</span>
           </Accordion.Header>
           <Accordion.Body className="overflow-auto">
-            <D3Tree {...neoplasmTree} className="mw-100" style={{ maxHeight: "800px" }} />
+            {neoplasmData.length ?
+              <D3Tree {...neoplasmTree} className="mw-100" style={{ maxHeight: "800px" }} />
+              :
+              <big className="d-flex justify-content-center my-4 text-muted" >
+                No Data
+              </big>}
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
@@ -40,7 +50,12 @@ export default function ICD10Hierarchy({ form }) {
             <span className="accordion-font">DRUG HIERARCHY</span>
           </Accordion.Header>
           <Accordion.Body className="overflow-auto">
-            <D3Tree {...drugTree} className="mw-100" style={{ maxHeight: "800px" }} />
+            {drugData.length ?
+              <D3Tree {...drugTree} className="mw-100" style={{ maxHeight: "800px" }} />
+              :
+              <big className="d-flex justify-content-center my-4 text-muted" >
+                No Data
+              </big>}
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
@@ -51,7 +66,12 @@ export default function ICD10Hierarchy({ form }) {
             <span className="accordion-font">INJURY HIERARCHY</span>
           </Accordion.Header>
           <Accordion.Body className="overflow-auto">
-            <D3Tree {...injuryTree} className="mw-100" style={{ maxHeight: "800px" }} />
+            {injuryData.length ?
+              <D3Tree {...injuryTree} className="mw-100" style={{ maxHeight: "800px" }} />
+              :
+              <big className="d-flex justify-content-center my-4 text-muted" >
+                No Data
+              </big>}
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
