@@ -140,7 +140,7 @@ export default function BatchQuery() {
           <Row className="justify-content-center">
             <Col md={8}>
               <Form.Group className="mb-3">
-                <Form.Label>Please upload a file or enter a list of keywords, ICD-10 codes or ICD-O-3 codes</Form.Label>
+                <Form.Label>Please upload a file (.csv) or enter a list of keywords, ICD-10 codes or ICD-O-3 codes</Form.Label>
                 <Form.Control
                   className="mb-3"
                   as="textarea"
@@ -157,6 +157,7 @@ export default function BatchQuery() {
                   className="form-control mb-3"
                   aria-label="Upload a file containing search terms"
                   data-name="input"
+                  accept=".csv"
                   onChange={handleChange}
                 />
               </Form.Group>
