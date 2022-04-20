@@ -48,6 +48,10 @@
   }
 }
 
+.float-right{
+  float: right;
+}
+
 .index {
   .accordion-button {
     background-color: #7b658b !important;
@@ -103,4 +107,8 @@
   background-color: white;
   border: #97b4cb solid 2px;
   border-radius: 8px;
+}
+
+.dx-g-bs4-cursor-pointer {
+  color: white !important;
 }

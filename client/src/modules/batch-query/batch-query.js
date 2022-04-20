@@ -7,7 +7,13 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Loader from "../common/loader";
 import Modal from "react-bootstrap/Modal";
-import { Grid, VirtualTable, TableHeaderRow } from "@devexpress/dx-react-grid-bootstrap4";
+import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
+import {
+  SortingState,
+  IntegratedSorting,
+  PagingState,
+  IntegratedPaging,
+} from '@devexpress/dx-react-grid';
 import { formState, resultsState } from "./batch-query.state";
 import { readFileAsText, exportCsv } from "./batch-query.utils";
 
@@ -179,8 +185,18 @@ export default function BatchQuery() {
             </div>
             <div className="index border">
               <Grid rows={results.output} columns={results.columns}>
-                <VirtualTable columnExtensions={results.columnExtensions} />
-                <TableHeaderRow />
+                <SortingState
+                  defaultSorting={[{ columnName: 'input', direction: 'asc' }]}
+                />
+                <PagingState
+                  defaultCurrentPage={0}
+                  defaultPageSize={20}
+                />
+                <IntegratedSorting />
+                <IntegratedPaging />
+                <Table columnExtensions={results.columnExtensions} />
+                <TableHeaderRow showSortingControls />
+                <PagingPanel pageSizes={[5,10,15,20]}/>
               </Grid>
             </div>
           </Container>
