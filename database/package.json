@@ -9,7 +9,8 @@
     "better-sqlite3": "^7.5.0",
     "csv-parse": "^5.0.4",
     "dotenv": "^16.0.0",
-    "minimist": "^1.2.6"
+    "minimist": "^1.2.6",
+    "xml2js": "^0.4.23"
   },
   "devDependencies": {
     "jest": "^27.5.1",
