@@ -10,6 +10,11 @@ const spec = require("./icdgenie/spec");
 const { APP_BASE_URL } = process.env;
 const api = Router();
 
+const { Client } = require("@opensearch-project/opensearch")
+const createAwsOpensearchConnector  = require("aws-opensearch-connector")
+
+const host;
+
 api.use(cors());
 api.use(json());
 
@@ -56,8 +61,45 @@ api.post("/batch", (request, response) => {
     response.set("Content-Disposition", `attachment; filename=icdgenie_batch_export.csv`);
     stringify(results, { header: true }).pipe(response);
   } else {
-    response.json(results);
+    response. json(results);
   }
 });
+
+const getClient = async() => {
+  const conector = createAwsOpensearchConnector({
+    region: "us-east-1",
+    getCredentials: function(cb){
+      return cb();
+    }
+  })
+  return new Client({
+    ...createAwsOpensearchConnector.ConnectorFactory,
+    node: host
+  })
+}
+
+api.post("/opensearch", async (request, response) => {
+  const { logger } = request.app.locals;
+  var client = new Client({
+    node: devhost,
+  })
+  logger.info(request.body.search)
+  var query = {
+    "query": {
+      "multi_match": {
+        "query": request.body.search,
+        "fields": ["path"]
+      }
+    }
+  }
+
+  logger.info(query)
+  var results = await client.search({
+    index: "drug",
+    body: request.body.query
+  })
+  logger.info(results.body.hits.hits)
+  response.json(results.body.hits.hits)
+})  
 
 module.exports = { api };
