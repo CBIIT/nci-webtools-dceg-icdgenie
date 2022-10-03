@@ -11,9 +11,7 @@ const { APP_BASE_URL } = process.env;
 const api = Router();
 
 const { Client } = require("@opensearch-project/opensearch")
-const createAwsOpensearchConnector  = require("aws-opensearch-connector")
-
-const host;
+const createAwsOpensearchConnector = require("aws-opensearch-connector")
 
 api.use(cors());
 api.use(json());
@@ -61,45 +59,42 @@ api.post("/batch", (request, response) => {
     response.set("Content-Disposition", `attachment; filename=icdgenie_batch_export.csv`);
     stringify(results, { header: true }).pipe(response);
   } else {
-    response. json(results);
+    response.json(results);
   }
 });
-
-const getClient = async() => {
-  const conector = createAwsOpensearchConnector({
-    region: "us-east-1",
-    getCredentials: function(cb){
-      return cb();
-    }
-  })
-  return new Client({
-    ...createAwsOpensearchConnector.ConnectorFactory,
-    node: host
-  })
-}
 
 api.post("/opensearch", async (request, response) => {
   const { logger } = request.app.locals;
   var client = new Client({
-    node: devhost,
+    node: host,
+    ssl: {
+      rejectUnauthorized: false
+    }
   })
   logger.info(request.body.search)
-  var query = {
+  var body = {
     "query": {
-      "multi_match": {
-        "query": request.body.search,
-        "fields": ["path"]
+      "bool": {
+        "filter": [
+          {
+            "multi_match": {
+              "type": "best_fields",
+              "query": request.body.search,
+              "lenient": true
+            }
+          }
+        ],
       }
-    }
+    },
+    "size": 10000
   }
 
-  logger.info(query)
   var results = await client.search({
-    index: "drug",
-    body: request.body.query
+    index: "injury",
+    body
   })
-  logger.info(results.body.hits.hits)
+  
   response.json(results.body.hits.hits)
-})  
+})
 
 module.exports = { api };

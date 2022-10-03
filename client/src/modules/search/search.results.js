@@ -8,7 +8,7 @@ import ICD10Hierarchy from "./search.hierarchy";
 
 export default function SearchResults({ query }) {
   const results = useRecoilValue(resultsSelector(query));
-
+  console.log(results)
   return (
     <Tabs
       id="results-tabs"
