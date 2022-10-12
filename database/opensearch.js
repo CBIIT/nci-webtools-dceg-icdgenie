@@ -5,7 +5,6 @@ const timestamp = getTimestamp(([absolute, relative]) => `${absolute / 1000}s, $
 const database = require("better-sqlite3")("database.db");
 var xml2js = require('xml2js');
 
-
 function getChildren(currentNode) {
 
     if (currentNode.mainTerm) {
@@ -289,6 +288,7 @@ function parseTabularTree(currentNode, nodes = []) {
                         "path": e.path,
                         "description": e.description,
                         "parent": e.parents,
+                        "id": index
                     }) + '\n',
                         'utf-8'
                     )
@@ -328,6 +328,7 @@ function parseTabularTree(currentNode, nodes = []) {
                         "path": e.path,
                         "description": e.description,
                         "parent": e.parents,
+                        "id": index
                     }) + '\n',
                         'utf-8'
                     )
@@ -368,6 +369,7 @@ function parseTabularTree(currentNode, nodes = []) {
                         "path": e.path,
                         "description": e.description,
                         "parent": e.parents,
+                        "id": index
                     }) + '\n',
                         'utf-8'
                     )
@@ -407,6 +409,7 @@ function parseTabularTree(currentNode, nodes = []) {
                         "path": e.path,
                         "description": e.description,
                         "parent": e.parents,
+                        "id": index
                     }) + '\n',
                         'utf-8'
                     )
