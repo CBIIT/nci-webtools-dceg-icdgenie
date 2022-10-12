@@ -5,6 +5,8 @@ const timestamp = getTimestamp(([absolute, relative]) => `${absolute / 1000}s, $
 const database = require("better-sqlite3")("database.db");
 var xml2js = require('xml2js');
 
+var id = -1;
+
 function getChildren(currentNode) {
 
     if (currentNode.mainTerm) {
@@ -52,11 +54,13 @@ function parseDrugNode(currentNode, parents) {
         }
     }
 
+    id++;
     return ({
         "code": code,
         "description": description,
         "path": nodePath,
-        "parents": parentArray
+        "parents": parentArray,
+        "id": id
     })
 }
 
@@ -109,11 +113,13 @@ function parseNeoplasmNode(currentNode, parents) {
         }
     }
 
+    id++;
     return ({
         "code": code,
         "description": description,
         "path": nodePath,
-        "parents": parentArray
+        "parents": parentArray,
+        "id": id
     })
 }
 
@@ -142,12 +148,13 @@ function parseInjuryNode(currentNode, parents) {
         code = 'NA'
 
     nodePath.push(description)
-
+    id++;
     return ({
         "code": code,
         "description": description,
         "path": nodePath,
-        "parents": parentArray
+        "parents": parentArray,
+        "id": id
     })
 }
 
@@ -211,12 +218,13 @@ function parseTabularNode(currentNode, parents) {
     }
 
     nodePath.push(description)
-
+    id++;
     return ({
         "code": code,
         "description": description,
         "path": nodePath,
-        "parents": parentArray
+        "parents": parentArray,
+        "id": id
     })
 }
 
@@ -259,7 +267,7 @@ function parseTabularTree(currentNode, nodes = []) {
 (async function main() {
 
    
-    fs.readFile('icd10cm-tabular-2023.xml', function (err, data) {
+    await fs.readFile('icd10cm-tabular-2023.xml', function (err, data) {
         console.log(`[${timestamp()}] Start tabular import`);
         xml2js.parseString(data, (err, result) => {
             try {
@@ -270,7 +278,6 @@ function parseTabularTree(currentNode, nodes = []) {
 
                 var terms = []
                 terms = parseTabularTree(result["ICD10CM.tabular"], [])
-                console.log(terms)
 
                 var fd = fs.openSync(path.resolve('data', 'icd10tabular.json'), 'a')
                 terms.map((e, index) => {
@@ -288,19 +295,20 @@ function parseTabularTree(currentNode, nodes = []) {
                         "path": e.path,
                         "description": e.description,
                         "parent": e.parents,
-                        "id": index
+                        "id": e.id
                     }) + '\n',
                         'utf-8'
                     )
                 })
-
+                id = -1;
                 console.log(`[${timestamp()}] Finish tabular import`); 
             } catch (err) {
                 console.log(err)
             }
         })
     })
-    fs.readFile('icd10cm-neoplasm-2023.xml', function (err, data) {
+    
+    await fs.readFile('icd10cm-neoplasm-2023.xml', function (err, data) {
         console.log(`[${timestamp()}] Start neoplasm import`);
         xml2js.parseString(data, (err, result) => {
             try {
@@ -328,19 +336,20 @@ function parseTabularTree(currentNode, nodes = []) {
                         "path": e.path,
                         "description": e.description,
                         "parent": e.parents,
-                        "id": index
+                        "id": e.id
                     }) + '\n',
                         'utf-8'
                     )
                 })
+                id = -1;
                 console.log(`[${timestamp()}] Finish neoplasm import`);
             } catch (err) {
                 console.log(err)
             }
         })
     })
-    
-    fs.readFile('icd10cm-drug-2023.xml', function (err, data) {
+
+    await fs.readFile('icd10cm-drug-2023.xml', function (err, data) {
         console.log(`[${timestamp()}] Start drug import`);
         xml2js.parseString(data, (err, result) => {
             try {
@@ -351,8 +360,6 @@ function parseTabularTree(currentNode, nodes = []) {
                 var terms = []
                 fs.writeFileSync('drug.json', JSON.stringify(result, null, 4))
                 terms = parseDrugTree(result["ICD10CM.index"]["letter"], [])
-                console.log(terms)
-
                 var fd = fs.openSync(path.resolve('data', 'icd10drug.json'), 'a')
                 terms.map((e, index) => {
                     fs.appendFileSync(fd, JSON.stringify({
@@ -369,18 +376,20 @@ function parseTabularTree(currentNode, nodes = []) {
                         "path": e.path,
                         "description": e.description,
                         "parent": e.parents,
-                        "id": index
+                        "id": e.id
                     }) + '\n',
                         'utf-8'
                     )
                 })
+                id = -1;
                 console.log(`[${timestamp()}] Finish drug import`);
             } catch (err) {
                 console.log(err)
             }
         })
     })
-    fs.readFile('icd10cm-eindex-2023.xml', function (err, data) {
+
+    await fs.readFile('icd10cm-eindex-2023.xml', function (err, data) {
         console.log(`[${timestamp()}] Start injury import`);
         xml2js.parseString(data, (err, result) => {
             if (err) {
@@ -409,7 +418,7 @@ function parseTabularTree(currentNode, nodes = []) {
                         "path": e.path,
                         "description": e.description,
                         "parent": e.parents,
-                        "id": index
+                        "id": e.id
                     }) + '\n',
                         'utf-8'
                     )
@@ -420,7 +429,7 @@ function parseTabularTree(currentNode, nodes = []) {
                 if (fd) {
                     fs.closeSync(fd)
                 }
-
+                id = -1
                 console.log(`[${timestamp()}] Finish injury import`);
             }
         });
