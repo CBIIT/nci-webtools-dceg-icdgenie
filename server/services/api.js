@@ -63,6 +63,8 @@ api.post("/batch", (request, response) => {
   }
 });
 
+
+
 api.post("/opensearch", async (request, response) => {
   const { logger } = request.app.locals;
   var client = new Client({
@@ -86,15 +88,28 @@ api.post("/opensearch", async (request, response) => {
         ],
       }
     },
+    "sort": [
+      {
+        "_script": {
+          "type": "number",
+          "order": "asc",
+          "script": "Long.parseLong(doc['_id'].value)"
+        }
+      }
+    ],
     "size": 10000
   }
 
   var results = await client.search({
-    index: "injury",
+    index: "drug",
     body
   })
-  
-  response.json(results.body.hits.hits)
+
+  const toReturn = {
+    drug: results.body.hits.hits
+  }
+
+  response.json(toReturn)
 })
 
 module.exports = { api };

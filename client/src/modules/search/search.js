@@ -1,4 +1,4 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
 import Container from "react-bootstrap/Container";
@@ -19,6 +19,7 @@ export default function Search() {
   const [search, setSearch] = useRecoilState(searchState);
   const [modal, setModal] = useRecoilState(modalState);
   const query = searchParams.get("query");
+  const [maps,setMaps] = useState({})
 
   useEffect(() => setSearch(query || ""), [query, setSearch]);
 
@@ -30,6 +31,69 @@ export default function Search() {
 
   function hideModal() {
     setModal((state) => ({ ...state, show: false }));
+  }
+
+  function processSearch(results) {
+
+    const map = new Map();
+
+    results.map((node) => {
+  
+      const source = node._source;
+      const key = source.path.join();
+      var parents = [];
+  
+      source.parent.map((parent) => {
+        const parentKey = parent.path.join()
+        if (!map.has(parentKey)) {
+  
+          var value;
+  
+          value = {
+            path: parent.source ? parent.source.join(' ') : parent.source,
+            description: parent.description,
+            children: [key],
+            parents: parent.parents.map((e) => {
+              return e.path.join();
+            })
+          }
+  
+          if(node._index === "drug" || node._index === "neoplasm"){
+            for(var code in parent.code)
+              value[code] = parent.code[code] 
+          }
+          else
+            value["code"] = parent.code
+  
+          map.set(parentKey, value)
+        }
+        else {
+          var parent = map.get(parentKey)
+          parent = { ...parent, children: parent.children.concat(key) }
+          map.set(parentKey, parent)
+        }
+  
+        parents = parents.concat(parentKey)
+      })
+  
+      const value = {
+        path: source.path.join(' '),
+        description: source.description,
+        parents: parents,
+        children: [],
+      }
+  
+      if(node._index === "drug" || node._index === "neoplasm"){
+        for(var code in source.code)
+          value[code] = source.code[code] 
+      }
+      else
+        value["code"] = source.code
+  
+      map.set(key, value)
+    })
+    console.log(map)
+    return map
   }
 
   async function typeaheadSearch(e) {
@@ -50,10 +114,14 @@ export default function Search() {
     };
 
     const response = await axios.post("api/opensearch",{ search: e.target.value })
+    
+    const results = {
+      drug: processSearch(response.data.drug)
+    }
 
-    console.log(response)
+    setMaps(results)
   }
-
+  console.log(maps)
   return (
     <>
       <Modal show={modal.show} size="xl" onHide={hideModal}>
@@ -76,7 +144,7 @@ export default function Search() {
               />}
               <Form.Control
                 className="search-box mb-3"
-                onChange={typeaheadSearch}
+                onBlur={typeaheadSearch}
               />
               <div className="text-uppercase text-muted text-center">
                 Search by Keywords, ICD-10 code, or ICD-O-3 code
@@ -87,7 +155,7 @@ export default function Search() {
 
         <ErrorBoundary fallback="">
           <Suspense fallback={<Loader show fullscreen />}>
-            <SearchResults query={query} />
+            <SearchResults query={query} maps={maps}/>
           </Suspense>
         </ErrorBoundary>
       </div>

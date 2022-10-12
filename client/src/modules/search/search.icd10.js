@@ -10,7 +10,7 @@ import ICDTranslations from "./search.translations";
 import axios from "axios";
 import Loader from "../common/loader";
 
-export default function ICD10({ form }) {
+export default function ICD10({ form, maps }) {
   const setModal = useSetRecoilState(modalState);
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +30,7 @@ export default function ICD10({ form }) {
   ];
 
   const drugColumns = [
-    { name: "substance", title: "Substance" },
+    { name: "path", title: "Substance" },
     { name: "poisoningAccidental", title: "Accidental Poisoning" },
     { name: "poisoningIntentionalSelfHarm", title: "Intentional Self Harm Poisoning" },
     { name: "poisoningAssault", title: "Assault Poisoning" },
@@ -59,6 +59,20 @@ export default function ICD10({ form }) {
 
   function getChildRows(row, rootRows) {
     return row ? row.children : rootRows;
+  }
+
+  function getDrugChildRows(row, rootRows){
+   
+    if(row){
+      var children = []
+      row.children.map((child) => {
+        children = children.concat(maps.drug.get(child))
+      })
+
+      return children
+    }
+
+    return rootRows;
   }
 
   async function showTranslationModal(icd10) {
@@ -147,7 +161,7 @@ export default function ICD10({ form }) {
             <span className="accordion-font">DRUG TABLE</span>
           </Accordion.Header>
           <Accordion.Body>
-            <Grid rows={form.drugData} columns={drugColumns}>
+            <Grid rows={maps.drug ? Array.from(maps.drug.values()).filter((node) => node.parents.length === 0) : []} columns={drugColumns}>
               <IcdCodeTypeProvider
                 for={[
                   "poisoningAccidental",
@@ -159,15 +173,14 @@ export default function ICD10({ form }) {
                 ]}
               />
               <TreeDataState />
-              <CustomTreeData getChildRows={getChildRows} />
+              <CustomTreeData getChildRows={getDrugChildRows} />
               <Table columnExtensions={drugColumnExtension} />
               <TableHeaderRow />
-              <TableTreeColumn for="substance" />
+              <TableTreeColumn for="path" />
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
-
       <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 injury">
         <Accordion.Item eventKey="0">
           <Accordion.Header>
@@ -180,7 +193,7 @@ export default function ICD10({ form }) {
               <CustomTreeData getChildRows={getChildRows} />
               <Table columnExtensions={indexColumnExtension} />
               <TableHeaderRow />
-              <TableTreeColumn for="description" />
+              <TableTreeColumn for="path" />
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
