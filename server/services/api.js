@@ -7,11 +7,13 @@ const icdo3 = require("./icdgenie/icdo3");
 const translate = require("./icdgenie/translate");
 const batch = require("./icdgenie/batch");
 const spec = require("./icdgenie/spec");
-const { APP_BASE_URL } = process.env;
+const { APP_BASE_URL, ADMIN, PASSWORD, DOMAIN } = process.env;
 const api = Router();
 
 const { Client } = require("@opensearch-project/opensearch")
 const createAwsOpensearchConnector = require("aws-opensearch-connector")
+
+const host = `https://${ADMIN}:${PASSWORD}@${DOMAIN}`;
 
 api.use(cors());
 api.use(json());
@@ -100,16 +102,34 @@ api.post("/opensearch", async (request, response) => {
     "size": 10000
   }
 
-  var results = await client.search({
+  const tabularResult = await client.search({
+    index: "tabular",
+    body
+  })
+
+  const neoplasmResult = await client.search({
+    index: "neoplasm",
+    body
+  })
+
+  const drugResult = await client.search({
     index: "drug",
     body
   })
 
-  const toReturn = {
-    drug: results.body.hits.hits
+  const injuryResult = await client.search({
+    index: "injury",
+    body
+  })
+
+  const results = {
+    tabular: tabularResult.body.hits.hits,
+    neoplasm: neoplasmResult.body.hits.hits,
+    drug: drugResult.body.hits.hits,
+    injury: injuryResult.body.hits.hits,
   }
 
-  response.json(toReturn)
+  response.json(results)
 })
 
 module.exports = { api };
