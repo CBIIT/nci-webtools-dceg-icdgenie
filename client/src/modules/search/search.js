@@ -26,6 +26,7 @@ export default function Search() {
   const query = searchParams.get("query");
   const [maps, setMaps] = useState({})
   const [input, setInput] = useState("")
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => setSearch(query || ""), [query, setSearch]);
 
@@ -48,7 +49,6 @@ export default function Search() {
       const source = node._source;
       const key = source.id;
       var parents = [];
-      console.log(source)
       var currentKey = key;
 
       source.parent.reverse().map((parent) => {
@@ -105,13 +105,12 @@ export default function Search() {
 
       map.set(key, value)
     })
-    console.log(Array.from(map.values()).filter((node) => node.parents.length === 0))
     return map
   }
 
   async function opensearch(e) {
     e.preventDefault();
-    console.log(input)
+    setLoading(true)
     const response = await axios.post("api/opensearch", { search: input })
 
     const results = {
@@ -121,11 +120,13 @@ export default function Search() {
       injury: processSearch(response.data.injury)
     }
     console.log(results)
+    setLoading(false)
     setMaps(results)
   }
-  console.log(maps)
+
   return (
     <>
+      <Loader show={loading} fullscreen />
       <Modal show={modal.show} size="xl" onHide={hideModal}>
         <Modal.Header closeButton>
           <Modal.Title>{modal.title}</Modal.Title>
@@ -133,6 +134,7 @@ export default function Search() {
         <Modal.Body>{modal.body}</Modal.Body>
       </Modal>
       <div className="h-100 bg-white">
+
         <Container className="flex-grow-1 py-5">
           <Row className="h-100 justify-content-center align-items-center">
             <Col md={8}>
@@ -154,7 +156,6 @@ export default function Search() {
               <div className="text-uppercase text-muted text-center">
                 Search by Keywords, ICD-10 code, or ICD-O-3 code
               </div>
-
             </Col>
           </Row>
         </Container>
@@ -166,5 +167,6 @@ export default function Search() {
         </ErrorBoundary>
       </div>
     </>
+
   );
 }

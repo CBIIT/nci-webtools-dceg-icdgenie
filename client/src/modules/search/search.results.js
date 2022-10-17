@@ -8,7 +8,6 @@ import ICD10Hierarchy from "./search.hierarchy";
 
 export default function SearchResults({ query, maps }) {
   const results = useRecoilValue(resultsSelector(query));
-  console.log(results)
   return (
     <Tabs
       id="results-tabs"
@@ -26,7 +25,7 @@ export default function SearchResults({ query, maps }) {
       </Tab>
       <Tab eventKey="contact" title="ICD-10 Hierarchy">
         <div className="bg-secondary">
-          <ICD10Hierarchy form={results} />
+          <ICD10Hierarchy form={results} maps={maps}/>
         </div>
       </Tab>
     </Tabs>
