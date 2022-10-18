@@ -38,11 +38,11 @@ export function prepareTreeData(map, rootLabel, options = {}) {
   const records = Array.from(map.values()).filter((node) => node.parents.length === 0)
   if (!records.length) return { data: null };
 
-  const children = flattenArray(records.map((d) => ({ ...d, parentId: 0 })), map);
+  const children = flattenArray(records.map((d) => ({ ...d, parentId: -1 })), map);
   const data = [{
     description: rootLabel,
     code: "",
-    id: 0,
+    id: -1,
     parentId: null,
   }].concat(children);
 
