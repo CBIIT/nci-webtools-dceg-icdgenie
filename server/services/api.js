@@ -84,7 +84,8 @@ api.post("/opensearch", async (request, response) => {
             "multi_match": {
               "type": "best_fields",
               "query": request.body.search,
-              "lenient": true
+              "lenient": true,
+              "fuzziness": "AUTO",
             }
           }
         ],
