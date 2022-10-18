@@ -27,7 +27,7 @@ api.get("/ping", (request, response) => {
   const { logger, database } = request.app.locals;
   logger.debug("ping");
   const results = icdgenie.getStatus(database);
-  response.json(host);
+  response.json(results);
 });
 
 api.get("/search/icd10", (request, response) => {
