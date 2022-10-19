@@ -103,25 +103,12 @@ api.post("/opensearch", async (request, response) => {
     "size": 10000
   }
 
-  const tabularResult = await client.search({
-    index: "tabular",
-    body
-  })
-
-  const neoplasmResult = await client.search({
-    index: "neoplasm",
-    body
-  })
-
-  const drugResult = await client.search({
-    index: "drug",
-    body
-  })
-
-  const injuryResult = await client.search({
-    index: "injury",
-    body
-  })
+  const [tabularResult, neoplasmResult, drugResult, injuryResult] = await Promise.all([
+    client.search({index: "tabular", body}),
+    client.search({index: "neoplasm", body}),
+    client.search({index: "drug", body}),
+    client.search({index: "injury", body})
+  ])
 
   const results = {
     tabular: tabularResult.body.hits.hits,
