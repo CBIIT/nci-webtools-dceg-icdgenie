@@ -1,40 +1,38 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { createSearchParams, useNavigate, useSearchParams } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Modal from "react-bootstrap/Modal";
-import { Form } from 'react-bootstrap'
-import Loader from "../common/loader";
-import SearchForm from "../common/search-form";
-import SearchResults from "./search.results";
-import { modalState, searchState } from "./search.state";
-import ErrorBoundary from "../common/error-boundary";
 import axios from "axios";
-import InputGroup from "react-bootstrap/InputGroup";
-import FormControl from "react-bootstrap/FormControl";
-import Button from "react-bootstrap/Button";
+
+import {  useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { Container, Row, Col, Modal, InputGroup, FormControl, Button } from "react-bootstrap";
+
+import Loader from "../common/loader";
+import SearchResults from "./search.results";
+import { modalState } from "./search.state";
+import ErrorBoundary from "../common/error-boundary";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 export default function Search() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
-  const [search, setSearch] = useRecoilState(searchState);
   const [modal, setModal] = useRecoilState(modalState);
   const query = searchParams.get("query");
   const [maps, setMaps] = useState({})
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => setSearch(query || ""), [query, setSearch]);
+  useEffect(() => {
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-    const params = createSearchParams({ query: search });
-    navigate(`/search?${params}`);
-  }
+    if (location.state) {
+      setInput(location.state.query)
+      handleSubmit(location.state.query)
+    }
+
+    window.history.replaceState(null, '')
+  },
+    [location]);
 
   function hideModal() {
     setModal((state) => ({ ...state, show: false }));
@@ -77,10 +75,10 @@ export default function Search() {
           map.set(parentKey, value)
         }
         else {
-          var parent = map.get(parentKey)
-          if (!parent.children.includes(currentKey)) {
-            parent = { ...parent, children: parent.children.concat(currentKey) }
-            map.set(parentKey, parent)
+          var parentValue = map.get(parentKey)
+          if (!parentValue.children.includes(currentKey)) {
+            parentValue = { ...parentValue, children: parentValue.children.concat(currentKey) }
+            map.set(parentKey, parentValue)
           }
         }
 
@@ -108,10 +106,10 @@ export default function Search() {
     return map
   }
 
-  async function opensearch(e) {
-    e.preventDefault();
+  async function handleSubmit(query) {
+
     setLoading(true)
-    const response = await axios.post("api/opensearch", { search: input })
+    const response = await axios.post("api/opensearch", { search: query })
 
     const results = {
       tabular: processSearch(response.data.tabular),
@@ -122,6 +120,11 @@ export default function Search() {
     console.log(results)
     setLoading(false)
     setMaps(results)
+  }
+
+  async function opensearch(e) {
+    e.preventDefault();
+    handleSubmit(input);
   }
 
   return (
