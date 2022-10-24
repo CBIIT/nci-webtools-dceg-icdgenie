@@ -75,17 +75,21 @@ api.post("/opensearch", async (request, response) => {
       rejectUnauthorized: false
     }
   })
-  logger.info(request.body.search)
+ 
+  const query = request.body.search.split(" ").map((word) => {
+    return word + "~AUTO"
+  }).join(" ");
+  logger.info(query)
+  
   var body = {
     "query": {
       "bool": {
         "filter": [
           {
-            "multi_match": {
-              "type": "best_fields",
-              "query": request.body.search,
-              "lenient": true,
-              "fuzziness": "AUTO",
+            "query_string": {
+              "query": query,
+              "fields": ["*"],
+              "lenient": true
             }
           }
         ],
@@ -104,10 +108,10 @@ api.post("/opensearch", async (request, response) => {
   }
 
   const [tabularResult, neoplasmResult, drugResult, injuryResult] = await Promise.all([
-    client.search({index: "tabular", body}),
-    client.search({index: "neoplasm", body}),
-    client.search({index: "drug", body}),
-    client.search({index: "injury", body})
+    client.search({ index: "tabular", body }),
+    client.search({ index: "neoplasm", body }),
+    client.search({ index: "drug", body }),
+    client.search({ index: "injury", body })
   ])
 
   const results = {
