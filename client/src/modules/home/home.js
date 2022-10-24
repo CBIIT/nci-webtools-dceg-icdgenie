@@ -13,7 +13,7 @@ export default function Home() {
   function handleSubmit(event) {
     event.preventDefault();
     //const params = createSearchParams({ query: search });
-    navigate(`/search`, { state: { query: search }});
+    navigate(`/search`, { state: { query: search } });
   }
 
   return (
@@ -33,36 +33,42 @@ export default function Home() {
         </Row>
       </Container>
 
-      <div className="bg-white bg-gradient-main">
+      <div className="bg-main">
+
         <Container className="py-5">
+          <h3 className="pb-3">About ICD Genie</h3>
           <Row className="justify-content-center">
             <Col xl={8}>
-              <h3 className="text-light">ABOUT ICDGENIE</h3>
               <p className="lead fw-normal">
                 ICD Genie is a translator for textual diagnoses, ICD-10, and ICD-O-3 codes sourced from the
-                <a href="https://www.cms.gov/files/zip/2022-code-tables-tabular-and-index.zip" target="_blank"> Centers for Medicare & Medicaid Services (CMS)</a>,
-                the <a href="https://www.naaccr.org/icdo3/" target="_blank">North American Association of Central Cancer Registries (NAACCR)</a>,
-                the <a href="https://seer.cancer.gov/icd-o-3/" target="_blank">Surveillance, Epidemiology, and End Results (SEER) program validation list</a>,
-                and the <a href="https://apps.who.int/iris/bitstream/handle/10665/96612/9789241548496_eng.pdf" target="_blank">World Health Organization (WHO) ICD-O-3 publication</a>.
+                <a className="white-href" href="https://www.cms.gov/files/zip/2022-code-tables-tabular-and-index.zip" target="_blank"> Centers for Medicare & Medicaid Services (CMS)</a>,
+                the <a className="white-href" href="https://www.naaccr.org/icdo3/" target="_blank">North American Association of Central Cancer Registries (NAACCR)</a>,
+                the <a className="white-href" href="https://seer.cancer.gov/icd-o-3/" target="_blank">Surveillance, Epidemiology, and End Results (SEER) program validation list</a>,
+                and the <a className="white-href" href="https://apps.who.int/iris/bitstream/handle/10665/96612/9789241548496_eng.pdf" target="_blank">World Health Organization (WHO) ICD-O-3 publication</a>.
               </p>
 
               <p className="lead fw-normal">
                 ICD Genie was created by Sairah Khan M.P.H., Shu-Hong Lin Ph.D., BVSc,
-                <a href="https://dceg.cancer.gov/fellowship-training/fellowship-experience/meet-fellows/iteb/abubakar-mustapha" target="_blank"> Mustapha Abubakar M.D., Ph.D.</a> and
-                <a href="https://dceg.cancer.gov/about/staff-directory/machiela-mitchell" target="_blank"> Mitchell J. Machiela Sc.D., MPH</a> of the NCI Division of Cancer Epidemiology and Genetics DCEG Integrative Tumor Epidemiology Branch with assistance developing the tool from Brian Park B.S., Ben Chen B.S., Ryan Damico B.S., Kai-Ling Chen M.S. and Ye Wu Ph.D. of NCI’s
-                <a href="https://datascience.cancer.gov/" target="_blank"> Center for Biomedical Informatics and Information Technology.</a> Many thanks to our colleagues who provided critical input during the design and development of ICD Genie!
+                <a className="white-href" href="https://dceg.cancer.gov/fellowship-training/fellowship-experience/meet-fellows/iteb/abubakar-mustapha" target="_blank"> Mustapha Abubakar M.D., Ph.D.</a> and
+                <a className="white-href" href="https://dceg.cancer.gov/about/staff-directory/machiela-mitchell" target="_blank"> Mitchell J. Machiela Sc.D., MPH</a> of the NCI Division of Cancer Epidemiology and Genetics DCEG Integrative Tumor Epidemiology Branch with assistance developing the tool from Brian Park B.S., Ben Chen B.S., Ryan Damico B.S., Kai-Ling Chen M.S. and Ye Wu Ph.D. of NCI’s
+                <a className="white-href" href="https://datascience.cancer.gov/" target="_blank"> Center for Biomedical Informatics and Information Technology.</a> Many thanks to our colleagues who provided critical input during the design and development of ICD Genie!
               </p>
 
               <p className="lead fw-normal mb-0">
-                This project was funded by a <a href="https://dceg.cancer.gov/news-events/news/2021/2021-informatics-tool-challenge" target="_blank">DCEG Informatic Tool Challenge</a> award.
+                This project was funded by a <a className="white-href" href="https://dceg.cancer.gov/news-events/news/2021/2021-informatics-tool-challenge" target="_blank">DCEG Informatic Tool Challenge</a> award.
               </p>
             </Col>
-            <Col className="lead fw-normal" xl={4}>
-              <div>Learn about how to get started:</div>
-              <Button variant="outline-light" className="m-3 px-4" onClick={() => {navigate('/about')}}>
-                About Page
-              </Button>
-              <div>Questions, comments or concerns, get in contact with ICD Genie Support</div>
+            <Col className="lead fw-normal text-end" xl={4}>
+              <div className="px-3" style={{ borderRight: "5px solid #FA6951"}}>
+                <div>Learn about how to get started:</div>
+                <Button variant="outline-light" className="m-3 px-4 pill-button" onClick={() => { navigate('/about') }}>
+                  About Page
+                </Button>
+                <div>Questions, comments or concerns, get in contact with ICD Genie Support</div>
+                <Button variant="outline-light" className="m-3 px-4 pill-button" onClick={() => window.location.href = "mailto:NCIICDGenieWebAdmin@mail.nih.gov"}>
+                  Contact Us
+                </Button>
+              </div>
             </Col>
           </Row>
         </Container>

@@ -24,8 +24,23 @@ hr {
   background-color: rgba(158, 199, 226, 0.52);
 }
 
-.bg-gradient-main {
-  background: linear-gradient(270deg, #f1a193 0%, #a9e0fb 100%);
+.bg-main {
+  background: rgba(0,0,0,0.3);
+  border-top: 3px solid white;
+  color: white;
+}
+
+.white-href{
+  color: white;
+  text-decoration-line: underline;
+}
+
+.white-href:hover{
+  color: white;
+}
+
+.pill-button {
+  border-radius: 30px;
 }
 
 @mixin nav-link($color, $border-color) {
