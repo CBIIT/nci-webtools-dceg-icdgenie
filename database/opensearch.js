@@ -3,6 +3,8 @@ const path = require("path")
 const { getTimestamp } = require("./utils");
 const timestamp = getTimestamp(([absolute, relative]) => `${absolute / 1000}s, ${relative / 1000}s`);
 const database = require("better-sqlite3")("database.db");
+const { parse } = require("csv-parse");
+const { readFileAsIterable } = require("./utils");
 var xml2js = require('xml2js');
 
 var id = -1;
@@ -263,10 +265,107 @@ function parseTabularTree(currentNode, nodes = []) {
     return toReturn
 }
 
+async function parseICDO3() {
+
+    const filePath = "data/icdo3_morphology_v22_20210719.csv"
+    const headers = ["histology", "behavior", "preferred", "description"]
+    var results = [];
+
+    console.log(`[${timestamp()}] Start icdo3 import`);
+
+    await fs.createReadStream(filePath)
+        .pipe(parse({
+            columns: headers || true,
+            skip_empty_lines: true,
+            relax_column_count: true,
+            trim: true,
+            from_line: headers ? 2 : 1,
+            delimiter: ','
+        }))
+        .on('data', function (row) {
+            results = results.concat({
+                ...row,
+                code: row.histology + "/" + row.behavior
+            })
+        })
+        .on("end", function () {
+
+            var fd = fs.openSync(path.resolve('data', 'icdo3.json'), 'a')
+            results.map((e, index) => {
+             
+                fs.appendFileSync(fd, JSON.stringify({
+                    "index": {
+                        "_index": "icdo3",
+                        "_id": index
+                    }
+                }) + '\n',
+                    'utf-8'
+                )
+
+                fs.appendFileSync(fd, JSON.stringify({
+                   ...e
+                }) + '\n',
+                    'utf-8'
+                )
+            })
+
+            console.log(`[${timestamp()}] Finish icdo3 import`);
+        })
+}
+
+async function parseTranslations() {
+
+    const filePath = "data/icd10cm_icdo3_mapping.csv"
+    const headers = ["icd10", "icd10Description", "icdo3", "icdo3Description"]
+    var results = [];
+
+    console.log(`[${timestamp()}] Start translations import`);
+
+    await fs.createReadStream(filePath)
+        .pipe(parse({
+            columns: headers || true,
+            skip_empty_lines: true,
+            relax_column_count: true,
+            trim: true,
+            from_line: headers ? 2 : 1,
+            delimiter: ','
+        }))
+        .on('data', function (row) {
+            console.log(row)
+            results = results.concat({
+                ...row,
+            })
+        })
+        .on("end", function () {
+           
+            var fd = fs.openSync(path.resolve('data', 'translations.json'), 'a')
+            results.map((e, index) => {
+             
+                fs.appendFileSync(fd, JSON.stringify({
+                    "index": {
+                        "_index": "translations",
+                        "_id": index
+                    }
+                }) + '\n',
+                    'utf-8'
+                )
+
+                fs.appendFileSync(fd, JSON.stringify({
+                   ...e
+                }) + '\n',
+                    'utf-8'
+                )
+            })
+
+            console.log(`[${timestamp()}] Finish translations import`);
+        })
+}
 
 (async function main() {
 
-   
+    parseICDO3();
+    parseTranslations();
+
     await fs.readFile('icd10cm-tabular-2023.xml', function (err, data) {
         console.log(`[${timestamp()}] Start tabular import`);
         xml2js.parseString(data, (err, result) => {
@@ -301,13 +400,13 @@ function parseTabularTree(currentNode, nodes = []) {
                     )
                 })
                 id = -1;
-                console.log(`[${timestamp()}] Finish tabular import`); 
+                console.log(`[${timestamp()}] Finish tabular import`);
             } catch (err) {
                 console.log(err)
             }
         })
     })
-    
+
     await fs.readFile('icd10cm-neoplasm-2023.xml', function (err, data) {
         console.log(`[${timestamp()}] Start neoplasm import`);
         xml2js.parseString(data, (err, result) => {
@@ -318,7 +417,7 @@ function parseTabularTree(currentNode, nodes = []) {
 
                 var terms = []
                 terms = parseNeoplasmTree(result["ICD10CM.index"]["letter"][0].mainTerm, [])
-               // console.log(terms)
+                // console.log(terms)
 
                 var fd = fs.openSync(path.resolve('data', 'icd10neoplasm.json'), 'a')
                 terms.map((e, index) => {
@@ -403,7 +502,7 @@ function parseTabularTree(currentNode, nodes = []) {
             var fd;
             try {
                 fd = fs.openSync(path.resolve('data', 'icd10eindex.json'), 'a')
-                terms.map((e,index) => {
+                terms.map((e, index) => {
                     fs.appendFileSync(fd, JSON.stringify({
                         "index": {
                             "_index": "injury",
