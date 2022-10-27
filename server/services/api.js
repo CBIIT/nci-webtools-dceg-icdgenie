@@ -65,7 +65,41 @@ api.post("/batch", (request, response) => {
   }
 });
 
+api.post("/translation", async (request, response) => {
+  const { logger } = request.app.locals;
+  var client = new Client({
+    node: host,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  })
 
+  var body = {
+    "query": {
+      "bool": {
+        "filter": [
+          {
+            "query_string": {
+              "query": query,
+              "fields": ["*"],
+              "lenient": true
+            }
+          }
+        ],
+      }
+    },
+    "sort": [
+      {
+        "_script": {
+          "type": "number",
+          "order": "asc",
+          "script": "Long.parseLong(doc['_id'].value)"
+        }
+      }
+    ],
+    "size": 10000
+  }
+})
 
 api.post("/opensearch", async (request, response) => {
   const { logger } = request.app.locals;
@@ -107,11 +141,12 @@ api.post("/opensearch", async (request, response) => {
     "size": 10000
   }
 
-  const [tabularResult, neoplasmResult, drugResult, injuryResult] = await Promise.all([
+  const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result] = await Promise.all([
     client.search({ index: "tabular", body }),
     client.search({ index: "neoplasm", body }),
     client.search({ index: "drug", body }),
-    client.search({ index: "injury", body })
+    client.search({ index: "injury", body }),
+    client.search({ index: "icdo3", body})
   ])
 
   const results = {
@@ -119,6 +154,7 @@ api.post("/opensearch", async (request, response) => {
     neoplasm: neoplasmResult.body.hits.hits,
     drug: drugResult.body.hits.hits,
     injury: injuryResult.body.hits.hits,
+    icdo3: icdo3Result.body.hits.hits
   }
 
   response.json(results)
