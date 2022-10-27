@@ -44,13 +44,6 @@ api.get("/search/icdo3", (request, response) => {
   response.json(results);
 });
 
-api.get("/translate", (request, response) => {
-  const { logger, database } = request.app.locals;
-  logger.debug("translate: " + JSON.stringify(request.query));
-  const results = translate.translateCode(database, request.query);
-  response.json(results);
-});
-
 api.post("/batch", (request, response) => {
   const { logger, database } = request.app.locals;
   logger.debug("batch: " + JSON.stringify(request.body));
@@ -65,7 +58,7 @@ api.post("/batch", (request, response) => {
   }
 });
 
-api.post("/translation", async (request, response) => {
+api.post("/translate", async (request, response) => {
   const { logger } = request.app.locals;
   var client = new Client({
     node: host,
@@ -73,15 +66,15 @@ api.post("/translation", async (request, response) => {
       rejectUnauthorized: false
     }
   })
-
+  console.log("\"" + request.body.params + "\"")
   var body = {
     "query": {
       "bool": {
         "filter": [
           {
             "query_string": {
-              "query": query,
-              "fields": ["*"],
+              "query": "\"" + request.body.params + "\"",
+              "fields": ["icdo3", "icd10"],
               "lenient": true
             }
           }
@@ -99,6 +92,9 @@ api.post("/translation", async (request, response) => {
     ],
     "size": 10000
   }
+
+  const results = await client.search({ index: "translations", body })
+  response.json(results.body.hits.hits.map((e) => { return e._source }))
 })
 
 api.post("/opensearch", async (request, response) => {

@@ -134,7 +134,7 @@ export default function ICD10({ form, maps }) {
     try {
       setLoading(true);
       icd10 = icd10.replace(/-$/, "");
-      const rows = await axios.get("api/translate", { params: { icd10 } });
+      const rows = await axios.post("api/translate", { params: icd10 });
       setModal({
         show: true,
         title: `ICD-O-3 Translation for ICD10 Code: ${icd10}`,
