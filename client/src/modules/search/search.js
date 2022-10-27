@@ -115,8 +115,10 @@ export default function Search() {
       tabular: processSearch(response.data.tabular),
       neoplasm: processSearch(response.data.neoplasm),
       drug: processSearch(response.data.drug),
-      injury: processSearch(response.data.injury)
+      injury: processSearch(response.data.injury),
+      icdo3: response.data.icdo3
     }
+
     console.log(results)
     setLoading(false)
     setMaps(results)

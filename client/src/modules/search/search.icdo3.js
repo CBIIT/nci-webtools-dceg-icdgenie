@@ -9,7 +9,7 @@ import Loader from "../common/loader";
 import { modalState } from "./search.state";
 import { useSetRecoilState } from "recoil";
 
-export default function ICDO3({ form }) {
+export default function ICDO3({ form, maps }) {
   const [loading, setLoading] = useState(false);
   const setModal = useSetRecoilState(modalState);
 
@@ -24,7 +24,7 @@ export default function ICDO3({ form }) {
   async function showTranslationModal(icdo3) {
     try {
       setLoading(true);
-      const rows = await axios.get("api/translate", { params: { icdo3 } });
+      const rows = await axios.post("api/translate", { params: icdo3 });
       setModal({
         show: true,
         title: `ICD-10 Translation for ICD-O-3 Code: ${icdo3}`,
@@ -46,7 +46,7 @@ export default function ICDO3({ form }) {
   }
 
   function preferredTermFormatter({ value }) {
-    return value === 1 ? "Yes" : "No";
+    return value === "1" ? "Yes" : "No";
   }
 
   function IcdCodeTypeProvider(props) {
@@ -60,7 +60,7 @@ export default function ICDO3({ form }) {
   return (
     <Container className="py-5 h-100 col-xl-8 col-sm-12 index">
       <Loader show={loading} fullscreen />
-      <Grid rows={form.icdo3Data} columns={icdo3Columns}>
+      <Grid rows={maps.icdo3 ? maps.icdo3.map((e) => { return e._source}) : []} columns={icdo3Columns}>
         <IcdCodeTypeProvider for={["code"]} />
         <PreferredTermTypeProvider for={["preferred"]} />
         <Table columnExtensions={columnExtensions} />

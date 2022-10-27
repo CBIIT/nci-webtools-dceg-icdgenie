@@ -20,7 +20,7 @@ export default function SearchResults({ query, maps }) {
       </Tab>
       <Tab eventKey="icdo3CodeTable" title="ICD-O-3 Code Table">
         <div className="bg-secondary">
-          <ICDO3 form={results} />
+          <ICDO3 form={results} maps={maps} />
         </div>
       </Tab>
       <Tab eventKey="contact" title="ICD-10 Hierarchy">
