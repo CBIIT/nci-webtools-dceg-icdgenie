@@ -2,8 +2,8 @@ import { Suspense, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 
-import {  useNavigate, useSearchParams, useLocation } from "react-router-dom";
-import { Container, Row, Col, Modal, InputGroup, FormControl, Button } from "react-bootstrap";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { Container, Row, Col, Modal, InputGroup, FormControl, Form, Button } from "react-bootstrap";
 
 import Loader from "../common/loader";
 import SearchResults from "./search.results";
@@ -22,6 +22,8 @@ export default function Search() {
   const [maps, setMaps] = useState({})
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
+  const [valid, setValid] = useState(true)
+  const [suggestions, setSuggestions] = useState([])
 
   useEffect(() => {
 
@@ -41,7 +43,6 @@ export default function Search() {
   function processSearch(results) {
 
     const map = new Map();
-
     results.map((node) => {
 
       const source = node._source;
@@ -109,6 +110,8 @@ export default function Search() {
   async function handleSubmit(query) {
 
     setLoading(true)
+    setValid(true)
+    setInput(query)
     const response = await axios.post("api/opensearch", { search: query })
 
     const results = {
@@ -119,14 +122,17 @@ export default function Search() {
       icdo3: response.data.icdo3
     }
 
-    console.log(results)
+    setSuggestions(response.data.fuzzyTerms)
     setLoading(false)
     setMaps(results)
   }
 
   async function opensearch(e) {
     e.preventDefault();
-    handleSubmit(input);
+    if(input.length >= 3)
+      handleSubmit(input);
+    else
+      setValid(false)
   }
 
   return (
@@ -144,21 +150,33 @@ export default function Search() {
           <Row className="h-100 justify-content-center align-items-center">
             <Col md={8}>
               <form onSubmit={opensearch}>
-                <InputGroup size={"lg"} className="search-box mb-3">
-                  <FormControl
+                <InputGroup size={"lg"} className="search-box" style={{borderColor: valid ? "" : "red"}}>
+                  <Form.Control
                     className="border-0 shadow-none"
                     placeholder={"Search ICD Genie"}
                     aria-label={"Search ICD Genie"}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
+                    onBlur={() => setValid(input.length >= 3)}
                   />
                   <Button type="submit" variant="white" className="border-0 shadow-none">
                     <span className="visually-hidden">Submit</span>
                     <FontAwesomeIcon icon={faArrowRight} className="text-muted" />
                   </Button>
                 </InputGroup>
+                {!valid && <div style={{color: "red"}}>
+                  Your search text must be at least 3 characters long
+                </div>}
               </form>
-              <div className="text-uppercase text-muted text-center">
+              {suggestions.length ? <span style={{fontSize: '18px'}}>
+                Did you mean: {(suggestions.map((e, index) =>
+                   <>
+                    {index ? ', ': ''}
+                    <a href="javascript:void(0)" onClick={() => handleSubmit(e)}>{e}</a>
+                   </>
+                ))}
+              </span> : <></>}
+              <div className="mt-3 text-uppercase text-muted text-center">
                 Search by Keywords, ICD-10 code, or ICD-O-3 code
               </div>
             </Col>

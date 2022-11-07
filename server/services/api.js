@@ -11,7 +11,7 @@ const { APP_BASE_URL, ADMIN, PASSWORD, DOMAIN } = process.env;
 const api = Router();
 
 const { Client } = require("@opensearch-project/opensearch")
-const createAwsOpensearchConnector = require("aws-opensearch-connector")
+const createAwsOpensearchConnector = require("aws-opensearch-connector");
 
 const host = `https://${ADMIN}:${PASSWORD}@${DOMAIN}`;
 
@@ -97,6 +97,47 @@ api.post("/translate", async (request, response) => {
   response.json(results.body.hits.hits.map((e) => { return e._source }))
 })
 
+async function fuzzySearch(options, client, index) {
+
+  var results = []
+  await Promise.all(options.map(async (e) => {
+
+    var body = {
+      "query": {
+        "bool": {
+          "filter": [
+            {
+              "query_string": {
+                "query": e.text,
+                "fields": ["*"],
+                "lenient": true,
+                "analyze_wildcard": true,
+                "allow_leading_wildcard": true,
+              }
+            }
+          ],
+        }
+      },
+      "sort": [
+        {
+          "_script": {
+            "type": "number",
+            "order": "asc",
+            "script": "Long.parseLong(doc['_id'].value)"
+          }
+        }
+      ],
+      "size": 500
+    }
+
+    const query = await client.search({ index: index, body })
+    results = results.concat(query.body.hits.hits)
+  }))
+
+
+  return results
+}
+
 api.post("/opensearch", async (request, response) => {
   const { logger } = request.app.locals;
   var client = new Client({
@@ -105,12 +146,10 @@ api.post("/opensearch", async (request, response) => {
       rejectUnauthorized: false
     }
   })
- 
-  const query = request.body.search.split(" ").map((word) => {
-    return word + "~AUTO"
-  }).join(" ");
+
+  const query = "*" + request.body.search + "*"
   logger.info(query)
-  
+
   var body = {
     "query": {
       "bool": {
@@ -119,10 +158,20 @@ api.post("/opensearch", async (request, response) => {
             "query_string": {
               "query": query,
               "fields": ["*"],
-              "lenient": true
+              "lenient": true,
+              "analyze_wildcard": true,
+              "allow_leading_wildcard": true,
             }
           }
         ],
+      }
+    },
+    "suggest": {
+      "spell-check": {
+        "text": query,
+        "term": {
+          "field": "description"
+        }
       }
     },
     "sort": [
@@ -134,7 +183,7 @@ api.post("/opensearch", async (request, response) => {
         }
       }
     ],
-    "size": 10000
+    "size": 500
   }
 
   const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result] = await Promise.all([
@@ -142,16 +191,53 @@ api.post("/opensearch", async (request, response) => {
     client.search({ index: "neoplasm", body }),
     client.search({ index: "drug", body }),
     client.search({ index: "injury", body }),
-    client.search({ index: "icdo3", body})
+    client.search({ index: "icdo3", body })
   ])
 
-  const results = {
+
+  var results = {
     tabular: tabularResult.body.hits.hits,
     neoplasm: neoplasmResult.body.hits.hits,
     drug: drugResult.body.hits.hits,
     injury: injuryResult.body.hits.hits,
-    icdo3: icdo3Result.body.hits.hits
+    icdo3: icdo3Result.body.hits.hits,
+    showSuggestions: true,
+    fuzzyTerms: [],
   }
+
+  const tabularOptions = tabularResult.body.suggest["spell-check"][0].options;
+  const neoplasmOptions = neoplasmResult.body.suggest["spell-check"][0].options;
+  const drugOptions = drugResult.body.suggest["spell-check"][0].options;
+  const injuryOptions = injuryResult.body.suggest["spell-check"][0].options;
+  const icdo3Options = icdo3Result.body.suggest["spell-check"][0].options
+
+  if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length) {
+    const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy] = await Promise.all([
+      fuzzySearch(tabularOptions, client, "tabular"),
+      fuzzySearch(neoplasmOptions, client, "neoplasm"),
+      fuzzySearch(drugOptions, client, "drug"),
+      fuzzySearch(injuryOptions, client, "injury"),
+      fuzzySearch(icdo3Options, client, "icdo3")
+    ])
+
+    results.tabular = results.tabular.concat(tabularFuzzy)
+    results.neoplasm = results.neoplasm.concat(neoplasmFuzzy)
+    results.drug = results.drug.concat(drugFuzzy)
+    results.injury = results.injury.concat(injuryFuzzy)
+    results.icdo3 = results.icdo3.concat(icdo3Fuzzy)
+    results.showSuggestions = false
+  }
+  else {
+    const minScore = 0.75
+    results.fuzzyTerms = [...new Set([
+      ...tabularOptions.filter(e => e.score >= minScore).map(e => e.text),
+      ...neoplasmOptions.filter(e => e.score >= minScore).map(e => e.text),
+      ...drugOptions.filter(e => e.score >= minScore).map(e => e.text),
+      ...injuryOptions.filter(e => e.score >= minScore).map(e => e.text),
+      ...icdo3Options.filter(e => e.score >= minScore).map(e => e.text)
+    ])]
+  }
+
 
   response.json(results)
 })
