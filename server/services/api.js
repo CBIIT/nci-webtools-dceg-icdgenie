@@ -147,7 +147,7 @@ api.post("/opensearch", async (request, response) => {
     }
   })
 
-  const query = "*" + request.body.search + "*"
+  const query = request.body.search.split(" ").length === 1 ? "*" + request.body.search + "*" : "\"" + request.body.search + "\""
   logger.info(query)
 
   var body = {
@@ -210,6 +210,8 @@ api.post("/opensearch", async (request, response) => {
   const drugOptions = drugResult.body.suggest["spell-check"][0].options;
   const injuryOptions = injuryResult.body.suggest["spell-check"][0].options;
   const icdo3Options = icdo3Result.body.suggest["spell-check"][0].options
+
+  console.log(injuryOptions)
 
   if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length) {
     const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy] = await Promise.all([
