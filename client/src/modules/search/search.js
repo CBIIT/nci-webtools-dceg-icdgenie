@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import axios from "axios";
 
 import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
-import { Container, Row, Col, Modal, InputGroup, FormControl, Form, Button } from "react-bootstrap";
+import { Container, Row, Col, Modal, InputGroup, Form, Button } from "react-bootstrap";
 
 import Loader from "../common/loader";
 import SearchResults from "./search.results";
@@ -29,7 +29,10 @@ export default function Search() {
 
     if (location.state) {
       setInput(location.state.query)
-      handleSubmit(location.state.query)
+      if(location.state.query.length >= 3)
+        handleSubmit(location.state.query)
+      else
+        setValid(false)
     }
 
     window.history.replaceState(null, '')
