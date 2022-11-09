@@ -9,6 +9,9 @@ var xml2js = require('xml2js');
 
 var id = -1;
 
+const sections = [];
+const ranges = [];
+
 function getChildren(currentNode) {
 
     if (currentNode.mainTerm) {
@@ -202,16 +205,21 @@ function parseNeoplasmTree(currentNode, nodes = []) {
     return toReturn
 }
 
+function convertCode(code) {
+    return parseInt(String(code.charCodeAt(0) - 64).padEnd(4, 0)) + parseFloat(code.substring(1))
+}
 
-
+var rangeId = 0;
 function parseTabularNode(currentNode, parents) {
 
-
-    const code = currentNode.name[0]
-    const description = currentNode.desc[0]
-
+    var code;
+    var id;
     var nodePath = []
     var parentArray = []
+
+
+    const description = currentNode.desc[0]
+
 
     for (node of parents) {
         parentArray.push(node)
@@ -220,7 +228,45 @@ function parseTabularNode(currentNode, parents) {
     }
 
     nodePath.push(description)
-    id++;
+
+    if (currentNode["$"] && currentNode["$"].id && currentNode["$"].id.includes("-")) {
+        code = currentNode["$"].id
+        const min = convertCode(code.split("-")[0])
+        const max = convertCode(code.split("-")[1])
+        var root = true;
+        id = parseFloat(min + "." + max)
+
+        for (var i = ranges.length - 1; i >= 0; i--) {
+
+            if (min >= Number(ranges[i].id.toString().split(".")[0]) && max <= Number(ranges[i].id.toString().split(".")[1])) {
+                parentArray.push(ranges[i])
+                root = false;
+                break;
+            }
+        }
+
+        if (root) {
+            for (var i = 0; i < sections.length; i++) {
+
+                if (min >= Number(sections[i].id.toString().split(".")[0]) && max <= Number(sections[i].id.toString().split(".")[1])) {
+                    parentArray.push(sections[i])
+                }
+            }
+        }
+
+        ranges.push({
+            "code": code,
+            "description": description,
+            "path": nodePath,
+            "parents": parentArray,
+            "id": id
+        })
+    }
+    else {
+        code = currentNode.name[0]
+        id = convertCode(code)
+    }
+
     return ({
         "code": code,
         "description": description,
@@ -231,6 +277,7 @@ function parseTabularNode(currentNode, parents) {
 }
 
 function getTabularChildren(currentNode) {
+
 
     if (currentNode.diag) {
         return currentNode.diag
@@ -250,7 +297,22 @@ function parseTabularTree(currentNode, nodes = []) {
     var toReturn = []
     var newNodes = []
 
-    if (currentNode.name && currentNode.desc && !currentNode.sectionIndex) {
+    if (currentNode.sectionIndex) {
+        const regExp = /\(([^]+)\)/;
+        const code = regExp.exec(currentNode.desc)[1]
+
+        section = {
+            "code": code,
+            "description": currentNode.desc,
+            "path": currentNode.desc[0],
+            "parents": [],
+            "id": Number(convertCode(code.split("-")[0]) + "." + convertCode(code.split("-")[1]))
+        }
+
+        sections.push(section)
+        toReturn = [section]
+    }
+    else if ((currentNode.name || (currentNode["$"] && currentNode["$"].id) && currentNode["$"].id.includes("-")) && currentNode.desc) {
 
         toReturn = [parseTabularNode(currentNode, nodes)]
         newNodes = nodes.concat(toReturn)
@@ -292,7 +354,7 @@ async function parseICDO3() {
 
             var fd = fs.openSync(path.resolve('data', 'icdo3.json'), 'a')
             results.map((e, index) => {
-             
+
                 fs.appendFileSync(fd, JSON.stringify({
                     "index": {
                         "_index": "icdo3",
@@ -303,7 +365,7 @@ async function parseICDO3() {
                 )
 
                 fs.appendFileSync(fd, JSON.stringify({
-                   ...e
+                    ...e
                 }) + '\n',
                     'utf-8'
                 )
@@ -337,10 +399,10 @@ async function parseTranslations() {
             })
         })
         .on("end", function () {
-           
+
             var fd = fs.openSync(path.resolve('data', 'translations.json'), 'a')
             results.map((e, index) => {
-             
+
                 fs.appendFileSync(fd, JSON.stringify({
                     "index": {
                         "_index": "translations",
@@ -351,7 +413,7 @@ async function parseTranslations() {
                 )
 
                 fs.appendFileSync(fd, JSON.stringify({
-                   ...e
+                    ...e
                 }) + '\n',
                     'utf-8'
                 )
@@ -376,6 +438,7 @@ async function parseTranslations() {
 
 
                 var terms = []
+                fs.writeFileSync("./tabular.json", JSON.stringify(result["ICD10CM.tabular"], null, 4))
                 terms = parseTabularTree(result["ICD10CM.tabular"], [])
 
                 var fd = fs.openSync(path.resolve('data', 'icd10tabular.json'), 'a')
