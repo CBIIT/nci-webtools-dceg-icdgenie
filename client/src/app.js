@@ -12,6 +12,7 @@ import "./styles/main.scss";
 // preload lazy-loaded page components
 const Home = preloadLazyComponent(() => import("./modules/home/home"));
 const Search = preloadLazyComponent(() => import("./modules/search/search"));
+const Browse = preloadLazyComponent(() => import ("./modules/browse/browse"));
 const ApiAccess = preloadLazyComponent(() => import("./modules/api-access/api-access"));
 const About = preloadLazyComponent(() => import("./modules/about/about"));
 const BatchQuery = preloadLazyComponent(() => import("./modules/batch-query/batch-query"));
@@ -32,6 +33,11 @@ export default function App() {
       route: "/search",
       title: "Search",
       component: Search,
+    },
+    {
+      route: "/browse",
+      title: "Browse",
+      component: Browse
     },
     {
       route: "/batch-query",
