@@ -206,20 +206,20 @@ function parseNeoplasmTree(currentNode, nodes = []) {
 }
 
 function convertCode(code) {
-    return parseInt(String(code.charCodeAt(0) - 64).padEnd(4, 0)) + parseFloat(code.substring(1))
+    var decimals = 0;
+    if(code.substring(1).includes("."))
+        decimals = code.substring(1).split(".")[1].length;
+    
+    return parseInt(String((code.charCodeAt(0) - 64) * 1000)) + parseFloat(code.substring(1)).toFixed(decimals)
 }
 
-var rangeId = 0;
+
 function parseTabularNode(currentNode, parents) {
 
-    var code;
-    var id;
     var nodePath = []
     var parentArray = []
 
-
     const description = currentNode.desc[0]
-
 
     for (node of parents) {
         parentArray.push(node)
@@ -229,50 +229,17 @@ function parseTabularNode(currentNode, parents) {
 
     nodePath.push(description)
 
-    if (currentNode["$"] && currentNode["$"].id && currentNode["$"].id.includes("-")) {
-        code = currentNode["$"].id
-        const min = convertCode(code.split("-")[0])
-        const max = convertCode(code.split("-")[1])
-        var root = true;
-        id = parseFloat(min + "." + max)
-
-        for (var i = ranges.length - 1; i >= 0; i--) {
-
-            if (min >= Number(ranges[i].id.toString().split(".")[0]) && max <= Number(ranges[i].id.toString().split(".")[1])) {
-                parentArray.push(ranges[i])
-                root = false;
-                break;
-            }
-        }
-
-        if (root) {
-            for (var i = 0; i < sections.length; i++) {
-
-                if (min >= Number(sections[i].id.toString().split(".")[0]) && max <= Number(sections[i].id.toString().split(".")[1])) {
-                    parentArray.push(sections[i])
-                }
-            }
-        }
-
-        ranges.push({
-            "code": code,
-            "description": description,
-            "path": nodePath,
-            "parents": parentArray,
-            "id": id
-        })
-    }
-    else {
-        code = currentNode.name[0]
-        id = convertCode(code)
-    }
-
+    const code = currentNode.name[0]
+    const codeID = convertCode(code)
+    id++;
     return ({
         "code": code,
+        "codeID": codeID,
+        "type": "entry",
         "description": description,
         "path": nodePath,
         "parents": parentArray,
-        "id": id
+        "id": id,
     })
 }
 
@@ -300,19 +267,56 @@ function parseTabularTree(currentNode, nodes = []) {
     if (currentNode.sectionIndex) {
         const regExp = /\(([^]+)\)/;
         const code = regExp.exec(currentNode.desc)[1]
+        const min = Number(convertCode(code.split("-")[0]))
+        const max = Number(convertCode(code.split("-")[1]))
 
-        section = {
+        const chapter = {
             "code": code,
-            "description": currentNode.desc,
-            "path": currentNode.desc[0],
-            "parents": [],
-            "id": Number(convertCode(code.split("-")[0]) + "." + convertCode(code.split("-")[1]))
+            "min": min,
+            "max": max,
+            "type": "chapter",
+            "description": currentNode.desc[0],
+            "children": [],
+            "codeID": parseFloat(min + "." + max),
         }
 
-        sections.push(section)
-        toReturn = [section]
+        sections.push(chapter)
+        toReturn = [chapter]
     }
-    else if ((currentNode.name || (currentNode["$"] && currentNode["$"].id) && currentNode["$"].id.includes("-")) && currentNode.desc) {
+    else if (currentNode["$"] && currentNode["$"].id && currentNode["$"].id.includes("-")) {
+        const code = currentNode["$"].id
+        const min = convertCode(code.split("-")[0])
+        const max = convertCode(code.split("-")[1])
+        const codeID = parseFloat(min + "." + max)
+
+        for (var i = ranges.length - 1; i >= 0; i--) {
+
+            if (min >= Number(ranges[i].min) && max <= Number(ranges[i].max)) {
+                ranges[i].children.push(id)
+                break;
+            }
+        }
+
+        for (var i = 0; i < sections.length; i++) {
+            if (min >= Number(sections[i].min) && max <= Number(sections[i].max)) {
+                sections[i].children.push(id)
+                break;
+            }
+        }
+        const range = {
+            "code": code,
+            "min": min,
+            "max": max,
+            "type": "range",
+            "description": currentNode.desc[0],
+            "children": [],
+            "codeID": codeID,
+        }
+
+        ranges.push(range)
+        toReturn = [range]
+    }
+    else if (currentNode.name && currentNode.desc) {
 
         toReturn = [parseTabularNode(currentNode, nodes)]
         newNodes = nodes.concat(toReturn)
@@ -425,8 +429,8 @@ async function parseTranslations() {
 
 (async function main() {
 
-    parseICDO3();
-    parseTranslations();
+    //parseICDO3();
+    //parseTranslations();
 
     await fs.readFile('icd10cm-tabular-2023.xml', function (err, data) {
         console.log(`[${timestamp()}] Start tabular import`);
@@ -451,16 +455,33 @@ async function parseTranslations() {
                     }) + '\n',
                         'utf-8'
                     )
-
-                    fs.appendFileSync(fd, JSON.stringify({
-                        "code": e.code,
-                        "path": e.path,
-                        "description": e.description,
-                        "parent": e.parents,
-                        "id": e.id
-                    }) + '\n',
-                        'utf-8'
-                    )
+                    if (e.type === "entry") {
+                        fs.appendFileSync(fd, JSON.stringify({
+                            "code": e.code,
+                            "codeID": e.codeID,
+                            "type": e.type,
+                            "path": e.path,
+                            "description": e.description,
+                            "parent": e.parents,
+                            "id": e.id
+                        }) + '\n',
+                            'utf-8'
+                        )
+                    }
+                    else {
+                        fs.appendFileSync(fd, JSON.stringify({
+                            "code": e.code,
+                            "codeID": e.codeID,
+                            "min": e.min,
+                            "max": e.max,
+                            "type": e.type,
+                            "description": e.description,
+                            "children": e.children,
+                            "id": e.id,
+                        }) + '\n',
+                            'utf-8'
+                        )
+                    }
                 })
                 id = -1;
                 console.log(`[${timestamp()}] Finish tabular import`);
@@ -469,131 +490,131 @@ async function parseTranslations() {
             }
         })
     })
-
-    await fs.readFile('icd10cm-neoplasm-2023.xml', function (err, data) {
-        console.log(`[${timestamp()}] Start neoplasm import`);
-        xml2js.parseString(data, (err, result) => {
-            try {
+    /*
+        await fs.readFile('icd10cm-neoplasm-2023.xml', function (err, data) {
+            console.log(`[${timestamp()}] Start neoplasm import`);
+            xml2js.parseString(data, (err, result) => {
+                try {
+                    if (err) {
+                        throw err;
+                    }
+    
+                    var terms = []
+                    terms = parseNeoplasmTree(result["ICD10CM.index"]["letter"][0].mainTerm, [])
+                    // console.log(terms)
+    
+                    var fd = fs.openSync(path.resolve('data', 'icd10neoplasm.json'), 'a')
+                    terms.map((e, index) => {
+                        fs.appendFileSync(fd, JSON.stringify({
+                            "index": {
+                                "_index": "neoplasm",
+                                "_id": index
+                            }
+                        }) + '\n',
+                            'utf-8'
+                        )
+    
+                        fs.appendFileSync(fd, JSON.stringify({
+                            "code": e.code,
+                            "path": e.path,
+                            "description": e.description,
+                            "parent": e.parents,
+                            "id": e.id
+                        }) + '\n',
+                            'utf-8'
+                        )
+                    })
+                    id = -1;
+                    console.log(`[${timestamp()}] Finish neoplasm import`);
+                } catch (err) {
+                    console.log(err)
+                }
+            })
+        })
+    
+        await fs.readFile('icd10cm-drug-2023.xml', function (err, data) {
+            console.log(`[${timestamp()}] Start drug import`);
+            xml2js.parseString(data, (err, result) => {
+                try {
+                    if (err) {
+                        throw err;
+                    }
+    
+                    var terms = []
+                    fs.writeFileSync('drug.json', JSON.stringify(result, null, 4))
+                    terms = parseDrugTree(result["ICD10CM.index"]["letter"], [])
+                    var fd = fs.openSync(path.resolve('data', 'icd10drug.json'), 'a')
+                    terms.map((e, index) => {
+                        fs.appendFileSync(fd, JSON.stringify({
+                            "index": {
+                                "_index": "drug",
+                                "_id": index
+                            }
+                        }) + '\n',
+                            'utf-8'
+                        )
+    
+                        fs.appendFileSync(fd, JSON.stringify({
+                            "code": e.code,
+                            "path": e.path,
+                            "description": e.description,
+                            "parent": e.parents,
+                            "id": e.id
+                        }) + '\n',
+                            'utf-8'
+                        )
+                    })
+                    id = -1;
+                    console.log(`[${timestamp()}] Finish drug import`);
+                } catch (err) {
+                    console.log(err)
+                }
+            })
+        })
+    
+        await fs.readFile('icd10cm-eindex-2023.xml', function (err, data) {
+            console.log(`[${timestamp()}] Start injury import`);
+            xml2js.parseString(data, (err, result) => {
                 if (err) {
                     throw err;
                 }
-
+    
                 var terms = []
-                terms = parseNeoplasmTree(result["ICD10CM.index"]["letter"][0].mainTerm, [])
-                // console.log(terms)
-
-                var fd = fs.openSync(path.resolve('data', 'icd10neoplasm.json'), 'a')
-                terms.map((e, index) => {
-                    fs.appendFileSync(fd, JSON.stringify({
-                        "index": {
-                            "_index": "neoplasm",
-                            "_id": index
-                        }
-                    }) + '\n',
-                        'utf-8'
-                    )
-
-                    fs.appendFileSync(fd, JSON.stringify({
-                        "code": e.code,
-                        "path": e.path,
-                        "description": e.description,
-                        "parent": e.parents,
-                        "id": e.id
-                    }) + '\n',
-                        'utf-8'
-                    )
-                })
-                id = -1;
-                console.log(`[${timestamp()}] Finish neoplasm import`);
-            } catch (err) {
-                console.log(err)
-            }
-        })
-    })
-
-    await fs.readFile('icd10cm-drug-2023.xml', function (err, data) {
-        console.log(`[${timestamp()}] Start drug import`);
-        xml2js.parseString(data, (err, result) => {
-            try {
-                if (err) {
-                    throw err;
+                fs.writeFileSync('injury.json', JSON.stringify(result, null, 4))
+                terms = parseInjuryTree(result["ICD10CM.index"]["letter"], [])
+    
+                var fd;
+                try {
+                    fd = fs.openSync(path.resolve('data', 'icd10eindex.json'), 'a')
+                    terms.map((e, index) => {
+                        fs.appendFileSync(fd, JSON.stringify({
+                            "index": {
+                                "_index": "injury",
+                                "_id": index
+                            }
+                        }) + '\n',
+                            'utf-8'
+                        )
+    
+                        fs.appendFileSync(fd, JSON.stringify({
+                            "code": e.code,
+                            "path": e.path,
+                            "description": e.description,
+                            "parent": e.parents,
+                            "id": e.id
+                        }) + '\n',
+                            'utf-8'
+                        )
+                    })
+                } catch (err) {
+                    console.log(`[${timestamp()}] ${err}`)
+                } finally {
+                    if (fd) {
+                        fs.closeSync(fd)
+                    }
+                    id = -1
+                    console.log(`[${timestamp()}] Finish injury import`);
                 }
-
-                var terms = []
-                fs.writeFileSync('drug.json', JSON.stringify(result, null, 4))
-                terms = parseDrugTree(result["ICD10CM.index"]["letter"], [])
-                var fd = fs.openSync(path.resolve('data', 'icd10drug.json'), 'a')
-                terms.map((e, index) => {
-                    fs.appendFileSync(fd, JSON.stringify({
-                        "index": {
-                            "_index": "drug",
-                            "_id": index
-                        }
-                    }) + '\n',
-                        'utf-8'
-                    )
-
-                    fs.appendFileSync(fd, JSON.stringify({
-                        "code": e.code,
-                        "path": e.path,
-                        "description": e.description,
-                        "parent": e.parents,
-                        "id": e.id
-                    }) + '\n',
-                        'utf-8'
-                    )
-                })
-                id = -1;
-                console.log(`[${timestamp()}] Finish drug import`);
-            } catch (err) {
-                console.log(err)
-            }
-        })
-    })
-
-    await fs.readFile('icd10cm-eindex-2023.xml', function (err, data) {
-        console.log(`[${timestamp()}] Start injury import`);
-        xml2js.parseString(data, (err, result) => {
-            if (err) {
-                throw err;
-            }
-
-            var terms = []
-            fs.writeFileSync('injury.json', JSON.stringify(result, null, 4))
-            terms = parseInjuryTree(result["ICD10CM.index"]["letter"], [])
-
-            var fd;
-            try {
-                fd = fs.openSync(path.resolve('data', 'icd10eindex.json'), 'a')
-                terms.map((e, index) => {
-                    fs.appendFileSync(fd, JSON.stringify({
-                        "index": {
-                            "_index": "injury",
-                            "_id": index
-                        }
-                    }) + '\n',
-                        'utf-8'
-                    )
-
-                    fs.appendFileSync(fd, JSON.stringify({
-                        "code": e.code,
-                        "path": e.path,
-                        "description": e.description,
-                        "parent": e.parents,
-                        "id": e.id
-                    }) + '\n',
-                        'utf-8'
-                    )
-                })
-            } catch (err) {
-                console.log(`[${timestamp()}] ${err}`)
-            } finally {
-                if (fd) {
-                    fs.closeSync(fd)
-                }
-                id = -1
-                console.log(`[${timestamp()}] Finish injury import`);
-            }
-        });
-    })
+            });
+        })*/
 })();
