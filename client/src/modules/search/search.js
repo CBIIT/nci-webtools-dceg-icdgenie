@@ -55,20 +55,18 @@ export default function Search() {
 
       source.parent.reverse().map((parent) => {
         const parentKey = parent.id;
+
         if (!map.has(parentKey)) {
 
           var value;
 
           value = {
-            path: parent.source ? parent.source.join(' ') : parent.source,
             description: parent.description,
+            parents: parent.parents,
             children: [currentKey],
-            key: parentKey,
-            parents: parent.parents.map((e) => {
-              return e.path.join();
-            })
+            key: parentKey,  
           }
-
+         
           if (node._index === "drug" || node._index === "neoplasm") {
             for (var code in parent.code)
               value[code] = parent.code[code]
@@ -79,6 +77,7 @@ export default function Search() {
           map.set(parentKey, value)
         }
         else {
+
           var parentValue = map.get(parentKey)
           if (!parentValue.children.includes(currentKey)) {
             parentValue = { ...parentValue, children: parentValue.children.concat(currentKey) }
@@ -91,7 +90,6 @@ export default function Search() {
       })
 
       const value = {
-        path: source.path.join(' '),
         description: source.description,
         key: key,
         parents: parents,
@@ -116,15 +114,15 @@ export default function Search() {
     setValid(true)
     setInput(query)
     const response = await axios.post("api/opensearch", { search: query })
-
+    console.log(response)
     const results = {
-      tabular: processSearch(response.data.tabular),
+      tabular: processSearch(response.data.tabular.filter((e) => e._source.type === "entry")),
       neoplasm: processSearch(response.data.neoplasm),
       drug: processSearch(response.data.drug),
       injury: processSearch(response.data.injury),
       icdo3: response.data.icdo3
     }
-
+    console.log(results)
     setSuggestions(response.data.fuzzyTerms)
     setLoading(false)
     setMaps(results)
