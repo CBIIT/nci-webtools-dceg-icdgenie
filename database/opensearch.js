@@ -263,7 +263,7 @@ function parseTabularTree(currentNode, nodes = []) {
 
     var toReturn = []
     var newNodes = []
-
+    id++;
     if (currentNode.sectionIndex) {
         const regExp = /\(([^]+)\)/;
         const code = regExp.exec(currentNode.desc)[1]
@@ -329,7 +329,7 @@ function parseTabularTree(currentNode, nodes = []) {
         newNodes = nodes.concat(toReturn)
     }
 
-    id++;
+    
 
     for (let childNode of getTabularChildren(currentNode)) {
 
@@ -458,7 +458,7 @@ async function parseTranslations() {
                     fs.appendFileSync(fd, JSON.stringify({
                         "index": {
                             "_index": "tabular",
-                            "_id": e.id
+                            "_id": index
                         }
                     }) + '\n',
                         'utf-8'
