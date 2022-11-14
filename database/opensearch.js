@@ -207,10 +207,10 @@ function parseNeoplasmTree(currentNode, nodes = []) {
 
 function convertCode(code) {
     var decimals = 0;
-    if(code.substring(1).includes("."))
+    if (code.substring(1).includes("."))
         decimals = code.substring(1).split(".")[1].length;
-    
-    return parseInt(String((code.charCodeAt(0) - 64) * 1000)) + parseFloat(code.substring(1)).toFixed(decimals)
+
+    return ((code.charCodeAt(0) - 64) * 1000) + parseFloat(parseFloat(code.substring(1)).toFixed(decimals))
 }
 
 
@@ -230,8 +230,8 @@ function parseTabularNode(currentNode, parents) {
     nodePath.push(description)
 
     const code = currentNode.name[0]
-    const codeID = convertCode(code)
-    id++;
+    const codeID = Number(convertCode(code))
+
     return ({
         "code": code,
         "codeID": codeID,
@@ -278,6 +278,7 @@ function parseTabularTree(currentNode, nodes = []) {
             "description": currentNode.desc[0],
             "children": [],
             "codeID": parseFloat(min + "." + max),
+            "id": id,
         }
 
         sections.push(chapter)
@@ -285,24 +286,29 @@ function parseTabularTree(currentNode, nodes = []) {
     }
     else if (currentNode["$"] && currentNode["$"].id && currentNode["$"].id.includes("-")) {
         const code = currentNode["$"].id
-        const min = convertCode(code.split("-")[0])
-        const max = convertCode(code.split("-")[1])
+        const min = Number(convertCode(code.split("-")[0]))
+        const max = Number(convertCode(code.split("-")[1]))
         const codeID = parseFloat(min + "." + max)
+        var chapterChild = true
 
         for (var i = ranges.length - 1; i >= 0; i--) {
 
             if (min >= Number(ranges[i].min) && max <= Number(ranges[i].max)) {
                 ranges[i].children.push(id)
+                chapterChild = false;
                 break;
             }
         }
 
-        for (var i = 0; i < sections.length; i++) {
-            if (min >= Number(sections[i].min) && max <= Number(sections[i].max)) {
-                sections[i].children.push(id)
-                break;
+        if (chapterChild) {
+            for (var i = 0; i < sections.length; i++) {
+                if (min >= Number(sections[i].min) && max <= Number(sections[i].max)) {
+                    sections[i].children.push(id)
+                    break;
+                }
             }
         }
+
         const range = {
             "code": code,
             "min": min,
@@ -311,6 +317,7 @@ function parseTabularTree(currentNode, nodes = []) {
             "description": currentNode.desc[0],
             "children": [],
             "codeID": codeID,
+            "id": id
         }
 
         ranges.push(range)
@@ -322,6 +329,7 @@ function parseTabularTree(currentNode, nodes = []) {
         newNodes = nodes.concat(toReturn)
     }
 
+    id++;
 
     for (let childNode of getTabularChildren(currentNode)) {
 
@@ -450,7 +458,7 @@ async function parseTranslations() {
                     fs.appendFileSync(fd, JSON.stringify({
                         "index": {
                             "_index": "tabular",
-                            "_id": index
+                            "_id": e.id
                         }
                     }) + '\n',
                         'utf-8'
