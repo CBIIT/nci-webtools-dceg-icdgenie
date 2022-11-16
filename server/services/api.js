@@ -44,11 +44,67 @@ api.get("/search/icdo3", (request, response) => {
   response.json(results);
 });
 
-api.post("/batch", (request, response) => {
+api.post("/batch", async (request, response) => {
   const { logger, database } = request.app.locals;
   logger.debug("batch: " + JSON.stringify(request.body));
-  const results = batch.batchExport(database, request.body);
+  const { input, inputType, outputType } = request.body;
 
+  var client = new Client({
+    node: host,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  })
+
+  var index = "translations";
+  if(inputType === "keywords")
+    index = outputType === "icd10" ? "tabular" : "icdo3"
+ 
+  const inputs = input
+    .split(/\n/g)
+    .map((e) => e.trim().replace(/\"/g, ""))
+    .filter((e) => e.length > 0);
+
+  var results = [];
+  await Promise.all(inputs.map(async (e) => {
+    var body = {
+      "query": {
+        "bool": {
+          "filter": [
+            {
+              "query_string": {
+                "query": "\"" + e + "\"",
+                "fields": ["*"],
+                "lenient": true,
+              }
+            }
+          ],
+        }
+      },
+      "sort": [
+        {
+          "_script": {
+            "type": "number",
+            "order": "asc",
+            "script": "Long.parseLong(doc['_id'].value)"
+          }
+        }
+      ],
+      "size": 5000
+    }
+   
+    var query = await client.search({index: index, body: body});
+    query = query.body.hits.hits.map((i) => {
+      return({
+        input: e,
+        code: i._source.code ? i._source.code : i._source[outputType],
+        description: i._source.description ? i._source.description : i._source[outputType + "Description"]
+      })
+    })
+
+    results = results.concat(query)
+  }))
+  
   if (request.body.outputFormat === "csv") {
     response.set("Content-Type", "text/csv");
     response.set("Content-Disposition", `attachment; filename=icdgenie_batch_export.csv`);
@@ -96,6 +152,29 @@ api.post("/translate", async (request, response) => {
   const results = await client.search({ index: "translations", body })
   response.json(results.body.hits.hits.map((e) => { return e._source }))
 })
+
+api.post("/browse", async (request, response) => {
+  const { logger } = request.app.locals;
+  var client = new Client({
+    node: host,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  })
+
+  var body = {
+    "query": {
+      "range": {
+        "price": {
+          "gte": 1000,
+          "lte": 2000
+        }
+      }
+    }
+  }
+  const query = await client.search({ index: "tabular", body })
+})
+
 
 async function fuzzySearch(options, client, index) {
 
@@ -211,6 +290,7 @@ api.post("/opensearch", async (request, response) => {
   const injuryOptions = injuryResult.body.suggest["spell-check"][0].options;
   const icdo3Options = icdo3Result.body.suggest["spell-check"][0].options
 
+  console.log(tabularOptions)
   console.log(injuryOptions)
 
   if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length) {

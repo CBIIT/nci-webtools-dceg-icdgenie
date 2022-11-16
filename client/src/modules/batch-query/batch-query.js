@@ -46,20 +46,20 @@ export default function BatchQuery() {
       inputType: form.inputType,
       outputType: form.outputType,
     });
-
+   
     const columns = [
       { name: "input", title: "Input" },
-      form.outputType === "icdo3" && { name: "icdo3", title: "ICD-O-3 Code(s)" },
-      form.outputType === "icdo3" && { name: "icdo3Description", title: "Description" },
-      form.outputType === "icd10" && { name: "icd10", title: "ICD-10 Code(s)" },
-      form.outputType === "icd10" && { name: "icd10Description", title: "Description" },
+      form.outputType === "icdo3" && { name: "code", title: "ICD-O-3 Code(s)" },
+      form.outputType === "icdo3" && { name: "description", title: "Description" },
+      form.outputType === "icd10" && { name: "code", title: "ICD-10 Code(s)" },
+      form.outputType === "icd10" && { name: "description", title: "Description" },
     ].filter(Boolean);
 
     const columnExtensions = [
-      form.outputType === "icdo3" && { columnName: "icdo3Description", width: 600, wordWrapEnabled: true },
-      form.outputType === "icd10" && { columnName: "icd10Description", width: 600, wordWrapEnabled: true },
+      form.outputType === "icdo3" && { columnName: "description", width: 600, wordWrapEnabled: true },
+      form.outputType === "icd10" && { columnName: "description", width: 600, wordWrapEnabled: true },
     ].filter(Boolean);
-
+    console.log(response)
     mergeResults({
       loading: false,
       output: response.data,
