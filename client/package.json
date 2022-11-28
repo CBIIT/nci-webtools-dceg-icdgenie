@@ -22,6 +22,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.3.0",
+    "react-router-hash-link": "^2.4.3",
     "recoil": "^0.7.0",
     "stream-browserify": "^3.0.0",
     "swagger-ui-react": "^4.10.0",

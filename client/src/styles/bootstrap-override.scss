@@ -1,5 +1,6 @@
 .accordion-item {
-  border-radius: 1% !important;
+  
+  border: 0;  
 }
 
 .tab-content {
@@ -8,11 +9,8 @@
 }
 
 .accordion-button {
-  border-top-right-radius: 50px !important;
-  border-top-left-radius: 10px !important;
-  width: 30%;
-  margin-top: -1em;
-  margin-left: 0.5em;
+ background-color: #6ACAE7 !important;
+ color: black !important;
 }
 
 .accordion-button:not(.collapsed)::after {
@@ -55,7 +53,12 @@
 .index {
   .accordion-button {
     background-color: #7b658b !important;
-    color: white;
+    color: white !important;
+    border-top-right-radius: 50px !important;
+    border-top-left-radius: 10px !important;
+    width: 30%;
+    margin-top: -1em;
+    margin-left: 0.5em;
   }
   table thead tr {
     border: 0.75px solid #97b4cb;
@@ -67,7 +70,12 @@
 .neoplasm {
   .accordion-button {
     background-color: #df7b54 !important;
-    color: white;
+    color: white !important;
+    border-top-right-radius: 50px !important;
+    border-top-left-radius: 10px !important;
+    width: 30%;
+    margin-top: -1em;
+    margin-left: 0.5em;
   }
 
   table thead tr {
@@ -80,7 +88,12 @@
 .drug {
   .accordion-button {
     background-color: #9b4e2f !important;
-    color: white;
+    color: white !important;
+    border-top-right-radius: 50px !important;
+    border-top-left-radius: 10px !important;
+    width: 30%;
+    margin-top: -1em;
+    margin-left: 0.5em;
   }
 
   table thead tr {
@@ -93,7 +106,12 @@
 .injury {
   .accordion-button {
     background-color: #1b979b !important;
-    color: white;
+    color: white !important;
+    border-top-right-radius: 50px !important;
+    border-top-left-radius: 10px !important;
+    width: 30%;
+    margin-top: -1em;
+    margin-left: 0.5em;
   }
 
   table thead tr {

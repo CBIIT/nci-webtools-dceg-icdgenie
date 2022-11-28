@@ -14,6 +14,9 @@ const Home = preloadLazyComponent(() => import("./modules/home/home"));
 const Search = preloadLazyComponent(() => import("./modules/search/search"));
 const ApiAccess = preloadLazyComponent(() => import("./modules/api-access/api-access"));
 const About = preloadLazyComponent(() => import("./modules/about/about"));
+const Resources = preloadLazyComponent(() => import("./modules/about/resources"));
+const FAQ = preloadLazyComponent(() => import("./modules/about/faq"));
+const Started = preloadLazyComponent(() => import("./modules/about/getting-started"));
 const BatchQuery = preloadLazyComponent(() => import("./modules/batch-query/batch-query"));
 
 function preloadLazyComponent(factory) {
@@ -47,6 +50,21 @@ export default function App() {
       route: "/about",
       title: "About",
       component: About,
+    },
+    {
+      route: "/getting-started",
+      title: "Getting Started",
+      component: Started,
+    },
+    {
+      route: "/faq",
+      title: "FAQ",
+      component: FAQ,
+    },
+    {
+      route: "/resources",
+      title: "Resources",
+      component: Resources,
     },
   ];
 
