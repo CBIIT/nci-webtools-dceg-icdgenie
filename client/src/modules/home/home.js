@@ -50,7 +50,7 @@ export default function Home() {
               <p className="lead fw-normal">
                 ICD Genie was created by Sairah Khan M.P.H., Shu-Hong Lin Ph.D., BVSc,
                 <a className="white-href" href="https://dceg.cancer.gov/fellowship-training/fellowship-experience/meet-fellows/iteb/abubakar-mustapha" target="_blank"> Mustapha Abubakar M.D., Ph.D.</a> and
-                <a className="white-href" href="https://dceg.cancer.gov/about/staff-directory/machiela-mitchell" target="_blank"> Mitchell J. Machiela Sc.D., MPH</a> of the NCI Division of Cancer Epidemiology and Genetics DCEG Integrative Tumor Epidemiology Branch with assistance developing the tool from Brian Park B.S., Ben Chen B.S., Ryan Damico B.S., Kai-Ling Chen M.S. and Ye Wu Ph.D. of NCI’s
+                <a className="white-href" href="https://dceg.cancer.gov/about/staff-directory/machiela-mitchell" target="_blank"> Mitchell J. Machiela Sc.D., MPH</a> of the NCI Division of Cancer Epidemiology and Genetics DCEG Integrative Tumor Epidemiology Branch with assistance developing the tool from Brian Park B.S., Ben Chen B.S., Hannah Stogsdill B.A., Kai-Ling Chen M.S. and Ye Wu Ph.D. of NCI’s
                 <a className="white-href" href="https://datascience.cancer.gov/" target="_blank"> Center for Biomedical Informatics and Information Technology.</a> Many thanks to our colleagues who provided critical input during the design and development of ICD Genie!
               </p>
 
