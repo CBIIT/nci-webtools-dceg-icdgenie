@@ -30,7 +30,7 @@ export default function FAQ() {
                     <Accordion.Item eventKey="2">
                         <Accordion.Header>3. I have more than 5,000 rows of diagnosis codes - do you have an R program?</Accordion.Header>
                         <Accordion.Body>
-                            <div>An R program in development. At present we recommend the ICD Genie <a href="javascript:void(0)" onClick={() => { navigate('/api-access') }}>API access</a> for performing these large queries.</div>
+                            <div>An R program is in development. At present we recommend the ICD Genie <a href="javascript:void(0)" onClick={() => { navigate('/api-access') }}>API access</a> for performing these large queries.</div>
                         </Accordion.Body>
                     </Accordion.Item>
                 </Accordion>
