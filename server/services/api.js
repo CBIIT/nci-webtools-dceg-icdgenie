@@ -225,8 +225,9 @@ api.post("/opensearch", async (request, response) => {
       rejectUnauthorized: false
     }
   })
-
-  const query = request.body.search.split(" ").length === 1 ? "*" + request.body.search + "*" : "\"" + request.body.search + "\""
+  const { search } = request.body
+  const query = search.split(" ").length === 1 && !search.includes("/") ? "*" + search + "*" : "\"" + search + "\""
+  
   logger.info(query)
 
   var body = {
