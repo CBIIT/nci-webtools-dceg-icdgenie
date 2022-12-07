@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <>
-      <Container className="flex-grow-1 py-5" style={{ height: "60vh"}}>
+      <Container className="flex-grow-1 py-5" style={{ height: "50vh"}}>
         <Row className="h-100 justify-content-center align-items-center">
           <Col md={8}>
             <h1 className="display-4 mb-5 text-light text-center text-uppercase">ICD Genie</h1>
@@ -35,7 +35,7 @@ export default function Home() {
 
       <div className="bg-main">
 
-        <Container className="py-5" >
+        <Container className="py-5" style={{fontSize: "15px"}}>
           <h3 className="pb-3">About ICD Genie</h3>
           <Row className="justify-content-center">
             <Col xl={8}>
