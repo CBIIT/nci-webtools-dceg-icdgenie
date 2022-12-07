@@ -56,7 +56,6 @@ export default function Starter() {
                                 <ul>
                                     <li>Automatically detect the type of information you submit nor automatically determine what type of output you need</li>
                                     <li>Know which column is the input column you want it to use for queries of diagnosis codes or text</li>
-                                    <li>Automatically select “Preferred Term.” If you only want 1 text diagnosis per 1 ICD-O-3 or ICD-10 code you put in, you must select the box next to “Preferred Term”</li>
                                 </ul>
                                 <b style={{ textDecorationLine: "underline" }}>API</b>
                                 <p>For more advanced searches with large numbers of text or diagnosis code queries, we recommend <a href="javascript:void(0)" onClick={() => { navigate('/api-access') }}>API Access</a>.</p>
@@ -102,10 +101,12 @@ export default function Starter() {
                                 <ul>
                                     <li>Identifying what kind of ICD codes you have</li>
                                     <li>Formatting data in excel or a text editor</li>
+                                    <iframe width="640" height="360" src="https://nci.rev.vbrick.com/embed?id=5008d4e6-38c4-431f-96f7-e999f284f3b4" allowFullScreen></iframe>
                                 </ul>
                                 <b style={{ textDecorationLine: "underline" }}>Using the Tool</b>
                                 <ul>
                                     <li>Step by step guide for using batch query</li>
+                                    <iframe width="640" height="360" src="https://nci.rev.vbrick.com/embed?id=6f9e1353-f6bf-4725-bd4e-2b03509e18a5" allowFullScreen></iframe>
                                 </ul>
                             </Container>
                         </Col>
