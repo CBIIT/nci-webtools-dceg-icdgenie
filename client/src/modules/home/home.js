@@ -35,7 +35,7 @@ export default function Home() {
 
       <div className="bg-main">
 
-        <Container className="py-5" style={{fontSize: "15px"}}>
+        <Container className="py-3" style={{fontSize: "15px"}}>
           <h3 className="pb-3">About ICD Genie</h3>
           <Row className="justify-content-center">
             <Col xl={8}>
