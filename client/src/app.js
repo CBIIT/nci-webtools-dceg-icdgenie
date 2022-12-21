@@ -72,13 +72,13 @@ export default function App() {
     <RecoilRoot>
       <Router basename={process.env.PUBLIC_URL}>
         <div className="d-flex flex-column flex-grow-1 cover-image" style={{ backgroundImage: `url(${HomeImage})` }}>
-          <Navbar expand="sm" variant="dark" className="py-1 flex-none-auto">
+          <Navbar expand="lg" variant="dark" className="py-1 flex-none-auto">
             <Container>
               <Navbar.Toggle aria-controls="app-navbar" />
               <Navbar.Collapse id="app-navbar">
                 <Nav className="d-flex w-100 justify-content-center">
                   {links.map((link, index) => (
-                    <NavLink key={`navlink-${index}`} to={link.route} className="nav-link my-2 mx-3">
+                    <NavLink key={`navlink-${index}`} to={link.route} className="nav-link my-2 mx-3" style={{whiteSpace: "nowrap"}}>
                       {link.title}
                     </NavLink>
                   ))}
