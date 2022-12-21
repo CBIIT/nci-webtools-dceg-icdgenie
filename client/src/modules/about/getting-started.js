@@ -12,7 +12,7 @@ export default function Starter() {
             <hr />
             <Container className="py-5">
                 <Row>
-                    <Col md={2} >
+                    <Col lg={2} sm={12}>
                         <div className="pb-5" style={{ borderRight: "4px solid #76BDD7" }}>
                             <div className="my-2"><HashLink smooth to='/getting-started/#checklist' className="h6 blue-subheader">CHECKLIST</HashLink></div>
                             <div className="my-2"><HashLink smooth to='/getting-started/#searchTypes' className="h6 blue-subheader">SEARCH TYPES</HashLink></div>
@@ -20,8 +20,8 @@ export default function Starter() {
                             <div className="my-2"><HashLink smooth to='/getting-started/#tutorials' className="h6 blue-subheader">TUTORIALS</HashLink></div>
                         </div>
                     </Col>
-                    <Col md={10}>
-                        <Container className="mx-5">
+                    <Col lg={10}>
+                        <Container>
                             <h5>We encourage new users of ICD Genie to familiarize themselves with the following checklist to ensure they are using appropriate search terms and getting maximal utility from their ICD Genie searches. </h5>
                             <h3 id="checklist" className="my-4 text-center text-uppercase blue-subheader">Checklist</h3>
                             <ol>
@@ -41,9 +41,9 @@ export default function Starter() {
             <div style={{ backgroundColor: "lightgrey" }}>
                 <Container className="py-5" >
                     <Row>
-                        <Col md={2} />
-                        <Col md={10}>
-                            <Container className="mx-5">
+                        <Col lg={2}/>
+                        <Col lg={10}>
+                            <Container>
                                 <h3 id="searchTypes" className="my-4 text-center text-uppercase blue-subheader">Search Types</h3>
                                 <b style={{ textDecorationLine: "underline" }}>Single Query</b>
                                 <p>Single query accepts text, numeric (ICD-O-3), and alphanumeric (ICD-10) queries. You can explore disease descriptions and the coding hierarchy (i.e., parent nodes and child nodes). Only one search term can be entered at a time. </p>
@@ -66,9 +66,9 @@ export default function Starter() {
             </div>
             <Container className="py-5">
                 <Row>
-                    <Col md={2} />
-                    <Col md={10}>
-                        <Container className="mx-5">
+                    <Col lg={2} />
+                    <Col lg={10}>
+                        <Container>
                             <h3 id="formatting" className="my-4 text-center text-uppercase blue-subheader">Formatting ICD Codes</h3>
                             <b style={{ textDecorationLine: "underline" }}>ICD-10 Codes</b>
                             <div>A 0 1 . 0 2 1 S</div>
@@ -93,20 +93,20 @@ export default function Starter() {
             <div style={{ backgroundColor: "lightgrey" }}>
                 <Container className="py-5">
                     <Row>
-                        <Col md={2} />
-                        <Col md={10}>
-                            <Container className="mx-5">
+                        <Col lg={2} />
+                        <Col lg={10}>
+                            <Container>
                                 <h3 id="tutorials" className="my-4 text-center text-uppercase blue-subheader">Tutorials</h3>
                                 <b style={{ textDecorationLine: "underline" }}>Formatting</b>
                                 <ul>
                                     <li>Identifying what kind of ICD codes you have</li>
                                     <li>Formatting data in excel or a text editor</li>
-                                    <iframe width="640" height="360" src="https://nci.rev.vbrick.com/embed?id=5008d4e6-38c4-431f-96f7-e999f284f3b4" allowFullScreen></iframe>
+                                    <iframe width="80%" height="400vw" src="https://nci.rev.vbrick.com/embed?id=5008d4e6-38c4-431f-96f7-e999f284f3b4" allowFullScreen></iframe>
                                 </ul>
                                 <b style={{ textDecorationLine: "underline" }}>Using the Tool</b>
                                 <ul>
                                     <li>Step by step guide for using batch query</li>
-                                    <iframe width="640" height="360" src="https://nci.rev.vbrick.com/embed?id=6f9e1353-f6bf-4725-bd4e-2b03509e18a5" allowFullScreen></iframe>
+                                    <iframe width="80%" height="400vw" src="https://nci.rev.vbrick.com/embed?id=6f9e1353-f6bf-4725-bd4e-2b03509e18a5" allowFullScreen></iframe>
                                 </ul>
                             </Container>
                         </Col>
