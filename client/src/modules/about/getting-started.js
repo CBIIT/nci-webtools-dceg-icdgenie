@@ -1,9 +1,26 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Navbar, Nav } from "react-bootstrap";
 import { HashLink } from 'react-router-hash-link';
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 
 export default function Starter() {
     const navigate = useNavigate();
+
+    const [isMobile, setIsMobile] = useState(false)
+
+    const handleResize = () => {
+        if (window.innerWidth < 1000) {
+            setIsMobile(true)
+        } else {
+            setIsMobile(false)
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener("resize", handleResize)
+    })
+
     return (
         <div className="h-100 bg-white">
             <Container className="py-5">
@@ -12,14 +29,27 @@ export default function Starter() {
             <hr />
             <Container className="py-5">
                 <Row>
-                    <Col lg={2} sm={12}>
+                    {!isMobile && <Col lg={2} sm={12}>
                         <div className="pb-5" style={{ borderRight: "4px solid #76BDD7" }}>
                             <div className="my-2"><HashLink smooth to='/getting-started/#checklist' className="h6 blue-subheader">CHECKLIST</HashLink></div>
                             <div className="my-2"><HashLink smooth to='/getting-started/#searchTypes' className="h6 blue-subheader">SEARCH TYPES</HashLink></div>
                             <div className="my-2"><HashLink smooth to='/getting-started/#formatting' className="h6 blue-subheader">FORMATTING ICD CODES</HashLink></div>
                             <div className="my-2"><HashLink smooth to='/getting-started/#tutorials' className="h6 blue-subheader">TUTORIALS</HashLink></div>
                         </div>
-                    </Col>
+                    </Col>}
+                    {isMobile && <Navbar variant="light" className="pt-1 pb-4 flex-none-auto" expand="xl">
+                        <Container>
+                            <Navbar.Toggle aria-controls="page-navbar" />
+                            <Navbar.Collapse id="page-navbar">
+                                <Nav className="d-flex w-100 justify-content-center">
+                                    <HashLink smooth to='/getting-started/#checklist' className="my-2 ps-4 h6 blue-subheader">CHECKLIST</HashLink>
+                                    <HashLink smooth to='/getting-started/#searchTypes' className="my-2 ps-4 h6 blue-subheader">SEARCH TYPES</HashLink>
+                                    <HashLink smooth to='/getting-started/#formatting' className="my-2 ps-4 h6 blue-subheader">FORMATTING ICD CODES</HashLink>
+                                    <HashLink smooth to='/getting-started/#tutorials' className="my-2 ps-4 h6 blue-subheader">TUTORIALS</HashLink>
+                                </Nav>
+                            </Navbar.Collapse>
+                        </Container>
+                    </Navbar>}
                     <Col lg={10}>
                         <Container>
                             <h5>We encourage new users of ICD Genie to familiarize themselves with the following checklist to ensure they are using appropriate search terms and getting maximal utility from their ICD Genie searches. </h5>
@@ -41,7 +71,7 @@ export default function Starter() {
             <div style={{ backgroundColor: "lightgrey" }}>
                 <Container className="py-5" >
                     <Row>
-                        <Col lg={2}/>
+                        <Col lg={2} />
                         <Col lg={10}>
                             <Container>
                                 <h3 id="searchTypes" className="my-4 text-center text-uppercase blue-subheader">Search Types</h3>
