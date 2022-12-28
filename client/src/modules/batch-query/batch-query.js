@@ -56,8 +56,8 @@ export default function BatchQuery() {
     ].filter(Boolean);
 
     const columnExtensions = [
-      form.outputType === "icdo3" && { columnName: "description", width: 600, wordWrapEnabled: true },
-      form.outputType === "icd10" && { columnName: "description", width: 600, wordWrapEnabled: true },
+      form.outputType === "icdo3" && { columnName: "description", width: "20rem", wordWrapEnabled: true },
+      form.outputType === "icd10" && { columnName: "description", width: "20rem", wordWrapEnabled: true },
     ].filter(Boolean);
     console.log(response)
     mergeResults({
