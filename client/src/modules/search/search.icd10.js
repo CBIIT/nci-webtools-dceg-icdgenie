@@ -167,7 +167,7 @@ export default function ICD10({ form, maps }) {
   }
 
   return (
-    <Container className="py-5 col-xl-8 col-sm-12">
+    <Container className="py-5 col-xl-10 col-sm-12">
       <Loader show={loading} fullscreen />
       <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 index">
         <Accordion.Item eventKey="0">

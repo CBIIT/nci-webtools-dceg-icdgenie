@@ -58,7 +58,7 @@ export default function ICDO3({ form, maps }) {
   }
 
   return (
-    <Container className="py-5 h-100 col-xl-8 col-sm-12 index">
+    <Container className="py-5 h-100 col-xl-10 col-sm-12 index">
       <Loader show={loading} fullscreen />
       <Grid rows={maps.icdo3 ? maps.icdo3.map((e) => { return e._source}) : []} columns={icdo3Columns}>
         <IcdCodeTypeProvider for={["code"]} />
