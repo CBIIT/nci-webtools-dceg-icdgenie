@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <>
-      <div  style={{ backgroundImage: `url(${HomeImage})` }}>
+      <div className="cover-image" style={{ backgroundImage: `url(${HomeImage})` }}>
         <Container className="flex-grow-1 py-5" style={{ height: "50vh" }}>
           <Row className="h-100 justify-content-center align-items-center">
             <Col md={8}>
@@ -34,10 +34,10 @@ export default function Home() {
           </Row>
         </Container>
       </div>
-      <div style={{ backgroundColor: "rgb(241, 241, 241)"}}>
+      <div className="bg-light">
 
         <Container className="py-3" style={{ fontSize: "15px" }}>
-          <h3 className="pb-3">About ICD Genie</h3>
+          <h4 className="pb-3">About ICD Genie</h4>
           <Row className="justify-content-center">
             <Col xl={8}>
               <p className="fw-normal">
