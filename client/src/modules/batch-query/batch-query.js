@@ -46,7 +46,7 @@ export default function BatchQuery() {
       inputType: form.inputType,
       outputType: form.outputType,
     });
-   
+
     const columns = [
       { name: "input", title: "Input" },
       form.outputType === "icdo3" && { name: "code", title: "ICD-O-3 Code(s)" },
@@ -78,7 +78,7 @@ export default function BatchQuery() {
 
       <Form onSubmit={handleSubmit}>
         <Loader show={results.loading} fullscreen />
-        <Container className="py-5">
+        <Container className="py-2">
           <Row className="justify-content-center">
             <Col md={4}>
               <Form.Group className="mb-3">
@@ -145,29 +145,31 @@ export default function BatchQuery() {
                   className="mb-3"
                   as="textarea"
                   name="input"
-                  rows={5}
+                  rows={2}
                   value={form.input}
                   placeholder="Keywords (Ex. stomach), ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2)"
                   onChange={handleChange}
                 />
-                <input
-                  type="file"
-                  id="fileInput"
-                  name="fileInput"
-                  className="form-control mb-3"
-                  aria-label="Upload a file containing search terms"
-                  data-name="input"
-                  accept=".csv"
-                  onChange={handleChange}
-                />
+                <Row>
+                  <Col md={6}>
+                    <input
+                      type="file"
+                      id="fileInput"
+                      name="fileInput"
+                      className="form-control mb-3"
+                      aria-label="Upload a file containing search terms"
+                      data-name="input"
+                      accept=".csv"
+                      onChange={handleChange}
+                    />
+                  </Col>
+                  <Col md={1}>
+                    <Button variant="primary" type="submit">
+                      Submit
+                    </Button>
+                  </Col>
+                </Row>
               </Form.Group>
-            </Col>
-          </Row>
-          <Row className="justify-content-center">
-            <Col md={8}>
-              <Button variant="primary" type="submit">
-                Submit
-              </Button>
             </Col>
           </Row>
         </Container>
@@ -175,7 +177,7 @@ export default function BatchQuery() {
       {results.columns.length && (
         <>
           <hr />
-          <Container className="my-5">
+          <Container className="py-3">
             <div className="mb-3 d-flex justify-content-between align-items-center">
               <div className="text-uppercase" style={{ letterSpacing: "1.5px" }}>
                 <b>{results.output.length.toLocaleString()}</b> Results Found
@@ -197,7 +199,7 @@ export default function BatchQuery() {
                 <IntegratedPaging />
                 <Table columnExtensions={results.columnExtensions} />
                 <TableHeaderRow showSortingControls />
-                <PagingPanel pageSizes={[5,10,15,20]}/>
+                <PagingPanel pageSizes={[5, 10, 15, 20]} />
               </Grid>
             </div>
           </Container>
