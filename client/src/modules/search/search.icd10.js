@@ -39,22 +39,26 @@ export default function ICD10({ form, maps }) {
   ];
 
   
-  const indexColumnExtension = [{ columnName: "description", width: 800, wordWrapEnabled: true }];
+  const indexColumnExtension = [{ columnName: "description", width: "45rem", wordWrapEnabled: true }];
 
   const neoplasmColumnExtension = [
-    { columnName: "description", width: 400, wordWrapEnabled: true },
-    { columnName: "malignantPrimary", wordWrapEnabled: true },
-    { columnName: "malignantSecondary", wordWrapEnabled: true },
-    { columnName: "uncertainBehavior", wordWrapEnabled: true },
-    { columnName: "unspecifiedBehavior", wordWrapEnabled: true },
+    { columnName: "description", width: "25rem", wordWrapEnabled: true },
+    { columnName: "malignantPrimary", width: "7rem", wordWrapEnabled: true },
+    { columnName: "malignantSecondary", width: "7rem", wordWrapEnabled: true },
+    { columnName: "carcinomaInSitu", width: "8rem", wordWrapEnabled: true },
+    { columnName: "benign", width: "6rem", wordWrapEnabled: true },
+    { columnName: "uncertainBehavior", width: "8rem", wordWrapEnabled: true },
+    { columnName: "unspecifiedBehavior", width: "8rem", wordWrapEnabled: true },
   ];
 
   const drugColumnExtension = [
-    { columnName: "description", width: 400, wordWrapEnabled: true },
-    { columnName: "poisoningAccidental", wordWrapEnabled: true },
-    { columnName: "poisoningIntentionalSelfHarm", wordWrapEnabled: true },
-    { columnName: "poisoningAssault", wordWrapEnabled: true },
-    { columnName: "poisoningUndetermined", wordWrapEnabled: true },
+    { columnName: "description", width: "25rem", wordWrapEnabled: true },
+    { columnName: "poisoningAccidental", width: "7rem", wordWrapEnabled: true },
+    { columnName: "poisoningIntentionalSelfHarm", width: "7rem", wordWrapEnabled: true },
+    { columnName: "poisoningAssault", width: "7rem", wordWrapEnabled: true },
+    { columnName: "poisoningUndetermined", width: "8rem", wordWrapEnabled: true },
+    { columnName: "adverseEffect", width: "6rem", wordWrapEnabled: true },
+    { columnName: "adverseEffect", width: "6rem", wordWrapEnabled: true },
   ];
 
   function getChildRows(row, rootRows) {
