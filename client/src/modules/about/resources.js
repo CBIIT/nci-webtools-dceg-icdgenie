@@ -3,7 +3,7 @@ import ResourcesImage from "./images/resources.png";
 export default function Resources() {
   return (
     <div className="h-100 bg-white">
-      <Container className="py-5">
+      <Container className="py-3">
         <h1 className="display-6 text-muted text-center text-uppercase">Resources</h1>
       </Container>
       <hr />
