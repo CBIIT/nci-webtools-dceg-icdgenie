@@ -201,7 +201,7 @@ export default function BatchQuery() {
                 <IntegratedPaging />
                 <Table columnExtensions={results.columnExtensions} />
                 <TableHeaderRow showSortingControls />
-                <PagingPanel pageSizes={[5, 10, 15, 20]} />
+                <PagingPanel pageSizes={[10, 20, 50, 100]} />
               </Grid>
             </div>
           </Container>
