@@ -6,7 +6,7 @@ export default function FAQ() {
     return (
         <div className="h-100 bg-white">
             <Container className="py-3">
-                <h1 className="display-6 text-muted text-center ">FAQs</h1>
+                <h1 className="display-6 page-header text-muted text-center ">FAQs</h1>
             </Container>
             <hr />
             <Container className="py-5">

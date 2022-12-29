@@ -71,7 +71,7 @@ export default function BatchQuery() {
   return (
     <div className="d-flex flex-column h-100 bg-white">
       <Container>
-        <h1 className="my-3 display-6 text-muted text-center text-uppercase">Batch Query</h1>
+        <h1 className="my-3 page-header text-muted text-center text-uppercase">Batch Query</h1>
       </Container>
 
       <hr />

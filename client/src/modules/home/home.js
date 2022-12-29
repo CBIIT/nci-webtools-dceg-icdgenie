@@ -19,10 +19,10 @@ export default function Home() {
   return (
     <>
       <div className="cover-image" style={{ backgroundImage: `url(${HomeImage})` }}>
-        <Container className="flex-grow-1 py-5" style={{ height: "50vh" }}>
+        <Container className="flex-grow-1 py-5" style={{ height: "20rem" }}>
           <Row className="h-100 justify-content-center align-items-center">
             <Col md={8}>
-              <h1 className="display-4 mb-5 text-light text-center text-uppercase">ICD Genie</h1>
+              <h1 className="display-4 mb-2 text-light text-center text-uppercase">ICD Genie</h1>
               <SearchForm
                 className="shadow"
                 search={search}
@@ -34,9 +34,9 @@ export default function Home() {
           </Row>
         </Container>
       </div>
-      <div className="bg-light">
+      <div className="flex-grow-1 bg-light">
 
-        <Container className="py-3" style={{ fontSize: "15px" }}>
+        <Container className=" py-3" style={{ fontSize: "15px" }}>
           <h4 className="pb-3">About ICD Genie</h4>
           <Row className="justify-content-center">
             <Col xl={8}>
