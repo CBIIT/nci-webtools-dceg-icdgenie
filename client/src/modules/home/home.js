@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <>
       <div className="cover-image" style={{ backgroundImage: `url(${HomeImage})` }}>
-        <Container className="flex-grow-1 py-5" style={{ height: "20rem" }}>
+        <Container className="flex-grow-1 py-5" style={{ height: "15rem" }}>
           <Row className="h-100 justify-content-center align-items-center">
             <Col md={8}>
               <h1 className="display-4 mb-2 text-light text-center text-uppercase">ICD Genie</h1>
