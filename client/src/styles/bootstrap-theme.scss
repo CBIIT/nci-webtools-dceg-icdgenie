@@ -47,7 +47,6 @@ hr {
 }
 
 @mixin nav-link($color, $border-color) {
-  border-top: 3px solid transparent;
   border-bottom: 3px solid transparent;
   border-left: none;
   border-right: none;
@@ -67,6 +66,7 @@ hr {
     border-color: transparent;
     border-bottom-color: $border-color;
     background-color: transparent;
+    border-bottom-width: 4px;
   }
 }
 
@@ -76,7 +76,7 @@ hr {
   }
 
   .navbar-nav .nav-link {
-    @include nav-link($light, $blue-300);
+    @include nav-link($light, rgb(250, 105, 81));
   }
 }
 

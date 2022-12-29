@@ -78,7 +78,7 @@ export default function App() {
               <Navbar.Collapse id="app-navbar">
                 <Nav className="d-flex w-100 justify-content-center">
                   {links.map((link, index) => (
-                    <NavLink key={`navlink-${index}`} to={link.route} className="nav-link my-2 mx-3" style={{whiteSpace: "nowrap"}}>
+                    <NavLink key={`navlink-${index}`} to={link.route} className="nav-link mx-3" style={{whiteSpace: "nowrap"}}>
                       {link.title}
                     </NavLink>
                   ))}
