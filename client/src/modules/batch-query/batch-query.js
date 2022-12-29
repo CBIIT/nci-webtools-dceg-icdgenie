@@ -56,8 +56,10 @@ export default function BatchQuery() {
     ].filter(Boolean);
 
     const columnExtensions = [
-      form.outputType === "icdo3" && { columnName: "description", width: "20rem", wordWrapEnabled: true },
-      form.outputType === "icd10" && { columnName: "description", width: "20rem", wordWrapEnabled: true },
+      { columnName: "input", width: "10rem" },
+      { columnName: "code", width: "15rem" },
+      form.outputType === "icdo3" && { columnName: "description", wordWrapEnabled: true },
+      form.outputType === "icd10" && { columnName: "description", wordWrapEnabled: true },
     ].filter(Boolean);
     console.log(response)
     mergeResults({
@@ -179,10 +181,10 @@ export default function BatchQuery() {
           <hr />
           <Container className="py-3">
             <div className="mb-3 d-flex justify-content-between align-items-center">
-              <div className="text-uppercase" style={{ letterSpacing: "1.5px" }}>
+              <div className="text-uppercase" style={{ fontSize: "14px", letterSpacing: "1.5px" }}>
                 <b>{results.output.length.toLocaleString()}</b> Results Found
               </div>
-              <Button variant="primary" onClick={() => exportCsv(results.output, "icd_genie_batch_export.csv")}>
+              <Button variant="primary" size="sm" onClick={() => exportCsv(results.output, "icd_genie_batch_export.csv")}>
                 Export CSV
               </Button>
             </div>
