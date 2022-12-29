@@ -139,7 +139,7 @@ export default function BatchQuery() {
 
           <Row className="justify-content-center">
             <Col md={8}>
-              <Form.Group className="mb-3">
+              <Form.Group className="mb-1">
                 <Form.Label>Please upload a file (.csv) or enter a list of keywords, ICD-10 codes or ICD-O-3 codes</Form.Label>
                 <Form.Control
                   className="mb-3"
@@ -164,7 +164,7 @@ export default function BatchQuery() {
                     />
                   </Col>
                   <Col md={1}>
-                    <Button variant="primary" type="submit">
+                    <Button className="mt-1" variant="primary" type="submit" size="sm">
                       Submit
                     </Button>
                   </Col>
