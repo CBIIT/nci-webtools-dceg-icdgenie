@@ -39,7 +39,7 @@ export default function Home() {
         <Container className=" py-3" style={{ fontSize: "15px" }}>
           <h4 className="pb-3">About ICD Genie</h4>
           <Row className="justify-content-center">
-            <Col xl={8}>
+            <Col className="mb-4" xl={8}>
               <p className="fw-normal">
                 ICD Genie is a translator for textual diagnoses, ICD-10, and ICD-O-3 codes sourced from
                 the <a href="https://www.cms.gov/files/zip/2022-code-tables-tabular-and-index.zip" target="_blank">Centers for Medicare & Medicaid Services (CMS)</a>,
