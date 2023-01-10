@@ -176,7 +176,7 @@ export default function BatchQuery() {
           </Row>
         </Container>
       </Form>
-      {results.columns.length && (
+      {results.columns.length ? (
         <div className="bg-light">
           <hr />
           <Container className="py-3">
@@ -206,7 +206,8 @@ export default function BatchQuery() {
             </div>
           </Container>
         </div>
-      )}
+      ) : 
+      <> </>}
     </div>
   );
 }
