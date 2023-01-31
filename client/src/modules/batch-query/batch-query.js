@@ -8,12 +8,7 @@ import Button from "react-bootstrap/Button";
 import Loader from "../common/loader";
 import Modal from "react-bootstrap/Modal";
 import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
-import {
-  SortingState,
-  IntegratedSorting,
-  PagingState,
-  IntegratedPaging,
-} from '@devexpress/dx-react-grid';
+import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { formState, resultsState } from "./batch-query.state";
 import { readFileAsText, exportCsv } from "./batch-query.utils";
 
@@ -61,7 +56,7 @@ export default function BatchQuery() {
       form.outputType === "icdo3" && { columnName: "description", wordWrapEnabled: true },
       form.outputType === "icd10" && { columnName: "description", wordWrapEnabled: true },
     ].filter(Boolean);
-    console.log(response)
+    console.log(response);
     mergeResults({
       loading: false,
       output: response.data,
@@ -142,7 +137,9 @@ export default function BatchQuery() {
           <Row className="justify-content-center">
             <Col md={8}>
               <Form.Group className="mb-1">
-                <Form.Label>Please upload a file (.csv) or enter a list of keywords, ICD-10 codes or ICD-O-3 codes</Form.Label>
+                <Form.Label>
+                  Please upload a file (.csv) or enter a list of keywords, ICD-10 codes or ICD-O-3 codes
+                </Form.Label>
                 <Form.Control
                   className="mb-3"
                   as="textarea"
@@ -158,12 +155,15 @@ export default function BatchQuery() {
                       type="file"
                       id="fileInput"
                       name="fileInput"
-                      className="form-control mb-3"
+                      className="form-control"
                       aria-label="Upload a file containing search terms"
                       data-name="input"
                       accept=".csv"
                       onChange={handleChange}
                     />
+                    <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_batch_query.csv`}>
+                      Download Example
+                    </a>
                   </Col>
                   <Col md={1}>
                     <Button className="mt-1" variant="primary" type="submit" size="sm">
@@ -176,7 +176,7 @@ export default function BatchQuery() {
           </Row>
         </Container>
       </Form>
-      {results.columns.length && (
+      {results.columns.length ? (
         <div className="bg-light">
           <hr />
           <Container className="py-3">
@@ -184,19 +184,18 @@ export default function BatchQuery() {
               <div className="text-uppercase" style={{ fontSize: "14px", letterSpacing: "1.5px" }}>
                 <b>{results.output.length.toLocaleString()}</b> Results Found
               </div>
-              <Button variant="primary" size="sm" onClick={() => exportCsv(results.output, "icd_genie_batch_export.csv")}>
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => exportCsv(results.output, "icd_genie_batch_export.csv")}
+              >
                 Export CSV
               </Button>
             </div>
             <div className="index border">
               <Grid rows={results.output} columns={results.columns}>
-                <SortingState
-                  defaultSorting={[{ columnName: 'input', direction: 'asc' }]}
-                />
-                <PagingState
-                  defaultCurrentPage={0}
-                  defaultPageSize={20}
-                />
+                <SortingState defaultSorting={[{ columnName: "input", direction: "asc" }]} />
+                <PagingState defaultCurrentPage={0} defaultPageSize={20} />
                 <IntegratedSorting />
                 <IntegratedPaging />
                 <Table columnExtensions={results.columnExtensions} />
@@ -206,6 +205,8 @@ export default function BatchQuery() {
             </div>
           </Container>
         </div>
+      ) : (
+        <> </>
       )}
     </div>
   );
