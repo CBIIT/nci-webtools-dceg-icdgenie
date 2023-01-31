@@ -225,9 +225,18 @@ api.post("/opensearch", async (request, response) => {
       rejectUnauthorized: false
     }
   })
-  const { search } = request.body
-  const query = search.split(" ").length === 1 && !search.includes("/") ? "*" + search + "*" : "\"" + search + "\""
+  var { search } = request.body
+  const splitSearch = search.split(" ")
   
+  //Handle [organ] cancer search
+  if(splitSearch.length > 1 && splitSearch[splitSearch.length-1] === "cancer"){
+    search = splitSearch.slice(0,-1).join(" ")
+    console.log(search)
+  }
+
+  //Prefix and suffix search for single words, exact match for icdo-3 and multi word queries
+  const query = search.split(" ").length === 1 && !search.includes("/") ? "*" + search + "*" : "\"" + search + "\""
+
   logger.info(query)
 
   var body = {
