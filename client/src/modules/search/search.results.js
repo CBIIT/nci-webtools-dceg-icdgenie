@@ -23,11 +23,11 @@ export default function SearchResults({ query, maps }) {
           <ICDO3 form={results} maps={maps} />
         </div>
       </Tab>
-      <Tab eventKey="contact" title="ICD-10 Hierarchy">
+      {/*<Tab eventKey="contact" title="ICD-10 Hierarchy">
         <div className="bg-light">
           <ICD10Hierarchy form={results} maps={maps}/>
         </div>
-      </Tab>
+    </Tab>*/}
     </Tabs>
   );
 }
