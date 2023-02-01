@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -x
 
 # no need to run opensearch.js, since we've already built opensearch indexes
 # node opensearch.js
