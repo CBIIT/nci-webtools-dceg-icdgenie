@@ -1,12 +1,23 @@
 FROM public.ecr.aws/amazonlinux/amazonlinux:2022
 
 RUN dnf -y update \
+ && dnf -y install \
+    make \
+    gcc-c++ \
+    nodejs \
+    npm \
  && dnf clean all
 
-RUN mkdir -p /database
+RUN mkdir -p /app/database
 
-WORKDIR /database
+WORKDIR /app/database
 
-COPY database /database
+# use build cache for npm packages
+COPY database/package.json /app/database/
 
-CMD sh /database/import.sh
+RUN npm install
+
+# copy the rest of the application
+COPY database /app/database/
+
+CMD npm run import
