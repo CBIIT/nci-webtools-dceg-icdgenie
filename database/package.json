@@ -6,6 +6,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@opensearch-project/opensearch": "^2.2.0",
     "better-sqlite3": "^7.5.0",
     "csv-parse": "^5.0.4",
     "dotenv": "^16.0.0",
@@ -15,6 +16,9 @@
   "devDependencies": {
     "jest": "^27.5.1",
     "supertest": "^6.2.2"
+  },
+  "scripts": {
+    "import": "node -r dotenv/config import-opensearch.js"
   },
   "jest": {
     "clearMocks": true,
