@@ -5,6 +5,8 @@ RUN dnf -y update \
 
 RUN mkdir -p /database
 
+WORKDIR /database
+
 COPY database /database
 
 CMD sh /database/import.sh
