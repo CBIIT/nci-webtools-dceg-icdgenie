@@ -1,4 +1,4 @@
-FROM amazonlinux:2022
+FROM public.ecr.aws/amazonlinux/amazonlinux:2022
 
 RUN dnf -y update \
  && dnf clean all
