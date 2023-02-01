@@ -4,26 +4,29 @@ services:
     build:
       context: .
       dockerfile: docker/backend.dockerfile
-      args:
-        BASE_IMAGE: "quay.io/centos/centos:stream9"
     volumes:
       - ./database:/app/database
-    environment:
-      APP_NAME: icdgenie
-      API_PORT: 9000
-      APP_BASE_URL: http://localhost:8080/
-      DATABASE_PATH: /app/database/database.db
-      LOG_FOLDER: logs
-      LOG_LEVEL: debug
+    env_file:
+      - server/.env
+
   frontend:
     build:
       context: .
       dockerfile: docker/frontend.dockerfile
-      args:
-        BASE_IMAGE: "quay.io/centos/centos:stream9"
     environment:
       API_BASE_URL: http://backend:9000
     links:
       - backend:backend
     ports:
       - "8080:80"
+
+  # On WSL:2, run the following commands to increase the max_map_count
+  # wsl -d docker-desktop
+  # sysctl -w vm.max_map_count=262144
+  database:
+    image: public.ecr.aws/opensearchproject/opensearch:latest
+    environment:
+      discovery.type: single-node
+    ports:
+      - "9200:9200"
+      - "9600:9600"
