@@ -71,9 +71,8 @@ export default function Home() {
                 </a>{" "}
                 of the NCI{" "}
                 <a href="https://dceg.cancer.gov/" target="_blank">
-                  Division of Cancer Epidemiology and Genetics
+                  Division of Cancer Epidemiology and Genetics (DCEG)
                 </a>{" "}
-                (DCEG){" "}
                 <a href="https://dceg.cancer.gov/about/organization/tdrp/iteb" target="_blank">
                   Integrative Tumor Epidemiology Branch
                 </a>{" "}
