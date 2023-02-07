@@ -177,18 +177,18 @@ export default function Starter() {
               </h3>
               <b style={{ textDecorationLine: "underline" }}>ICD-10 Codes</b>
               <div>
-                <strong>Example Code:</strong> A 0 1 . 0 2 1 S
+                <strong>Example Code:</strong> C50.011
               </div>
               <ul>
                 <li>Alphanumeric</li>
-                <li>Can be up to 7 characters</li>
+                <li>Can be up to 6 characters (7 character codes are not currently supported)</li>
                 <li>First character is always a letter (except "U")</li>
                 <li>Second and third characters are always a number</li>
-                <li>Characters 4 through 7 : either a number or letter</li>
+                <li>Characters 4 through 6: either a number or letter</li>
               </ul>
-              <b style={{ textDecorationLine: "underline" }}>ICD-0-3 Codes</b>
+              <b style={{ textDecorationLine: "underline" }}>ICD-O-3 Codes</b>
               <div>
-                <strong>Example Code:</strong> 9 1 4 0 / 3
+                <strong>Example Code:</strong> 8000/3
               </div>
               <ul>
                 <li>Entirely Numeric</li>
