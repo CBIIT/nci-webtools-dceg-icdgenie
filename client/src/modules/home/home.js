@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -96,23 +96,19 @@ export default function Home() {
             <Col className="fw-normal text-end" xl={4}>
               <div className="px-3" style={{ borderRight: "5px solid #FA6951" }}>
                 <div>Learn about how to get started:</div>
-                <Button
-                  variant="outline-primary"
-                  className="m-3 px-4 pill-button"
-                  onClick={() => {
-                    navigate("/about");
-                  }}
+                <Link
+                  className="m-3 btn btn-outline-primary rounded-pill"
+                  to="/getting-started"
                 >
-                  About Page
-                </Button>
+                  Getting Started
+                </Link>
                 <div>Questions, comments or concerns, get in contact with ICD Genie Support</div>
-                <Button
-                  variant="outline-primary"
-                  className="m-3 px-4 pill-button"
-                  onClick={() => (window.location.href = "mailto:NCIICDGenieWebAdmin@mail.nih.gov")}
+                <a
+                  className="m-3 btn btn-outline-primary rounded-pill"
+                  href="mailto:NCIICDGenieWebAdmin@mail.nih.gov"
                 >
                   Contact Us
-                </Button>
+                </a>
               </div>
             </Col>
           </Row>
