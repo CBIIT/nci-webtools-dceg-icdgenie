@@ -32,14 +32,14 @@ export default function App() {
       component: Home,
     },
     {
-      route: "/search",
-      title: "Search",
-      component: Search,
-    },
-    {
       route: "/getting-started",
       title: "Getting Started",
       component: Started,
+    },
+    {
+      route: "/search",
+      title: "Search",
+      component: Search,
     },
     {
       route: "/batch-query",
