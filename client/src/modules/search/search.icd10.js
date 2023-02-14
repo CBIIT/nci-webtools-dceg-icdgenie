@@ -169,7 +169,7 @@ export default function ICD10({ form, maps }) {
   return (
     <Container className="py-5 col-xl-10 col-sm-12">
       <Loader show={loading} fullscreen />
-      <Accordion activeKey={maps.tabular.size ? "0" : "1"} className="mb-4 index">
+      <Accordion activeKey={maps.tabular.size ? "0" : "1"} className={`mb-4 ${maps.tabular.size ? "index" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">INDEX TABLE</span>
@@ -187,7 +187,7 @@ export default function ICD10({ form, maps }) {
         </Accordion.Item>
       </Accordion>
 
-      <Accordion activeKey={maps.neoplasm.size ? "0" : "1"} className="mb-4 neoplasm">
+      <Accordion activeKey={maps.neoplasm.size ? "0" : "1"} className={`mb-4 ${maps.neoplasm.size ? "neoplasm" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">NEOPLASM TABLE</span>
@@ -214,7 +214,7 @@ export default function ICD10({ form, maps }) {
         </Accordion.Item>
       </Accordion>
 
-      <Accordion activeKey={maps.drug.size ? "0" : "1"} className="mb-4 drug">
+      <Accordion activeKey={maps.drug.size ? "0" : "1"} className={`mb-4 ${maps.drug.size ? "drug" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">DRUG TABLE</span>
@@ -241,7 +241,7 @@ export default function ICD10({ form, maps }) {
         </Accordion.Item>
       </Accordion>
 
-      <Accordion activeKey={maps.injury.size ? "0" : "1"} className="mb-4 injury">
+      <Accordion activeKey={maps.injury.size ? "0" : "1"} className={`mb-4 ${maps.injury.size ? "injury" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">INJURY TABLE</span>
