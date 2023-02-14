@@ -2,7 +2,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 
-import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { useNavigate, useSearchParams, useLocation, NavLink } from "react-router-dom";
 import { Container, Row, Col, Modal, InputGroup, Form, Button } from "react-bootstrap";
 
 import Loader from "../common/loader";
@@ -173,7 +173,7 @@ export default function Search() {
                 Did you mean: {(suggestions.map((e, index) =>
                    <>
                     {index ? ', ': ''}
-                    <a href="javascript:void(0)" onClick={() => handleSubmit(e)}>{e}</a>
+                    <NavLink to={`/search?query=${e}`}>{e}</NavLink>
                    </>
                 ))}
               </span> : <></>}
