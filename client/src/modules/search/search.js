@@ -19,6 +19,7 @@ export default function Search() {
   const [searchParams] = useSearchParams();
   const [modal, setModal] = useRecoilState(modalState);
   const query = searchParams.get("query");
+
   const [maps, setMaps] = useState({
     tabular: new Map(),
     neoplasm: new Map(),
@@ -27,6 +28,7 @@ export default function Search() {
     icdo3: []
   })
   const [input, setInput] = useState("")
+  const [submitted, setSubmitted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [valid, setValid] = useState(true)
   const [suggestions, setSuggestions] = useState([])
@@ -35,7 +37,7 @@ export default function Search() {
 
     if (location.state) {
       setInput(location.state.query)
-      if(location.state.query.length >= 3)
+      if (location.state.query.length >= 3)
         handleSubmit(location.state.query)
       else
         setValid(false)
@@ -70,9 +72,9 @@ export default function Search() {
             description: parent.description,
             parents: parent.parents,
             children: [currentKey],
-            key: parentKey,  
+            key: parentKey,
           }
-         
+
           if (node._index === "drug" || node._index === "neoplasm") {
             for (var code in parent.code)
               value[code] = parent.code[code]
@@ -130,13 +132,14 @@ export default function Search() {
     }
     console.log(results)
     setSuggestions(response.data.fuzzyTerms)
+    setSubmitted(true)
     setLoading(false)
     setMaps(results)
   }
 
   async function opensearch(e) {
     e.preventDefault();
-    if(input.length >= 3)
+    if (input.length >= 3)
       handleSubmit(input);
     else
       setValid(false)
@@ -157,7 +160,7 @@ export default function Search() {
           <Row className="h-100 justify-content-center align-items-center">
             <Col md={8}>
               <form onSubmit={opensearch}>
-                <InputGroup size={"lg"} className="search-box" style={{borderColor: valid ? "" : "red"}}>
+                <InputGroup size={"lg"} className="search-box" style={{ borderColor: valid ? "" : "red" }}>
                   <Form.Control
                     className="border-0 shadow-none"
                     placeholder={"Search ICD Genie"}
@@ -171,18 +174,22 @@ export default function Search() {
                     <FontAwesomeIcon icon={faArrowRight} className="text-muted" />
                   </Button>
                 </InputGroup>
-                {!valid && <div style={{color: "red"}}>
+                {!valid && <div style={{ color: "red" }}>
                   Your search text must be at least 3 characters long
                 </div>}
               </form>
-              {suggestions.length ? <span style={{fontSize: '18px'}}>
-                Did you mean: {(suggestions.map((e, index) =>
-                   <>
-                    {index ? ', ': ''}
-                    <a href="javascript:void(0)" onClick={() => handleSubmit(e)}>{e}</a>
-                   </>
-                ))}
-              </span> : <></>}
+              {
+                suggestions.length ? <span style={{ fontSize: '18px' }}>
+                  Did you mean: {(suggestions.map((e, index) =>
+                    <>
+                      {index ? ', ' : ''}
+                      <a href="javascript:void(0)" onClick={() => handleSubmit(e)}>{e}</a>
+                    </>
+                  ))}
+                </span> :
+                  submitted && maps.tabular.size === 0 && maps.neoplasm.size === 0 && maps.drug.size === 0 && maps.injury.size === 0 ?
+                    <span style={{ color: "red" }}>No Results Found</span>
+                    : <></>}
               <div className="mt-3 text-uppercase text-muted text-center">
                 Search by Keywords, ICD-10 code, or ICD-O-3 code
               </div>
