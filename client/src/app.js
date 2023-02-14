@@ -37,6 +37,11 @@ export default function App() {
       component: Search,
     },
     {
+      route: "/getting-started",
+      title: "Getting Started",
+      component: Started,
+    },
+    {
       route: "/batch-query",
       title: "Batch Query",
       component: BatchQuery,
@@ -50,11 +55,6 @@ export default function App() {
       route: "/about",
       title: "About",
       component: About,
-    },
-    {
-      route: "/getting-started",
-      title: "Getting Started",
-      component: Started,
     },
     {
       route: "/faq",
