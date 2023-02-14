@@ -14,14 +14,11 @@ export default function SearchResults({ query, maps }) {
       defaultActiveKey="icd10CodeTable"
       className="d-flex justify-content-center bg-primary-light">
       <Tab eventKey="icd10CodeTable" title="ICD-10 Code Table">
-        <div className="bg-light">
+   
           <ICD10 form={results} maps={maps} />
-        </div>
       </Tab>
       <Tab eventKey="icdo3CodeTable" title="ICD-O-3 Code Table">
-        <div className="bg-light">
           <ICDO3 form={results} maps={maps} />
-        </div>
       </Tab>
       {/*<Tab eventKey="contact" title="ICD-10 Hierarchy">
         <div className="bg-light">

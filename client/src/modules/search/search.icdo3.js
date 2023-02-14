@@ -60,12 +60,17 @@ export default function ICDO3({ form, maps }) {
   return (
     <Container className="py-5 h-100 col-xl-10 col-sm-12 index">
       <Loader show={loading} fullscreen />
-      <Grid rows={maps.icdo3 ? maps.icdo3.map((e) => { return e._source}) : []} columns={icdo3Columns}>
-        <IcdCodeTypeProvider for={["code"]} />
-        <PreferredTermTypeProvider for={["preferred"]} />
-        <Table columnExtensions={columnExtensions} />
-        <TableHeaderRow />
-      </Grid>
+      {maps.icdo3.length === 0 ?
+        <div style={{ textAlign: "center" }}>
+          <big>No Results Found</big>
+        </div>
+        :
+        <Grid rows={maps.icdo3 ? maps.icdo3.map((e) => { return e._source }) : []} columns={icdo3Columns}>
+          <IcdCodeTypeProvider for={["code"]} />
+          <PreferredTermTypeProvider for={["preferred"]} />
+          <Table columnExtensions={columnExtensions} />
+          <TableHeaderRow />
+        </Grid>}
     </Container>
   );
 }

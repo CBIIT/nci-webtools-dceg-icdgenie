@@ -19,7 +19,13 @@ export default function Search() {
   const [searchParams] = useSearchParams();
   const [modal, setModal] = useRecoilState(modalState);
   const query = searchParams.get("query");
-  const [maps, setMaps] = useState({})
+  const [maps, setMaps] = useState({
+    tabular: new Map(),
+    neoplasm: new Map(),
+    drug: new Map(),
+    injury: new Map(),
+    icdo3: []
+  })
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [valid, setValid] = useState(true)
@@ -173,7 +179,7 @@ export default function Search() {
                 Did you mean: {(suggestions.map((e, index) =>
                    <>
                     {index ? ', ': ''}
-                    <NavLink to={`/search?query=${e}`}>{e}</NavLink>
+                    <a href="javascript:void(0)" onClick={() => handleSubmit(e)}>{e}</a>
                    </>
                 ))}
               </span> : <></>}

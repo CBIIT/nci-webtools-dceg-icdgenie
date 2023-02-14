@@ -38,7 +38,7 @@ export default function ICD10({ form, maps }) {
     { name: "underdosing", title: "Underdosing" },
   ];
 
-  
+
   const indexColumnExtension = [{ columnName: "description", width: "45rem", wordWrapEnabled: true }];
 
   const neoplasmColumnExtension = [
@@ -63,7 +63,7 @@ export default function ICD10({ form, maps }) {
 
   function getChildRows(row, rootRows) {
     console.log(row)
-    if(row)
+    if (row)
       console.log(row.children)
     return row ? row.children : rootRows;
   }
@@ -71,14 +71,14 @@ export default function ICD10({ form, maps }) {
   function getTabularChildRows(row, rootRows) {
 
     if (row) {
-      if(row.children.length === 0)
+      if (row.children.length === 0)
         return null
 
       var children = []
       row.children.map((child) => {
         children = children.concat(maps.tabular.get(child))
       })
-      
+
       return children
     }
     return rootRows;
@@ -87,14 +87,14 @@ export default function ICD10({ form, maps }) {
   function getNeoplasmChildRows(row, rootRows) {
 
     if (row) {
-      if(row.children.length === 0)
+      if (row.children.length === 0)
         return null
 
       var children = []
       row.children.map((child) => {
         children = children.concat(maps.neoplasm.get(child))
       })
-      
+
       return children
     }
     return rootRows;
@@ -104,14 +104,14 @@ export default function ICD10({ form, maps }) {
   function getDrugChildRows(row, rootRows) {
 
     if (row) {
-      if(row.children.length === 0)
+      if (row.children.length === 0)
         return null
 
       var children = []
       row.children.map((child) => {
         children = children.concat(maps.drug.get(child))
       })
-      
+
       return children
     }
     return rootRows;
@@ -120,14 +120,14 @@ export default function ICD10({ form, maps }) {
   function getInjuryChildRows(row, rootRows) {
 
     if (row) {
-      if(row.children.length === 0)
+      if (row.children.length === 0)
         return null
 
       var children = []
       row.children.map((child) => {
         children = children.concat(maps.injury.get(child))
       })
-      
+
       return children
     }
     return rootRows;
@@ -169,7 +169,12 @@ export default function ICD10({ form, maps }) {
   return (
     <Container className="py-5 col-xl-10 col-sm-12">
       <Loader show={loading} fullscreen />
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 index">
+      {maps.tabular.size === 0 && maps.neoplasm.size === 0 && maps.drug.size === 0 && maps.injury.size === 0 ?
+        <div style={{textAlign: "center"}}>
+          <big>No Results Found</big>
+        </div>
+        : <></>}
+      {maps.tabular && maps.tabular.size ? <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 index">
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">INDEX TABLE</span>
@@ -185,9 +190,9 @@ export default function ICD10({ form, maps }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> : <></>}
 
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 neoplasm">
+      {maps.neoplasm && maps.neoplasm.size ? <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 neoplasm">
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">NEOPLASM TABLE</span>
@@ -212,9 +217,9 @@ export default function ICD10({ form, maps }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> : <></>}
 
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 drug">
+      {maps.drug && maps.drug.size ? <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 drug">
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">DRUG TABLE</span>
@@ -239,8 +244,9 @@ export default function ICD10({ form, maps }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 injury">
+      </Accordion> : <></>}
+
+      {maps.injury && maps.injury.size ? <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 injury">
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">INJURY TABLE</span>
@@ -256,7 +262,7 @@ export default function ICD10({ form, maps }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> : <></>}
     </Container>
   );
 }
