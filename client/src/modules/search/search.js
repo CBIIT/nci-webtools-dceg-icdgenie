@@ -187,7 +187,7 @@ export default function Search() {
                     </>
                   ))}
                 </span> :
-                  submitted && maps.tabular.size === 0 && maps.neoplasm.size === 0 && maps.drug.size === 0 && maps.injury.size === 0 ?
+                  submitted && maps.tabular.size === 0 && maps.neoplasm.size === 0 && maps.drug.size === 0 && maps.injury.size === 0 && maps.icdo3.length === 0?
                     <span style={{ color: "red" }}>No Results Found</span>
                     : <></>}
               <div className="mt-3 text-uppercase text-muted text-center">
