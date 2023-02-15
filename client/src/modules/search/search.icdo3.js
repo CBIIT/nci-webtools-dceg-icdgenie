@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { DataTypeProvider } from "@devexpress/dx-react-grid";
+import { DataTypeProvider, TableKeyboardNavigation } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, VirtualTable } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
@@ -60,12 +60,13 @@ export default function ICDO3({ form, maps }) {
   return (
     <Container className="py-5 h-100 col-xl-10 col-sm-12 index">
       <Loader show={loading} fullscreen />
-        <Grid rows={maps.icdo3 ? maps.icdo3.map((e) => { return e._source }) : []} columns={icdo3Columns}>
-          <IcdCodeTypeProvider for={["code"]} />
-          <PreferredTermTypeProvider for={["preferred"]} />
-          <Table columnExtensions={columnExtensions} />
-          <TableHeaderRow />
-        </Grid>
+      <Grid rows={maps.icdo3 ? maps.icdo3.map((e) => { return e._source }) : []} columns={icdo3Columns}>
+        <IcdCodeTypeProvider for={["code"]} />
+        <PreferredTermTypeProvider for={["preferred"]} />
+        <Table columnExtensions={columnExtensions} noDataCellComponent={() => <td />}/>
+
+        <TableHeaderRow />
+      </Grid>
     </Container>
   );
 }
