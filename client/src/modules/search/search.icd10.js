@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
 import { TreeDataState, CustomTreeData, DataTypeProvider } from "@devexpress/dx-react-grid";
@@ -12,7 +12,20 @@ import Loader from "../common/loader";
 
 export default function ICD10({ form, maps }) {
   const setModal = useSetRecoilState(modalState);
+
+  const [indexPanel, setIndexPanel] = useState(null)
+  const [neoplasmPanel, setNeoplasmPanel] = useState(null)
+  const [drugPanel, setDrugPanel] = useState(null)
+  const [injuryPanel, setInjuryPanel] = useState(null)
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setIndexPanel(maps.tabular.size ? "0" : null)
+    setNeoplasmPanel(maps.neoplasm.size ? "0" : null)
+    setDrugPanel(maps.drug.size ? "0" : null)
+    setInjuryPanel(maps.injury.size ? "0" : null)
+  }, [maps])
+
   const indexColumns = [
     { name: "description", title: "Description" },
     { name: "code", title: "Code" },
@@ -166,10 +179,15 @@ export default function ICD10({ form, maps }) {
     return <DataTypeProvider formatterComponent={icdCodeFormatter} {...props} />;
   }
 
+  function handleAccordion(panel, setPanel) {
+
+    return panel === null ? setPanel("0") : setPanel(null)
+  }
+
   return (
     <Container className="py-5 col-xl-10 col-sm-12">
       <Loader show={loading} fullscreen />
-      <Accordion activeKey={maps.tabular.size ? "0" : "1"} className={`mb-4 ${maps.tabular.size ? "index" : "disabled"}`}>
+      <Accordion onSelect={() => { maps.tabular.size ? handleAccordion(indexPanel, setIndexPanel) : setIndexPanel(null) }} activeKey={indexPanel} className={`mb-4 ${maps.tabular.size ? "index" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">INDEX TABLE</span>
@@ -187,7 +205,7 @@ export default function ICD10({ form, maps }) {
         </Accordion.Item>
       </Accordion>
 
-      <Accordion activeKey={maps.neoplasm.size ? "0" : "1"} className={`mb-4 ${maps.neoplasm.size ? "neoplasm" : "disabled"}`}>
+      <Accordion onSelect={() => { maps.neoplasm.size ? handleAccordion(neoplasmPanel, setNeoplasmPanel) : setNeoplasmPanel(null) }} activeKey={neoplasmPanel} className={`mb-4 ${maps.neoplasm.size ? "neoplasm" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">NEOPLASM TABLE</span>
@@ -214,7 +232,7 @@ export default function ICD10({ form, maps }) {
         </Accordion.Item>
       </Accordion>
 
-      <Accordion activeKey={maps.drug.size ? "0" : "1"} className={`mb-4 ${maps.drug.size ? "drug" : "disabled"}`}>
+      <Accordion onSelect={() => { maps.drug.size ? handleAccordion(drugPanel, setDrugPanel) : setDrugPanel(null) }} activeKey={drugPanel} className={`mb-4 ${maps.drug.size ? "drug" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">DRUG TABLE</span>
@@ -241,7 +259,7 @@ export default function ICD10({ form, maps }) {
         </Accordion.Item>
       </Accordion>
 
-      <Accordion activeKey={maps.injury.size ? "0" : "1"} className={`mb-4 ${maps.injury.size ? "injury" : "disabled"}`}>
+      <Accordion onSelect={() => { maps.injury.size ? handleAccordion(injuryPanel, setInjuryPanel) : setInjuryPanel(null) }} activeKey={injuryPanel} className={`mb-4 ${maps.injury.size ? "injury" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">INJURY TABLE</span>
