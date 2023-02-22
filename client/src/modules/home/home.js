@@ -36,7 +36,6 @@ export default function Home() {
       </div>
       <div className="flex-grow-1 bg-light">
         <Container className=" py-3" style={{ fontSize: "15px" }}>
-          <h4 className="pb-3">About ICD Genie</h4>
           <Row className="justify-content-center">
             <Col className="mb-4" xl={8}>
               <p className="fw-normal">
@@ -102,13 +101,13 @@ export default function Home() {
                 >
                   Getting Started
                 </Link>
-                <div>Questions, comments or concerns, get in contact with ICD Genie Support</div>
-                <a
+                <div>For further details on ICD Genie, check out our About page:</div>
+                <Link
                   className="m-3 btn btn-outline-primary rounded-pill"
-                  href="mailto:NCIICDGenieWebAdmin@mail.nih.gov"
+                  to="/about"
                 >
-                  Contact Us
-                </a>
+                  About ICD Genie
+                </Link>
               </div>
             </Col>
           </Row>

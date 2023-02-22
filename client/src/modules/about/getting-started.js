@@ -30,7 +30,7 @@ export default function Starter() {
         <Row>
           {!isMobile && (
             <Col lg={2} sm={12}>
-              <div className="pb-5" style={{ borderRight: "4px solid #76BDD7" }}>
+              <div className="pb-5" style={{ borderRight: "4px solid #0074a3" }}>
                 <div className="my-2">
                   <HashLink smooth to="/getting-started/#checklist" className="h6 blue-subheader">
                     CHECKLIST
@@ -83,9 +83,9 @@ export default function Starter() {
                 We encourage new users of ICD Genie to familiarize themselves with the following checklist to ensure
                 they are using appropriate search terms and getting maximal utility from their ICD Genie searches.{" "}
               </h5>
-              <h3 id="checklist" className="my-4 text-center text-uppercase blue-subheader">
+              <h2 id="checklist" className="my-4 text-uppercase blue-subheader">
                 Checklist
-              </h3>
+              </h2>
               <ol>
                 <li>Assess if you need to use single or batch query</li>
                 <li>
@@ -114,16 +114,16 @@ export default function Starter() {
             <Col lg={2} />
             <Col lg={10}>
               <Container>
-                <h3 id="searchTypes" className="my-4 text-center text-uppercase blue-subheader">
+                <h2 id="searchTypes" className="my-4 text-uppercase blue-subheader">
                   Search Types
-                </h3>
-                <b style={{ textDecorationLine: "underline" }}>Single Query</b>
+                </h2>
+                <h3 style={{ fontWeight: "bold" }}>Single Query</h3>
                 <p>
                   Single query accepts text, numeric (ICD-O-3), and alphanumeric (ICD-10) queries. You can explore
                   disease descriptions and the coding hierarchy (i.e., parent nodes and child nodes). Only one search
                   term can be entered at a time.{" "}
                 </p>
-                <b style={{ textDecorationLine: "underline" }}>Batch Query</b>
+                <h3 style={{ fontWeight: "bold" }}>Batch Query</h3>
                 <p>
                   ICD Genie will return the original information submitted with a new column added at the end with the
                   search results. We recommend you submit a tab-delimited file (“.tsv”) with no more than 5 columns by
@@ -149,7 +149,7 @@ export default function Starter() {
                     Know which column is the input column you want it to use for queries of diagnosis codes or text
                   </li>
                 </ul>
-                <b style={{ textDecorationLine: "underline" }}>API</b>
+                <h3 style={{ fontWeight: "bold" }}>API</h3>
                 <p>
                   For more advanced searches with large numbers of text or diagnosis code queries, we recommend{" "}
                   <a
@@ -172,10 +172,10 @@ export default function Starter() {
           <Col lg={2} />
           <Col lg={10}>
             <Container>
-              <h3 id="formatting" className="my-4 text-center text-uppercase blue-subheader">
+              <h2 id="formatting" className="my-4 text-uppercase blue-subheader">
                 Formatting ICD Codes
-              </h3>
-              <b style={{ textDecorationLine: "underline" }}>ICD-10 Codes</b>
+              </h2>
+              <h3 style={{ fontWeight: "bold" }}>ICD-10 Codes</h3>
               <div>
                 <strong>Example Code:</strong> C50.011
               </div>
@@ -186,7 +186,7 @@ export default function Starter() {
                 <li>Second and third characters are always a number</li>
                 <li>Characters 4 through 6: either a number or letter</li>
               </ul>
-              <b style={{ textDecorationLine: "underline" }}>ICD-O-3 Codes</b>
+              <h3 style={{ fontWeight: "bold" }}>ICD-O-3 Codes</h3>
               <div>
                 <strong>Example Code:</strong> 8000/3
               </div>
@@ -205,10 +205,10 @@ export default function Starter() {
             <Col lg={2} />
             <Col lg={10}>
               <Container>
-                <h3 id="tutorials" className="my-4 text-center text-uppercase blue-subheader">
+                <h2 id="tutorials" className="my-4 text-uppercase blue-subheader">
                   Tutorials
-                </h3>
-                <b style={{ textDecorationLine: "underline" }}>Formatting</b>
+                </h2>
+                <h3 style={{ fontWeight: "bold" }}>Formatting</h3>
                 <ul>
                   <li>Identifying what kind of ICD codes you have</li>
                   <li>Formatting data in excel or a text editor</li>
@@ -219,7 +219,7 @@ export default function Starter() {
                     allowFullScreen
                   ></iframe>
                 </ul>
-                <b style={{ textDecorationLine: "underline" }}>Using the Tool</b>
+                <h3 style={{ fontWeight: "bold" }}>Using the Tool</h3>
                 <ul>
                   <li>Step by step guide for using batch query</li>
                   <iframe
