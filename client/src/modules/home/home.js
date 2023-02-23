@@ -106,7 +106,7 @@ export default function Home() {
                   className="m-3 btn btn-outline-primary rounded-pill"
                   to="/about"
                 >
-                  About ICD Genie
+                  About
                 </Link>
               </div>
             </Col>
