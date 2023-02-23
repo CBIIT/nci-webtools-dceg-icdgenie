@@ -9,7 +9,7 @@ export default function FAQ() {
                 <h1 className="display-6 page-header text-muted text-center ">FAQs</h1>
             </Container>
             <hr />
-            <Container className="py-5">
+            <Container className="py-3">
                 <h5 className="my-4 blue-subheader">Frequently Asked Questions:</h5>
                 <Accordion defaultActiveKey={["0","1","2"]} alwaysOpen className="mb-4">
                     <Accordion.Item eventKey="0" className="mb-2">

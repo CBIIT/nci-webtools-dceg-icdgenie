@@ -11,11 +11,11 @@ export default function About() {
       <hr />
 
       <Row>
-        <Col lg={4} className="mw-lg-100">
+        {/*<Col lg={4} className="mw-lg-100">
           <img src={AboutImage} style={{ width: "150%", aspectRatio: "1.5" }}></img>
-        </Col>
+         </Col>*/}
         <Col lg={8}>
-          <Container className="py-5">
+          <Container className="py-3 ps-5">
             <h5 className="my-4 blue-subheader">A Little Background</h5>
             <p>
               Accurate histological classification is important for facilitating studies of cancer epidemiology and

@@ -10,7 +10,7 @@ export default function Resources() {
       <Container fluid>
         <Row>
           <Col md={5}>
-            <Container className="py-5 ps-3">
+            <Container className="py-3 ps-5">
               <h5 className="my-4 blue-subheader">
                 ICD Genie utilizes data from the following publicly available resources:
               </h5>
@@ -47,9 +47,9 @@ export default function Resources() {
               </ul>
             </Container>
           </Col>
-          <Col md={7} className="px-0">
+          {/*<Col md={7} className="px-0">
             <img src={ResourcesImage} className="w-100 img-fluid"></img>
-          </Col>
+          </Col>*/}
         </Row>
       </Container>
     </div>
