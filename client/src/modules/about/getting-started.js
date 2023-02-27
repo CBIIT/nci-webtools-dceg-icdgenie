@@ -92,16 +92,18 @@ export default function Starter() {
                   Figure out what you will use as input values (e.g., ICD-10 codes, ICD-O-3 codes or text diagnoses)
                 </li>
                 <li>Ensure your input values are properly formatted </li>
-                <ul>
-                  <li>
-                    Ensure diagnosis codes (i.e., ICD-10 or codes ICD-O-3 you are looking to translate) are properly
-                    formatted. Guidance is provided{" "}
-                    <HashLink smooth to="/getting-started/#formatting">
-                      below
-                    </HashLink>
-                  </li>
-                  <li>Ensure text diagnoses are in American English, not British English</li>
-                </ul>
+                <li style={{listStyleType: "none"}}>
+                  <ul>
+                    <li>
+                      Ensure diagnosis codes (i.e., ICD-10 or codes ICD-O-3 you are looking to translate) are properly
+                      formatted. Guidance is provided{" "}
+                      <HashLink smooth to="/getting-started/#formatting">
+                        below
+                      </HashLink>
+                    </li>
+                    <li>Ensure text diagnoses are in American English, not British English</li>
+                  </ul>
+                </li>
                 <li>Determine your desired output (ICD-10 codes, ICD-O-3 codes or text diagnoses)</li>
               </ol>
             </Container>
@@ -213,6 +215,7 @@ export default function Starter() {
                   <li>Identifying what kind of ICD codes you have</li>
                   <li>Formatting data in excel or a text editor</li>
                   <iframe
+                    title="formatting"
                     width="80%"
                     height="400vw"
                     src="https://nci.rev.vbrick.com/embed?id=5008d4e6-38c4-431f-96f7-e999f284f3b4"
@@ -223,6 +226,7 @@ export default function Starter() {
                 <ul>
                   <li>Step by step guide for using batch query</li>
                   <iframe
+                    title="batch"
                     width="80%"
                     height="400vw"
                     src="https://nci.rev.vbrick.com/embed?id=6f9e1353-f6bf-4725-bd4e-2b03509e18a5"
