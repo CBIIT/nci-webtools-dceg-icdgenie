@@ -72,7 +72,7 @@ export default function App() {
     <RecoilRoot>
       <Router basename={process.env.PUBLIC_URL}>
         <div className="d-flex flex-column flex-grow-1">
-          <Navbar expand="lg" variant="dark" className="py-0 flex-none-auto bg-primary">
+          <Navbar expand="lg" variant="dark" className="py-0 flex-none-auto shadow" style={{backgroundColor: "#F8F9A"}}>
             <Container>
               <Navbar.Toggle aria-controls="app-navbar" />
               <Navbar.Collapse id="app-navbar">

@@ -76,7 +76,7 @@ hr {
   }
 
   .navbar-nav .nav-link {
-    @include nav-link($light, rgb(250, 105, 81));
+    @include nav-link($primary, $primary);
   }
 }
 

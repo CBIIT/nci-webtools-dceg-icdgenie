@@ -33,8 +33,11 @@
 
   <body class="d-flex flex-column vh-100" react-cloak>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <header class="d-flex justify-content-center align-items-center flex-column flex-grow-0">
-      <div class="row container align-items-center">
+    <header class="flex-grow-0">
+      <div class="container">
+
+      
+      <div class="row container align-items-center justify-s-center">
         <a href="https://dceg.cancer.gov/" target="_blank" class="col-lg-9 h5 mb-1">
           <img
             src="%PUBLIC_URL%/images/nci-dceg-logo.svg"
@@ -54,11 +57,20 @@
             placeholder="Google Site Search"
             style="border-top-left-radius: 20px;border-bottom-left-radius: 20px; border-bottom-right-radius: 0;border-top-right-radius: 0"
           />
+          
           <div class="input-group-text" onclick="handleClick()" style="border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 0;border-top-left-radius: 0;margin-left: -1px;cursor: pointer;">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="1em" height="1em">
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
             </svg>
           </div>
+        </div>
+      </div>
+    </div>
+      <div class="bg-primary text-light align-items-center py-2 d-none d-md-block">
+        <div class="container">
+          <h1 class="h5 mx-5">
+            ICD Genie
+          </h1>
         </div>
       </div>
     </header>
