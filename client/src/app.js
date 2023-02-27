@@ -56,16 +56,6 @@ export default function App() {
       title: "About",
       component: About,
     },
-    {
-      route: "/faq",
-      title: "FAQ",
-      component: FAQ,
-    },
-    {
-      route: "/resources",
-      title: "Resources",
-      component: Resources,
-    },
   ];
 
   return (
