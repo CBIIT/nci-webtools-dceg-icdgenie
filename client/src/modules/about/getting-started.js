@@ -214,25 +214,25 @@ export default function Starter() {
                 <ul>
                   <li>Identifying what kind of ICD codes you have</li>
                   <li>Formatting data in excel or a text editor</li>
-                  <iframe
+                </ul>
+                <iframe
                     title="formatting"
                     width="80%"
                     height="400vw"
                     src="https://nci.rev.vbrick.com/embed?id=5008d4e6-38c4-431f-96f7-e999f284f3b4"
                     allowFullScreen
                   ></iframe>
-                </ul>
                 <h3 style={{ fontWeight: "bold" }}>Using the Tool</h3>
                 <ul>
                   <li>Step by step guide for using batch query</li>
-                  <iframe
+                </ul>
+                <iframe
                     title="batch"
                     width="80%"
                     height="400vw"
                     src="https://nci.rev.vbrick.com/embed?id=6f9e1353-f6bf-4725-bd4e-2b03509e18a5"
                     allowFullScreen
                   ></iframe>
-                </ul>
               </Container>
             </Col>
           </Row>
