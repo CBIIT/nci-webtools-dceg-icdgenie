@@ -93,7 +93,7 @@ export default function Home() {
               </p>
             </Col>
             <Col className="fw-normal text-end" xl={4}>
-              <div className="px-3" style={{ borderRight: "5px solid #FA6951" }}>
+              <div className="px-3">
                 <div>Learn about how to get started:</div>
                 <Link
                   className="m-3 btn btn-outline-primary rounded-pill"
