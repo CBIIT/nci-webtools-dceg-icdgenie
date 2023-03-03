@@ -80,7 +80,7 @@ export default function BatchQuery() {
             <Col md={4}>
               <Form.Group className="mb-3">
                 <Form.Label>Select searchable type</Form.Label>
-                <Form.Check
+                {/*<Form.Check
                   label="Keywords"
                   name="inputType"
                   type="radio"
@@ -88,7 +88,7 @@ export default function BatchQuery() {
                   value="keywords"
                   checked={form.inputType === "keywords"}
                   onChange={handleChange}
-                />
+                />*/}
                 <Form.Check
                   label="ICD-10 Codes"
                   name="inputType"
@@ -146,7 +146,7 @@ export default function BatchQuery() {
                   name="input"
                   rows={2}
                   value={form.input}
-                  placeholder="Keywords (Ex. stomach), ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2)"
+                  placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2)"
                   onChange={handleChange}
                 />
                 <Row>

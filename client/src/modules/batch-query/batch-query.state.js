@@ -4,8 +4,8 @@ export const formState = atom({
   key: "batchQuery.formState",
   default: {
     input: "",
-    inputType: "keywords",
-    outputType: "icd10",
+    inputType: "icd10",
+    outputType: "icdo3",
     inputPlaceholder: "",
   },
 });
