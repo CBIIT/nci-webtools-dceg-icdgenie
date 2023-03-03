@@ -163,8 +163,8 @@ export default function Search() {
                 <InputGroup size={"lg"} className="search-box" style={{ borderColor: valid ? "" : "red" }}>
                   <Form.Control
                     className="border-0 shadow-none"
-                    placeholder={"Search ICD Genie"}
-                    aria-label={"Search ICD Genie"}
+                    placeholder={"Search by Keywords, ICD-10 code, or ICD-O-3 code"}
+                    aria-label={"Search by Keywords, ICD-10 code, or ICD-O-3 code"}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onBlur={() => setValid(input.length >= 3)}
@@ -190,9 +190,7 @@ export default function Search() {
                   submitted && maps.tabular.size === 0 && maps.neoplasm.size === 0 && maps.drug.size === 0 && maps.injury.size === 0 && maps.icdo3.length === 0?
                     <span style={{ color: "red" }} className="mx-1">No Results Found</span>
                     : <></>}
-              <div className="mt-3 text-uppercase text-muted text-center">
-                Search by Keywords, ICD-10 code, or ICD-O-3 code
-              </div>
+
             </Col>
           </Row>
         </Container>
