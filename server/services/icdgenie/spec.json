@@ -14,9 +14,13 @@
   "paths": {
     "/api/search/icd10": {
       "get": {
-        "tags": ["Search"],
+        "tags": [
+          "Search"
+        ],
         "summary": "Search ICD-10 by code or description",
-        "produces": ["application/json"],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "query",
@@ -42,7 +46,12 @@
             "in": "query",
             "description": "Retrieves ICD-10 entries organized by type-specific categories. For example, \"type=neoplasm\" retrieves neoplasms grouped by site and behavior. ",
             "type": "string",
-            "enum": ["index", "drug", "injury", "neoplasm"],
+            "enum": [
+              "index",
+              "drug",
+              "injury",
+              "neoplasm"
+            ],
             "default": "index"
           },
           {
@@ -50,7 +59,10 @@
             "in": "query",
             "description": "Response format. If \"list\" is specified, results will be formatted as an array of ICD-10 entries, ordered hierarchically. If \"tree\" is specified, results will be formatted as a hierarchical tree of ICD-10 entries. In both cases, all parent nodes will also be returned.",
             "type": "string",
-            "enum": ["list", "tree"],
+            "enum": [
+              "list",
+              "tree"
+            ],
             "default": "list"
           }
         ],
@@ -69,9 +81,13 @@
     },
     "/api/search/icdo3": {
       "get": {
-        "tags": ["Search"],
+        "tags": [
+          "Search"
+        ],
         "summary": "Search ICD-O-3 by code or description",
-        "produces": ["application/json"],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "query",
@@ -108,26 +124,24 @@
       }
     },
     "/api/translate": {
-      "get": {
-        "tags": ["Translate"],
-        "summary": "Translate between ICD-10 and ICD-O-3 codes",
-        "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "icd10",
-            "in": "query",
-            "description": "ICD-10 code or prefix (eg: C10.0) to translate to ICD-O-3. If not specified, an ICD-O-3 code is expected.",
-            "type": "string",
-            "example": "C10.0"
-          },
-          {
-            "name": "icdo3",
-            "in": "query",
-            "description": "ICD-O-3 code or prefix (eg: 8000/3) to translate to ICD-10. If not specified, an ICD-10 code is expected.",
-            "type": "string",
-            "example": "8000/3"
-          }
+      "post": {
+        "tags": [
+          "Translate"
         ],
+        "summary": "Translate between ICD-10 and ICD-O-3 codes",
+        "produces": [
+          "application/json"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/definitions/TranslateRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -143,9 +157,13 @@
     },
     "/api/batch": {
       "post": {
-        "tags": ["Batch Export"],
+        "tags": [
+          "Batch Export"
+        ],
         "summary": "Batch export search and/or translation results for ICD-10 and ICD-O-3 codes",
-        "produces": ["application/json"],
+        "produces": [
+          "application/json"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -223,6 +241,16 @@
         }
       }
     },
+    "TranslateRequest": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "type": "string",
+          "description": "ICD-10 code or ICD-O-3 code is expected",
+          "default": "C10.0"
+        }
+      }
+    },
     "TranslateResponse": {
       "type": "object",
       "properties": {
@@ -244,38 +272,17 @@
         }
       }
     },
-
-    "parameters": [
-      {
-        "name": "inputType",
-        "in": "body",
-        "description": "Specifies the type of input data.",
-        "type": "string",
-        "enum": ["keywords", "icdo3", "icd10"],
-        "default": "keywords"
-      },
-      {
-        "name": "input",
-        "in": "body",
-        "description": "A newline-delimited list of input entries to search or translate.",
-        "type": "string"
-      },
-      {
-        "name": "inputType",
-        "in": "body",
-        "description": "Specifies the type of output data.",
-        "type": "string",
-        "enum": ["icdo3", "icd10"],
-        "default": "icdo3"
-      }
-    ],
     "BatchExportRequest": {
       "type": "object",
       "properties": {
         "inputType": {
           "type": "string",
           "description": "Specifies the type of input data.",
-          "enum": ["keywords", "icdo3", "icd10"],
+          "enum": [
+            "keywords",
+            "icdo3",
+            "icd10"
+          ],
           "default": "keywords"
         },
         "input": {
@@ -285,13 +292,19 @@
         "outputType": {
           "type": "string",
           "description": "Specifies the type of output data.",
-          "enum": ["icdo3", "icd10"],
+          "enum": [
+            "icdo3",
+            "icd10"
+          ],
           "default": "icdo3"
         },
         "outputFormat": {
           "type": "string",
           "description": "Specifies the output data format. Use 'csv' to export data as a csv file.",
-          "enum": ["json", "csv"],
+          "enum": [
+            "json",
+            "csv"
+          ],
           "default": "json"
         }
       }
