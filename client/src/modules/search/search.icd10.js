@@ -164,19 +164,8 @@ export default function ICD10({ form, maps }) {
     }
   }
 
-  function icdCodeFormatter({ value }) {
-    const isValidCode = /[A-Z]+\d+(\.\d+)?/i.test(value);
-    return isValidCode ? (
-      <Button className="p-0" variant="link" onClick={() => showTranslationModal(value)}>
-        {value}
-      </Button>
-    ) : (
-      value
-    );
-  }
-
-  function IcdCodeTypeProvider(props) {
-    return <DataTypeProvider formatterComponent={icdCodeFormatter} {...props} />;
+  function IcdCodeTypeProvider({ value }) {
+    return value
   }
 
   function handleAccordion(panel, setPanel) {

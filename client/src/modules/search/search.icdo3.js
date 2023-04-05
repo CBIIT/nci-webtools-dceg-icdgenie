@@ -37,20 +37,13 @@ export default function ICDO3({ form, maps }) {
     }
   }
 
-  function icdCodeFormatter({ value }) {
-    return (
-      <Button className="p-0" variant="link" onClick={() => showTranslationModal(value)}>
-        {value}
-      </Button>
-    );
-  }
 
   function preferredTermFormatter({ value }) {
     return value === "1" ? "Yes" : "No";
   }
 
-  function IcdCodeTypeProvider(props) {
-    return <DataTypeProvider formatterComponent={icdCodeFormatter} {...props} />;
+  function IcdCodeTypeProvider({value}) {
+    return value
   }
 
   function PreferredTermTypeProvider(props) {
