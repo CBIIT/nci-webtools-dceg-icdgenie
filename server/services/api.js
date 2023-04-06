@@ -79,6 +79,14 @@ api.post("/batch", async (request, response) => {
               }
             }
           ],
+          "must_not": [
+            {
+              "query_string": {
+                "query": "\"DO NOT USE",
+                "fields": ["description"],
+              }
+            }
+          ],
         }
       },
       "sort": [
@@ -195,6 +203,14 @@ async function fuzzySearch(options, client, index) {
               }
             }
           ],
+          "must_not": [
+            {
+              "query_string": {
+                "query": "\"DO NOT USE\"",
+                "fields": ["description"],
+              }
+            }
+          ],
         }
       },
       "sort": [
@@ -250,6 +266,14 @@ api.post("/opensearch", async (request, response) => {
               "lenient": true,
               "analyze_wildcard": true,
               "allow_leading_wildcard": true,
+            }
+          }
+        ],
+        "must_not": [
+          {
+            "query_string": {
+              "query": "\"DO NOT USE \"",
+              "fields": ["description"],
             }
           }
         ],
