@@ -32,6 +32,7 @@ export default function Search() {
   const [loading, setLoading] = useState(false)
   const [valid, setValid] = useState(true)
   const [suggestions, setSuggestions] = useState([])
+  const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
 
@@ -121,8 +122,8 @@ export default function Search() {
     setLoading(true)
     setValid(true)
     setInput(query)
+    setSearchTerm(query)
     const response = await axios.post("api/opensearch", { search: query })
-    console.log(response)
     const results = {
       tabular: processSearch(response.data.tabular.filter((e) => e._source.type === "entry")),
       neoplasm: processSearch(response.data.neoplasm),
@@ -197,7 +198,7 @@ export default function Search() {
 
         <ErrorBoundary fallback="">
           <Suspense fallback={<Loader show fullscreen />}>
-            <SearchResults query={query} maps={maps} />
+            <SearchResults query={query} maps={maps} search={searchTerm} />
           </Suspense>
         </ErrorBoundary>
       </div>

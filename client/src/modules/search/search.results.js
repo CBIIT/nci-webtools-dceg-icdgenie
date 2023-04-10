@@ -7,7 +7,7 @@ import ICDO3 from "./search.icdo3";
 import ICD10Hierarchy from "./search.hierarchy";
 import { useEffect, useState } from "react";
 
-export default function SearchResults({ query, maps }) {
+export default function SearchResults({ query, maps, search }) {
   const results = useRecoilValue(resultsSelector(query));
   const [tab, setTab] = useState("icd10CodeTable")
 
@@ -29,10 +29,10 @@ export default function SearchResults({ query, maps }) {
       >
       <Tab eventKey="icd10CodeTable" title="ICD-10 Code Table">
 
-        <ICD10 form={results} maps={maps} />
+        <ICD10 form={results} maps={maps} search={search} />
       </Tab>
       <Tab eventKey="icdo3CodeTable" title="ICD-O-3 Code Table">
-        <ICDO3 form={results} maps={maps} />
+        <ICDO3 form={results} maps={maps}/>
       </Tab>
       {/*<Tab eventKey="contact" title="ICD-10 Hierarchy">
         <div className="bg-light">

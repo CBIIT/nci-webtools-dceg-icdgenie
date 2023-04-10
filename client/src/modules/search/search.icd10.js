@@ -10,7 +10,7 @@ import ICDTranslations from "./search.translations";
 import axios from "axios";
 import Loader from "../common/loader";
 
-export default function ICD10({ form, maps }) {
+export default function ICD10({ form, maps, search }) {
   const setModal = useSetRecoilState(modalState);
 
   const [indexPanel, setIndexPanel] = useState(null)
@@ -18,12 +18,22 @@ export default function ICD10({ form, maps }) {
   const [drugPanel, setDrugPanel] = useState(null)
   const [injuryPanel, setInjuryPanel] = useState(null)
   const [loading, setLoading] = useState(false);
+  const [tabularOpen, setTabularOpen] = useState([])
+  const [neoplasmOpen, setNeoplasmOpen] = useState([])
+  const [drugOpen, setDrugOpen] = useState([])
+  const [injuryOpen, setInjuryOpen] = useState([])
 
   useEffect(() => {
+
     setIndexPanel(maps.tabular.size ? "0" : null)
     setNeoplasmPanel(maps.neoplasm.size ? "0" : null)
     setDrugPanel(maps.drug.size ? "0" : null)
     setInjuryPanel(maps.injury.size ? "0" : null)
+
+    setTabularOpen(expandTreeData(Array.from(maps.tabular)))
+    setNeoplasmOpen(expandTreeData(Array.from(maps.neoplasm)))
+    setDrugOpen(expandTreeData(Array.from(maps.drug)))
+    setInjuryOpen(expandTreeData(Array.from(maps.injury)))
   }, [maps])
 
   const indexColumns = [
@@ -73,6 +83,16 @@ export default function ICD10({ form, maps }) {
     { columnName: "adverseEffect", width: "6rem", wordWrapEnabled: true },
     { columnName: "adverseEffect", width: "6rem", wordWrapEnabled: true },
   ];
+
+  function expandTreeData(map) {
+    const node = map.find(e => e[1].code === search)
+    if (node) {
+      const toReturn = Array.from(node[1].parents, id => map.findIndex((e) => e[0] === id))
+      return toReturn
+    }
+
+    return []
+  }
 
   function getChildRows(row, rootRows) {
     console.log(row)
@@ -184,7 +204,10 @@ export default function ICD10({ form, maps }) {
           <Accordion.Body>
             <Grid rows={maps.tabular ? Array.from(maps.tabular.values()).filter((node) => node.parents.length === 0) : []} columns={indexColumns}>
               <IcdCodeTypeProvider for={["code"]} />
-              <TreeDataState />
+              <TreeDataState
+                expandedRowIds={tabularOpen}
+                onExpandedRowIdsChange={setTabularOpen}
+              />
               <CustomTreeData getChildRows={getTabularChildRows} />
               <Table columnExtensions={indexColumnExtension} />
               <TableHeaderRow />
@@ -211,7 +234,10 @@ export default function ICD10({ form, maps }) {
                   "unspecifiedBehavior",
                 ]}
               />
-              <TreeDataState />
+              <TreeDataState
+                expandedRowIds={neoplasmOpen}
+                onExpandedRowIdsChange={setNeoplasmOpen}
+              />
               <CustomTreeData getChildRows={getNeoplasmChildRows} />
               <Table columnExtensions={neoplasmColumnExtension} />
               <TableHeaderRow />
@@ -238,7 +264,10 @@ export default function ICD10({ form, maps }) {
                   "underdosing",
                 ]}
               />
-              <TreeDataState />
+              <TreeDataState
+                expandedRowIds={drugOpen}
+                onExpandedRowIdsChange={setDrugOpen}
+              />
               <CustomTreeData getChildRows={getDrugChildRows} />
               <Table columnExtensions={drugColumnExtension} />
               <TableHeaderRow />
@@ -256,7 +285,10 @@ export default function ICD10({ form, maps }) {
           <Accordion.Body>
             <Grid rows={maps.injury ? Array.from(maps.injury.values()).filter((node) => node.parents.length === 0) : []} columns={indexColumns}>
               <IcdCodeTypeProvider for={["code"]} />
-              <TreeDataState />
+              <TreeDataState
+                expandedRowIds={injuryOpen}
+                onExpandedRowIdsChange={setInjuryOpen}
+              />
               <CustomTreeData getChildRows={getInjuryChildRows} />
               <Table columnExtensions={indexColumnExtension} />
               <TableHeaderRow />
