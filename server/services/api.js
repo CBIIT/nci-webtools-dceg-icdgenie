@@ -82,7 +82,7 @@ api.post("/batch", async (request, response) => {
           "must_not": [
             {
               "query_string": {
-                "query": "\"DO NOT USE",
+                "query": "\"DO NOT USE\"",
                 "fields": ["description"],
               }
             }

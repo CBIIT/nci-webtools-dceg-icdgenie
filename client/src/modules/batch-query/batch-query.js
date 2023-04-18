@@ -98,6 +98,7 @@ export default function BatchQuery() {
                   checked={form.inputType === "icd10"}
                   onChange={handleChange}
                 />
+
                 <Form.Check
                   label="ICD-O-3 Codes"
                   name="inputType"
@@ -107,6 +108,36 @@ export default function BatchQuery() {
                   checked={form.inputType === "icdo3"}
                   onChange={handleChange}
                 />
+
+                <div className="ms-5">
+                  <Form.Check
+                    label="Site only"
+                    name="subType"
+                    type="radio"
+                    id="siteInput"
+                    value="site"
+                    checked={form.subType === "site"}
+                    onChange={handleChange}
+                  />
+                  <Form.Check
+                    label="Description only"
+                    name="subType"
+                    type="radio"
+                    id="descriptionInput"
+                    value="description"
+                    checked={form.subType === "description"}
+                    onChange={handleChange}
+                  />
+                  <Form.Check
+                    label="Description and site"
+                    name="subType"
+                    type="radio"
+                    id="siteDescInput"
+                    value="siteDesc"
+                    checked={form.subType === "siteDesc"}
+                    onChange={handleChange}
+                  />
+                </div>
               </Form.Group>
             </Col>
             <Col md={4}>
@@ -158,7 +189,7 @@ export default function BatchQuery() {
                       className="form-control"
                       aria-label="Upload a file containing search terms"
                       data-name="input"
-                      accept=".csv"
+                      accept=".tsv"
                       onChange={handleChange}
                     />
                     <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_batch_query.csv`}>

@@ -5,6 +5,7 @@ export const formState = atom({
   default: {
     input: "",
     inputType: "icd10",
+    subType: "site",
     outputType: "icdo3",
     inputPlaceholder: "",
   },
