@@ -11,6 +11,7 @@ import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-g
 import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { formState, resultsState } from "./batch-query.state";
 import { readFileAsText, exportCsv } from "./batch-query.utils";
+import { forceManyBody } from "d3";
 
 export default function BatchQuery() {
   const [form, setForm] = useRecoilState(formState);
@@ -116,6 +117,7 @@ export default function BatchQuery() {
                     type="radio"
                     id="siteInput"
                     value="site"
+                    disabled={form.inputType === "icd10"}
                     checked={form.subType === "site"}
                     onChange={handleChange}
                   />
@@ -125,6 +127,7 @@ export default function BatchQuery() {
                     type="radio"
                     id="descriptionInput"
                     value="description"
+                    disabled={form.inputType === "icd10"}
                     checked={form.subType === "description"}
                     onChange={handleChange}
                   />
@@ -134,6 +137,7 @@ export default function BatchQuery() {
                     type="radio"
                     id="siteDescInput"
                     value="siteDesc"
+                    disabled={form.inputType === "icd10"}
                     checked={form.subType === "siteDesc"}
                     onChange={handleChange}
                   />
@@ -141,27 +145,6 @@ export default function BatchQuery() {
               </Form.Group>
             </Col>
             <Col md={4}>
-              <Form.Group className="mb-3">
-                <Form.Label>Select output type</Form.Label>
-                <Form.Check
-                  label="ICD-10 Codes"
-                  name="outputType"
-                  type="radio"
-                  id="icd10Output"
-                  value="icd10"
-                  checked={form.outputType === "icd10"}
-                  onChange={handleChange}
-                />
-                <Form.Check
-                  label="ICD-O-3 Codes"
-                  name="outputType"
-                  type="radio"
-                  id="icdo3Output"
-                  value="icdo3"
-                  checked={form.outputType === "icdo3"}
-                  onChange={handleChange}
-                />
-              </Form.Group>
             </Col>
           </Row>
 
@@ -169,7 +152,7 @@ export default function BatchQuery() {
             <Col md={8}>
               <Form.Group className="mb-1">
                 <Form.Label>
-                  Please upload a file (.csv) or enter a list of keywords, ICD-10 codes or ICD-O-3 codes
+                  Please upload a file (.tsv) or enter a list of keywords, ICD-10 codes or ICD-O-3 codes
                 </Form.Label>
                 <Form.Control
                   className="mb-3"
