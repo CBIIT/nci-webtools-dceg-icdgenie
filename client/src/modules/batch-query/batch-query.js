@@ -130,6 +130,15 @@ export default function BatchQuery() {
                     onClick={() => mergeForm({ ["icd10Id"]: !form.icd10Id })}
                   />
 
+                  <Form.Check
+                    label="Codes"
+                    name="icd10Code"
+                    type="checkbox"
+                    id="icd10CCode"
+                    value="icd10Code"
+                    disabled={true}
+                    checked={form.inputType === "icd10"}
+                  />
                 </div>
 
                 <Form.Check
@@ -143,6 +152,16 @@ export default function BatchQuery() {
                 />
 
                 <div className="ms-5">
+                  <Form.Check
+                    label="Patient IDs"
+                    name="icdo3Id"
+                    type="checkbox"
+                    id="icdo3Id"
+                    value="icdo3Id"
+                    disabled={true}
+                    checked={form.inputType === "icdo3"}
+                  />
+
                   <Form.Check
                     label="Sites"
                     name="icdo3Site"
