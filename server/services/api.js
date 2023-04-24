@@ -47,7 +47,7 @@ api.get("/search/icdo3", (request, response) => {
 api.post("/batch", async (request, response) => {
   const { logger, database } = request.app.locals;
   logger.debug("batch: " + JSON.stringify(request.body));
-  const { input, inputType, outputType } = request.body;
+  const { input, inputType, icd10Id, icdo3Site, icdo3Morph } = request.body;
 
   var client = new Client({
     node: host,
@@ -56,29 +56,57 @@ api.post("/batch", async (request, response) => {
     }
   })
 
-  var index = "translations";
-  if(inputType === "keywords")
-    index = outputType === "icd10" ? "tabular" : "icdo3"
- 
+  var index = "tabular"
+  var mustQuery;
+
+  if (inputType === "icdo3") {
+
+    if (icdo3Format === "morphology")
+      index = "icdo3"
+
+    else if (icdo3 === "siteMorph")
+      index = "translations"
+  }
+
+
   const inputs = input
     .split(/\n/g)
-    .map((e) => e.trim().replace(/\"/g, ""))
-    .filter((e) => e.length > 0);
+    .filter((e) => e.length > 0)
+    .map((e) => e.split("\t").map((f) => f.trim().replace(/\"/g, "")))
 
+  console.log(inputs)
   var results = [];
+
   await Promise.all(inputs.map(async (e) => {
+
+    var patientId;
+    if (inputType === "icd10") {
+
+      if (icd10Id) {
+        patientId = e[0]
+        mustQuery = [
+          {
+            "match": {
+              "code": "\"" + e[1] + "\""
+            }
+          }
+        ]
+      }
+      else {
+        mustQuery = [
+          {
+            "match": {
+              "code": "\"" + e[0] + "\""
+            }
+          }
+        ]
+      }
+    }
+
     var body = {
       "query": {
         "bool": {
-          "filter": [
-            {
-              "query_string": {
-                "query": "\"" + e + "\"",
-                "fields": ["*"],
-                "lenient": true,
-              }
-            }
-          ],
+          "must": mustQuery,
           "must_not": [
             {
               "query_string": {
@@ -100,19 +128,25 @@ api.post("/batch", async (request, response) => {
       ],
       "size": 5000
     }
-   
-    var query = await client.search({index: index, body: body});
-    query = query.body.hits.hits.map((i) => {
-      return({
-        input: e,
-        code: i._source.code ? i._source.code : i._source[outputType],
-        description: i._source.description ? i._source.description : i._source[outputType + "Description"]
-      })
-    })
 
-    results = results.concat(query)
+    var query = await client.search({ index: index, body: body });
+    const hits = query.body.hits.hits
+
+    if(patientId){
+      
+      results = results.concat({
+        id: patientId,
+        code: e[1],
+        description: hits.length ? hits[0]._source.description : "Site code not found"
+      })
+    }
+    else
+      results = results.concat({
+        code: e[0],
+        description: hits.length ? hits[0]._source.description : "Site code not found"
+      })
   }))
-  
+
   if (request.body.outputFormat === "csv") {
     response.set("Content-Type", "text/csv");
     response.set("Content-Disposition", `attachment; filename=icdgenie_batch_export.csv`);
@@ -243,10 +277,10 @@ api.post("/opensearch", async (request, response) => {
   })
   var { search } = request.body
   const splitSearch = search.split(" ")
-  
+
   //Handle [organ] cancer search
-  if(splitSearch.length > 1 && splitSearch[splitSearch.length-1] === "cancer"){
-    search = splitSearch.slice(0,-1).join(" ")
+  if (splitSearch.length > 1 && splitSearch[splitSearch.length - 1] === "cancer") {
+    search = splitSearch.slice(0, -1).join(" ")
     console.log(search)
   }
 

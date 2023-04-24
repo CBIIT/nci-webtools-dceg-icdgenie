@@ -11,7 +11,7 @@ import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-g
 import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { formState, resultsState } from "./batch-query.state";
 import { readFileAsText, exportCsv } from "./batch-query.utils";
-import { forceManyBody } from "d3";
+import { useState } from "react";
 
 export default function BatchQuery() {
   const [form, setForm] = useRecoilState(formState);
@@ -19,6 +19,12 @@ export default function BatchQuery() {
   const mergeForm = (obj) => setForm({ ...form, ...obj });
   const mergeResults = (obj) => setResults({ ...results, ...obj });
 
+  const [integratedSortingColumnExtensions] = useState([
+    { columnName: 'id', compare: (a, b) => { return a - b } },
+  ]);
+
+  console.log(form)
+  console.log(results)
   async function handleChange(event) {
     let { type, name, value, files, dataset } = event.target;
 
@@ -40,30 +46,52 @@ export default function BatchQuery() {
     const response = await axios.post("api/batch", {
       input: form.input,
       inputType: form.inputType,
-      outputType: form.outputType,
+      icd10Id: form.icd10Id,
+      icdo3Format: form.icdo3Format,
     });
 
-    const columns = [
-      { name: "input", title: "Input" },
-      form.outputType === "icdo3" && { name: "code", title: "ICD-O-3 Code(s)" },
-      form.outputType === "icdo3" && { name: "description", title: "Description" },
-      form.outputType === "icd10" && { name: "code", title: "ICD-10 Code(s)" },
-      form.outputType === "icd10" && { name: "description", title: "Description" },
-    ].filter(Boolean);
+    var columns;
+    var columnExtensions;
 
-    const columnExtensions = [
-      { columnName: "input", width: "10rem" },
-      { columnName: "code", width: "15rem" },
-      form.outputType === "icdo3" && { columnName: "description", wordWrapEnabled: true },
-      form.outputType === "icd10" && { columnName: "description", wordWrapEnabled: true },
-    ].filter(Boolean);
-    console.log(response);
+    if (form.inputType === "icd10") {
+      columns = [
+        form.icd10Id && { name: "id", title: "Patient ID" },
+        { name: "code", title: "ICD-10 Code" },
+        { name: "description", title: "Description" }
+      ].filter(Boolean);
+
+      columnExtensions = [
+        form.icd10Id && { columnName: "id", width: "10rem" },
+        { columnName: "code", width: "15rem" },
+        { columnName: "description", wordWrapEnabled: "true" },
+      ].filter(Boolean)
+    }
+
+    console.log(response.data)
+    /*  
+        const columns = [
+          { name: "input", title: "Input" },
+          form.outputType === "icdo3" && { name: "code", title: "ICD-O-3 Code(s)" },
+          form.outputType === "icdo3" && { name: "description", title: "Description" },
+          form.outputType === "icd10" && { name: "code", title: "ICD-10 Code(s)" },
+          form.outputType === "icd10" && { name: "description", title: "Description" },
+        ].filter(Boolean);
+    
+        const columnExtensions = [
+          { columnName: "input", width: "10rem" },
+          { columnName: "code", width: "15rem" },
+          form.outputType === "icdo3" && { columnName: "description", wordWrapEnabled: true },
+          form.outputType === "icd10" && { columnName: "description", wordWrapEnabled: true },
+        ].filter(Boolean);*/
+
     mergeResults({
       loading: false,
       output: response.data,
-      columns,
-      columnExtensions,
+      columns: columns,
+      columnExtensions: columnExtensions
     });
+
+
   }
 
   return (
@@ -81,15 +109,7 @@ export default function BatchQuery() {
             <Col md={4}>
               <Form.Group className="mb-3">
                 <Form.Label>Select searchable type</Form.Label>
-                {/*<Form.Check
-                  label="Keywords"
-                  name="inputType"
-                  type="radio"
-                  id="keywords"
-                  value="keywords"
-                  checked={form.inputType === "keywords"}
-                  onChange={handleChange}
-                />*/}
+
                 <Form.Check
                   label="ICD-10 Codes"
                   name="inputType"
@@ -99,6 +119,18 @@ export default function BatchQuery() {
                   checked={form.inputType === "icd10"}
                   onChange={handleChange}
                 />
+                <div className="ms-5">
+                  <Form.Check
+                    label="Patient IDs"
+                    name="icd10Id"
+                    type="checkbox"
+                    id="icd10Id"
+                    value="icd10Id"
+                    disabled={form.inputType === "icdo3"}
+                    onClick={() => mergeForm({ ["icd10Id"]: !form.icd10Id })}
+                  />
+
+                </div>
 
                 <Form.Check
                   label="ICD-O-3 Codes"
@@ -112,34 +144,22 @@ export default function BatchQuery() {
 
                 <div className="ms-5">
                   <Form.Check
-                    label="Site only"
-                    name="subType"
-                    type="radio"
-                    id="siteInput"
-                    value="site"
+                    label="Sites"
+                    name="icdo3Site"
+                    type="checkbox"
+                    id="icdo3Site"
+                    value="icdo3Site"
                     disabled={form.inputType === "icd10"}
-                    checked={form.subType === "site"}
-                    onChange={handleChange}
+                    onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
                   />
                   <Form.Check
-                    label="Description only"
-                    name="subType"
-                    type="radio"
-                    id="descriptionInput"
-                    value="description"
+                    label="Morphology"
+                    name="icdo3Morph"
+                    type="checkbox"
+                    id="icdo3Morph"
+                    value="icdo3Morph"
                     disabled={form.inputType === "icd10"}
-                    checked={form.subType === "description"}
-                    onChange={handleChange}
-                  />
-                  <Form.Check
-                    label="Description and site"
-                    name="subType"
-                    type="radio"
-                    id="siteDescInput"
-                    value="siteDesc"
-                    disabled={form.inputType === "icd10"}
-                    checked={form.subType === "siteDesc"}
-                    onChange={handleChange}
+                    onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
                   />
                 </div>
               </Form.Group>
@@ -208,9 +228,9 @@ export default function BatchQuery() {
             </div>
             <div className="index border">
               <Grid rows={results.output} columns={results.columns}>
-                <SortingState defaultSorting={[{ columnName: "input", direction: "asc" }]} />
+                <SortingState defaultSorting={[{ columnName: "id", direction: "asc" }]} />
                 <PagingState defaultCurrentPage={0} defaultPageSize={20} />
-                <IntegratedSorting />
+                <IntegratedSorting columnExtensions={integratedSortingColumnExtensions} />
                 <IntegratedPaging />
                 <Table columnExtensions={results.columnExtensions} />
                 <TableHeaderRow showSortingControls />

@@ -5,8 +5,9 @@ export const formState = atom({
   default: {
     input: "",
     inputType: "icd10",
-    subType: "site",
-    outputType: "icdo3",
+    icd10Id: false,
+    icdo3Site: false,
+    icdo3Morph: false,
     inputPlaceholder: "",
   },
 });
