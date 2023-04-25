@@ -64,16 +64,17 @@ export default function BatchQuery() {
     var columns;
     var columnExtensions;
 
-    if (form.inputType === "icd10" || (form.icdo3Site && !form.icdo3Morph)) {
+    if (form.inputType === "icd10" || (form.icdo3Site !== form.icdo3Morph)) {
       columns = [
-        (form.icd10Id || form.icdo3Site) && { name: "id", title: "Patient ID" },
-        form.icd10Id && { name: "code", title: "ICD-10 Code" },
+        (form.icd10Id || form.icdo3Site || form.icdo3Morph) && { name: "id", title: "Patient ID" },
+        form.inputType === "icd10" && { name: "code", title: "ICD-10 Code" },
         form.icdo3Site && { name: "code", title: "ICD-O-3 Site Code"},
+        form.icdo3Morph && { name: "code", title: "ICD-O-3 Morphology Code"},
         { name: "description", title: "Description" }
       ].filter(Boolean);
 
       columnExtensions = [
-        (form.icd10Id || form.icdo3Site) && { columnName: "id", width: "10rem" },
+        (form.icd10Id || form.icdo3Site || form.icdo3Morph) && { columnName: "id", width: "10rem" },
         { columnName: "code", width: "15rem" },
         { columnName: "description", wordWrapEnabled: "true" },
       ].filter(Boolean)

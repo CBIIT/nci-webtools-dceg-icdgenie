@@ -57,6 +57,7 @@ api.post("/batch", async (request, response) => {
   })
 
   var index = "tabular"
+  var notFoundMsg = "ICD-10 code not found"
   var mustQuery;
 
   const inputs = input
@@ -67,31 +68,42 @@ api.post("/batch", async (request, response) => {
   console.log(inputs)
   var results = [];
 
-  if (inputType === "icd10" || (icdo3Site && !icdo3Morph)) {
+  if (inputType === "icd10" || (icdo3Site !== icdo3Morph)) {
+
+    if(icdo3Morph){
+      index = "icdo3"
+      notFoundMsg = "Morphology code not found"
+    }
+    else if(icdo3Site){
+      notFoundMsg = "Site code not found"
+    }
+
     await Promise.all(inputs.map(async (e) => {
 
       var patientId;
+      var code;
 
-      if (icd10Id || icdo3Site) {
+      if (icd10Id || icdo3Site || icdo3Morph) {
         patientId = e[0]
+        code =  "\"" + e[1] + "\""
         mustQuery = [
           {
             "match": {
-              "code": "\"" + e[1] + "\""
+              "code": code,
             }
           }
         ]
       }
       else {
+        code =  "\"" + e[0] + "\""
         mustQuery = [
           {
             "match": {
-              "code": "\"" + e[0] + "\""
+              "code": code,
             }
           }
         ]
       }
-
 
       var body = {
         "query": {
@@ -105,6 +117,16 @@ api.post("/batch", async (request, response) => {
                 }
               }
             ],
+            "filter": [
+              {
+                "query_string": {
+                  "query": code,
+                  "fields": ["code"],
+                  "lenient": true,
+                  "fuzziness": "0"
+                }
+              }
+            ]
           }
         },
         "sort": [
@@ -119,24 +141,31 @@ api.post("/batch", async (request, response) => {
         "size": 5000
       }
 
-      var query = await client.search({ index: index, body: body });
+      const query = await client.search({ index: index, body: body });
       const hits = query.body.hits.hits
 
       if (patientId) {
+        var preferred = 0;
+
+        if(icdo3Morph){
+          preferred = hits.indexOf((e) => { e._source.preferred === "1"})
+          preferred = preferred === -1 ? 0 : preferred
+        }
 
         results = results.concat({
           id: patientId,
           code: e[1],
-          description: hits.length ? hits[0]._source.description : "Site code not found"
+          description: hits.length ? hits[preferred]._source.description : notFoundMsg
         })
       }
       else
         results = results.concat({
           code: e[0],
-          description: hits.length ? hits[0]._source.description : "Site code not found"
+          description: hits.length ? hits[0]._source.description : notFoundMsg
         })
     }))
   }
+
 
   if (request.body.outputFormat === "csv") {
     response.set("Content-Type", "text/csv");
@@ -291,6 +320,7 @@ api.post("/opensearch", async (request, response) => {
               "lenient": true,
               "analyze_wildcard": true,
               "allow_leading_wildcard": true,
+              "fuzziness": search.includes("/") ? "0" : "AUTO"
             }
           }
         ],
@@ -347,10 +377,7 @@ api.post("/opensearch", async (request, response) => {
   const neoplasmOptions = neoplasmResult.body.suggest["spell-check"][0].options;
   const drugOptions = drugResult.body.suggest["spell-check"][0].options;
   const injuryOptions = injuryResult.body.suggest["spell-check"][0].options;
-  const icdo3Options = icdo3Result.body.suggest["spell-check"][0].options
-
-  console.log(tabularOptions)
-  console.log(injuryOptions)
+  const icdo3Options =  !search.includes("/") ? icdo3Result.body.suggest["spell-check"][0].options : []
 
   if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length) {
     const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy] = await Promise.all([
