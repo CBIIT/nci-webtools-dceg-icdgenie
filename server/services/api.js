@@ -59,16 +59,6 @@ api.post("/batch", async (request, response) => {
   var index = "tabular"
   var mustQuery;
 
-  if (inputType === "icdo3") {
-
-    if (icdo3Format === "morphology")
-      index = "icdo3"
-
-    else if (icdo3 === "siteMorph")
-      index = "translations"
-  }
-
-
   const inputs = input
     .split(/\n/g)
     .filter((e) => e.length > 0)
@@ -77,12 +67,12 @@ api.post("/batch", async (request, response) => {
   console.log(inputs)
   var results = [];
 
-  await Promise.all(inputs.map(async (e) => {
+  if (inputType === "icd10" || (icdo3Site && !icdo3Morph)) {
+    await Promise.all(inputs.map(async (e) => {
 
-    var patientId;
-    if (inputType === "icd10") {
+      var patientId;
 
-      if (icd10Id) {
+      if (icd10Id || icdo3Site) {
         patientId = e[0]
         mustQuery = [
           {
@@ -101,51 +91,52 @@ api.post("/batch", async (request, response) => {
           }
         ]
       }
-    }
 
-    var body = {
-      "query": {
-        "bool": {
-          "must": mustQuery,
-          "must_not": [
-            {
-              "query_string": {
-                "query": "\"DO NOT USE\"",
-                "fields": ["description"],
+
+      var body = {
+        "query": {
+          "bool": {
+            "must": mustQuery,
+            "must_not": [
+              {
+                "query_string": {
+                  "query": "\"DO NOT USE\"",
+                  "fields": ["description"],
+                }
               }
-            }
-          ],
-        }
-      },
-      "sort": [
-        {
-          "_script": {
-            "type": "number",
-            "order": "asc",
-            "script": "Long.parseLong(doc['_id'].value)"
+            ],
           }
-        }
-      ],
-      "size": 5000
-    }
+        },
+        "sort": [
+          {
+            "_script": {
+              "type": "number",
+              "order": "asc",
+              "script": "Long.parseLong(doc['_id'].value)"
+            }
+          }
+        ],
+        "size": 5000
+      }
 
-    var query = await client.search({ index: index, body: body });
-    const hits = query.body.hits.hits
+      var query = await client.search({ index: index, body: body });
+      const hits = query.body.hits.hits
 
-    if(patientId){
-      
-      results = results.concat({
-        id: patientId,
-        code: e[1],
-        description: hits.length ? hits[0]._source.description : "Site code not found"
-      })
-    }
-    else
-      results = results.concat({
-        code: e[0],
-        description: hits.length ? hits[0]._source.description : "Site code not found"
-      })
-  }))
+      if (patientId) {
+
+        results = results.concat({
+          id: patientId,
+          code: e[1],
+          description: hits.length ? hits[0]._source.description : "Site code not found"
+        })
+      }
+      else
+        results = results.concat({
+          code: e[0],
+          description: hits.length ? hits[0]._source.description : "Site code not found"
+        })
+    }))
+  }
 
   if (request.body.outputFormat === "csv") {
     response.set("Content-Type", "text/csv");

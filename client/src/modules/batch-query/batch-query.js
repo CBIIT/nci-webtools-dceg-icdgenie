@@ -32,11 +32,21 @@ export default function BatchQuery() {
       value = await readFileAsText(files);
     }
 
-    if (dataset.name) {
-      name = dataset.name;
+    if (name === "inputType") {
+      mergeForm({
+        icd10Id: false,
+        icdo3Site: false,
+        icdo3Morph: false,
+        [name]: value
+      })
     }
+    else {
+      if (dataset.name) {
+        name = dataset.name;
+      }
 
-    mergeForm({ [name]: value });
+      mergeForm({ [name]: value });
+    }
   }
 
   async function handleSubmit(event) {
@@ -47,21 +57,23 @@ export default function BatchQuery() {
       input: form.input,
       inputType: form.inputType,
       icd10Id: form.icd10Id,
-      icdo3Format: form.icdo3Format,
+      icdo3Site:form.icdo3Site,
+      icdo3Morph: form.icdo3Morph
     });
 
     var columns;
     var columnExtensions;
 
-    if (form.inputType === "icd10") {
+    if (form.inputType === "icd10" || (form.icdo3Site && !form.icdo3Morph)) {
       columns = [
-        form.icd10Id && { name: "id", title: "Patient ID" },
-        { name: "code", title: "ICD-10 Code" },
+        (form.icd10Id || form.icdo3Site) && { name: "id", title: "Patient ID" },
+        form.icd10Id && { name: "code", title: "ICD-10 Code" },
+        form.icdo3Site && { name: "code", title: "ICD-O-3 Site Code"},
         { name: "description", title: "Description" }
       ].filter(Boolean);
 
       columnExtensions = [
-        form.icd10Id && { columnName: "id", width: "10rem" },
+        (form.icd10Id || form.icdo3Site) && { columnName: "id", width: "10rem" },
         { columnName: "code", width: "15rem" },
         { columnName: "description", wordWrapEnabled: "true" },
       ].filter(Boolean)
@@ -126,6 +138,7 @@ export default function BatchQuery() {
                     type="checkbox"
                     id="icd10Id"
                     value="icd10Id"
+                    checked={form.icd10Id}
                     disabled={form.inputType === "icdo3"}
                     onClick={() => mergeForm({ ["icd10Id"]: !form.icd10Id })}
                   />
@@ -168,6 +181,7 @@ export default function BatchQuery() {
                     type="checkbox"
                     id="icdo3Site"
                     value="icdo3Site"
+                    checked={form.icdo3Site}
                     disabled={form.inputType === "icd10"}
                     onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
                   />
@@ -177,6 +191,7 @@ export default function BatchQuery() {
                     type="checkbox"
                     id="icdo3Morph"
                     value="icdo3Morph"
+                    checked={form.icdo3Morph}
                     disabled={form.inputType === "icd10"}
                     onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
                   />
