@@ -57,7 +57,7 @@ export default function BatchQuery() {
       input: form.input,
       inputType: form.inputType,
       icd10Id: form.icd10Id,
-      icdo3Site:form.icdo3Site,
+      icdo3Site: form.icdo3Site,
       icdo3Morph: form.icdo3Morph
     });
 
@@ -68,8 +68,8 @@ export default function BatchQuery() {
       columns = [
         (form.icd10Id || form.icdo3Site || form.icdo3Morph) && { name: "id", title: "Patient ID" },
         form.inputType === "icd10" && { name: "code", title: "ICD-10 Code" },
-        form.icdo3Site && { name: "code", title: "ICD-O-3 Site Code"},
-        form.icdo3Morph && { name: "code", title: "ICD-O-3 Morphology Code"},
+        form.icdo3Site && { name: "code", title: "ICD-O-3 Site Code" },
+        form.icdo3Morph && { name: "code", title: "ICD-O-3 Morphology Code" },
         { name: "description", title: "Description" }
       ].filter(Boolean);
 
@@ -78,6 +78,24 @@ export default function BatchQuery() {
         { columnName: "code", width: "15rem" },
         { columnName: "description", wordWrapEnabled: "true" },
       ].filter(Boolean)
+    }
+    else{
+      columns = [
+        { name: "id", title: "Patient ID" },
+        { name: "morphCode", title: "Morphology Code"},
+        { name: "siteCode", title: "Site Code"},
+        { name: "morphology", title: "Morphology Description"},
+        { name: "site", title: "Site Description"},
+        { name: "indicator", title: "Indicator"}
+      ]
+      columnExtensions = [
+        { columnName: "id", width: "8rem" },
+        { columnName: "morphCode", width: "12rem" },
+        { columnName: "siteCode", width: "10rem" },
+        { columnName: "morphology", wordWrapEnabled: "true" },
+        { columnName: "site", wordWrapEnabled: "true" },
+        { columnName: "indicator", wordWrapEnabled: "true" },
+      ]
     }
 
     console.log(response.data)
@@ -177,16 +195,6 @@ export default function BatchQuery() {
                   />
 
                   <Form.Check
-                    label="Sites"
-                    name="icdo3Site"
-                    type="checkbox"
-                    id="icdo3Site"
-                    value="icdo3Site"
-                    checked={form.icdo3Site}
-                    disabled={form.inputType === "icd10"}
-                    onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
-                  />
-                  <Form.Check
                     label="Morphology"
                     name="icdo3Morph"
                     type="checkbox"
@@ -196,6 +204,18 @@ export default function BatchQuery() {
                     disabled={form.inputType === "icd10"}
                     onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
                   />
+                  
+                  <Form.Check
+                    label="Sites"
+                    name="icdo3Site"
+                    type="checkbox"
+                    id="icdo3Site"
+                    value="icdo3Site"
+                    checked={form.icdo3Site}
+                    disabled={form.inputType === "icd10"}
+                    onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
+                  />
+
                 </div>
               </Form.Group>
             </Col>
