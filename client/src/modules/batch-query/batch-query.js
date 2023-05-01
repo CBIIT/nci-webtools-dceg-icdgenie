@@ -18,6 +18,7 @@ export default function BatchQuery() {
   const [results, setResults] = useRecoilState(resultsState);
   const mergeForm = (obj) => setForm({ ...form, ...obj });
   const mergeResults = (obj) => setResults({ ...results, ...obj });
+  const [fileError, setFileError] = useState("")
 
   const [integratedSortingColumnExtensions] = useState([
     { columnName: 'id', compare: (a, b) => { return a - b } },
@@ -29,7 +30,18 @@ export default function BatchQuery() {
     let { type, name, value, files, dataset } = event.target;
 
     if (type === "file") {
-      value = await readFileAsText(files);
+      
+      mergeForm({input: ""})
+
+      if(files[0].name.endsWith(".tsv")){
+        setFileError("")
+        value = await readFileAsText(files);
+      }
+      else{
+        setFileError("Please upload a .tsv file")
+        return;
+      }
+        
     }
 
     if (name === "inputType") {
@@ -79,14 +91,14 @@ export default function BatchQuery() {
         { columnName: "description", wordWrapEnabled: "true" },
       ].filter(Boolean)
     }
-    else{
+    else {
       columns = [
         { name: "id", title: "Patient ID" },
-        { name: "morphCode", title: "Morphology Code"},
-        { name: "siteCode", title: "Site Code"},
-        { name: "morphology", title: "Morphology Description"},
-        { name: "site", title: "Site Description"},
-        { name: "indicator", title: "Indicator"}
+        { name: "morphCode", title: "Morphology Code" },
+        { name: "siteCode", title: "Site Code" },
+        { name: "morphology", title: "Morphology Description" },
+        { name: "site", title: "Site Description" },
+        { name: "indicator", title: "Indicator" }
       ]
       columnExtensions = [
         { columnName: "id", width: "8rem" },
@@ -204,7 +216,7 @@ export default function BatchQuery() {
                     disabled={form.inputType === "icd10"}
                     onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
                   />
-                  
+
                   <Form.Check
                     label="Sites"
                     name="icdo3Site"
@@ -227,7 +239,7 @@ export default function BatchQuery() {
             <Col md={8}>
               <Form.Group className="mb-1">
                 <Form.Label>
-                  Please upload a file (.tsv) or enter a list of keywords, ICD-10 codes or ICD-O-3 codes
+                  Please upload a file (.tsv) or enter a list of ICD-10 codes or ICD-O-3 codes
                 </Form.Label>
                 <Form.Control
                   className="mb-3"
@@ -250,12 +262,19 @@ export default function BatchQuery() {
                       accept=".tsv"
                       onChange={handleChange}
                     />
+                    {fileError ? <div style={{ color: "red"}}>{fileError}</div> : <></>}
                     <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_batch_query.csv`}>
                       Download Example
                     </a>
                   </Col>
                   <Col md={1}>
-                    <Button className="mt-1" variant="primary" type="submit" size="sm">
+                    <Button
+                      className="mt-1"
+                      variant="primary"
+                      type="submit"
+                      size="sm"
+                      disabled={form.inputType === "icdo3" && (!form.icdo3Site && !form.icdo3Morph)}
+                    >
                       Submit
                     </Button>
                   </Col>
