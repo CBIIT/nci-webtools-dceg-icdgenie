@@ -35,7 +35,10 @@ export default function BatchQuery() {
 
       if(files[0].name.endsWith(".tsv")){
         setFileError("")
-        value = await readFileAsText(files);
+        var fileText = await readFileAsText(files);
+        fileText = fileText.split("\n")
+        fileText.splice(0,1)
+        value = fileText.join("\n")
       }
       else{
         setFileError("Please upload a .tsv file")
