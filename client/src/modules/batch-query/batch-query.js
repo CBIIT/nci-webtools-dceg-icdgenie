@@ -266,7 +266,7 @@ export default function BatchQuery() {
                       onChange={handleChange}
                     />
                     {fileError ? <div style={{ color: "red"}}>{fileError}</div> : <></>}
-                    <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_batch_query.csv`}>
+                    <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`}>
                       Download Example
                     </a>
                   </Col>
