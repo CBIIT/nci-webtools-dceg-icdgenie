@@ -10,20 +10,20 @@ export function readFileAsText(fileList) {
   });
 }
 
-export function toCsvString(records) {
+export function toTsvString(records) {
   const keys = Object.keys(records[0]);
   const quoteValue = (str) => (str ? `"${str.replace(/"/g, '""')}"` : "");
-  let csv = keys.map(quoteValue).join(",");
+  let csv = keys.map(quoteValue).join("\t");
 
   for (const record of records) {
-    csv += "\n" + keys.map((key) => quoteValue(record[key])).join(",");
+    csv += "\n" + keys.map((key) => quoteValue(record[key])).join("\t");
   }
 
   return csv;
 }
 
-export function exportCsv(records, filename) {
-  const csv = toCsvString(records);
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+export function exportTsv(records, filename) {
+  const csv = toTsvString(records);
+  const blob = new Blob([csv], { type: "text/tsv;charset=utf-8" });
   saveAs(blob, filename);
 }

@@ -10,7 +10,7 @@ import Modal from "react-bootstrap/Modal";
 import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
 import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { formState, resultsState } from "./batch-query.state";
-import { readFileAsText, exportCsv } from "./batch-query.utils";
+import { readFileAsText, exportTsv } from "./batch-query.utils";
 import { useState } from "react";
 
 export default function BatchQuery() {
@@ -298,7 +298,7 @@ export default function BatchQuery() {
               <Button
                 variant="primary"
                 size="sm"
-                onClick={() => exportCsv(results.output, "icd_genie_batch_export.csv")}
+                onClick={() => exportTsv(results.output, "icd_genie_batch_export.tsv")}
               >
                 Export CSV
               </Button>
