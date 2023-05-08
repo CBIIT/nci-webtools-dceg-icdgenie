@@ -19,6 +19,7 @@ export default function BatchQuery() {
   const mergeForm = (obj) => setForm({ ...form, ...obj });
   const mergeResults = (obj) => setResults({ ...results, ...obj });
   const [fileError, setFileError] = useState("")
+  const [uploaded, setUploaded] = useState(false);
 
   const [integratedSortingColumnExtensions] = useState([
     { columnName: 'id', compare: (a, b) => { return a - b } },
@@ -35,6 +36,8 @@ export default function BatchQuery() {
 
       if(files[0].name.endsWith(".tsv")){
         setFileError("")
+        setUploaded(true)
+
         var fileText = await readFileAsText(files);
         fileText = fileText.split("\n")
         fileText.splice(0,1)
@@ -250,6 +253,7 @@ export default function BatchQuery() {
                   name="input"
                   rows={2}
                   value={form.input}
+                  disabled={uploaded}
                   placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2)"
                   onChange={handleChange}
                 />
