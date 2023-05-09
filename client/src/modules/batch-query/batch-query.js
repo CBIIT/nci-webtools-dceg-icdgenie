@@ -20,6 +20,7 @@ export default function BatchQuery() {
   const mergeResults = (obj) => setResults({ ...results, ...obj });
   const [fileError, setFileError] = useState("")
   const [uploaded, setUploaded] = useState(false);
+  const [showResults, setShowResults] = useState(false);
 
   const [integratedSortingColumnExtensions] = useState([
     { columnName: 'id', compare: (a, b) => { return a - b } },
@@ -37,6 +38,7 @@ export default function BatchQuery() {
       if(files[0].name.endsWith(".tsv")){
         setFileError("")
         setUploaded(true)
+        setShowResults(false)
 
         var fileText = await readFileAsText(files);
         fileText = fileText.split("\n")
@@ -78,6 +80,8 @@ export default function BatchQuery() {
       icdo3Site: form.icdo3Site,
       icdo3Morph: form.icdo3Morph
     });
+
+    setShowResults(true);
 
     var columns;
     var columnExtensions;
@@ -192,7 +196,7 @@ export default function BatchQuery() {
                 </div>
 
                 <Form.Check
-                  label="ICD-O-3 Codes"
+                  label="ICD-O-3 Codes (Must Select Morphology and/or Site)"
                   name="inputType"
                   type="radio"
                   id="icdo3Input"
@@ -224,7 +228,7 @@ export default function BatchQuery() {
                   />
 
                   <Form.Check
-                    label="Sites"
+                    label="Site"
                     name="icdo3Site"
                     type="checkbox"
                     id="icdo3Site"
@@ -291,7 +295,7 @@ export default function BatchQuery() {
           </Row>
         </Container>
       </Form>
-      {results.columns.length ? (
+      {showResults ? (
         <div className="bg-light">
           <hr />
           <Container className="py-3">
