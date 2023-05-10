@@ -32,24 +32,24 @@ export default function BatchQuery() {
     let { type, name, value, files, dataset } = event.target;
 
     if (type === "file") {
-      
-      mergeForm({input: ""})
 
-      if(files[0].name.endsWith(".tsv")){
+      mergeForm({ input: "" })
+
+      if (files[0].name.endsWith(".tsv")) {
         setFileError("")
         setUploaded(true)
         setShowResults(false)
 
         var fileText = await readFileAsText(files);
         fileText = fileText.split("\n")
-        fileText.splice(0,1)
+        fileText.splice(0, 1)
         value = fileText.join("\n")
       }
-      else{
+      else {
         setFileError("Please upload a .tsv file")
         return;
       }
-        
+
     }
 
     if (name === "inputType") {
@@ -273,10 +273,17 @@ export default function BatchQuery() {
                       accept=".tsv"
                       onChange={handleChange}
                     />
-                    {fileError ? <div style={{ color: "red"}}>{fileError}</div> : <></>}
-                    <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`}>
-                      Download Example
-                    </a>
+                    {fileError ? <div style={{ color: "red" }}>{fileError}</div> : <></>}
+
+                    <div className="d-flex justify-content-between">
+                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10_patient_id.tsv`}>
+                        Download Sample ICD-10 
+                      </a>
+
+                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`}>
+                        Download Sample ICD-O-3
+                      </a>
+                    </div>
                   </Col>
                   <Col md={1}>
                     <Button
