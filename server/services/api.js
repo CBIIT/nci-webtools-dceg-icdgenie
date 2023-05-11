@@ -228,7 +228,7 @@ api.post("/batch", async (request, response) => {
         else {
           var preferred = hits.indexOf((e) => { e._source.preferred === "1" })
           morphResults = hits[preferred === -1 ? 0 : preferred]._source.description
-          morphMsg = "Morphology found"
+          morphMsg = morphResults
         }
         
       }
@@ -284,7 +284,7 @@ api.post("/batch", async (request, response) => {
         }
         else{
           siteResults = hits[0]._source.description
-          siteMsg = "Site found"
+          siteMsg = siteResults
         }
       }
 

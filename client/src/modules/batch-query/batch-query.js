@@ -150,7 +150,8 @@ export default function BatchQuery() {
     if (fileRef.current)
       fileRef.current.files = null;
 
-    setShowResults(false);
+    setShowResults(false)
+    setUploaded(false)
     setFileError("")
 
     mergeForm({
@@ -278,6 +279,7 @@ export default function BatchQuery() {
                   name="input"
                   rows={2}
                   value={form.input}
+                  disabled={uploaded}
                   placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2)"
                   onChange={handleChange}
                 />
