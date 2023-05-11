@@ -11,7 +11,7 @@ import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-g
 import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { formState, resultsState } from "./batch-query.state";
 import { readFileAsText, exportTsv } from "./batch-query.utils";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function BatchQuery() {
   const [form, setForm] = useRecoilState(formState);
@@ -21,6 +21,7 @@ export default function BatchQuery() {
   const [fileError, setFileError] = useState("")
   const [uploaded, setUploaded] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const fileRef = useRef();
 
   const [integratedSortingColumnExtensions] = useState([
     { columnName: 'id', compare: (a, b) => { return a - b } },
@@ -143,8 +144,28 @@ export default function BatchQuery() {
       columns: columns,
       columnExtensions: columnExtensions
     });
+  }
+  async function handleReset() {
 
+    if (fileRef.current)
+      fileRef.current.files = null;
 
+    setShowResults(false);
+    setFileError("")
+
+    mergeForm({
+      input: "",
+      inputType: "icd10",
+      icd10Id: false,
+      icdo3Site: false,
+      icdo3Morph: false,
+    })
+
+    mergeResults({
+      output: [],
+      columns: [],
+      columnExtensions: [],
+    })
   }
 
   return (
@@ -155,7 +176,7 @@ export default function BatchQuery() {
 
       <hr />
 
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} onReset={handleReset}>
         <Loader show={results.loading} fullscreen />
         <Container className="py-2">
           <Row className="justify-content-center">
@@ -257,7 +278,6 @@ export default function BatchQuery() {
                   name="input"
                   rows={2}
                   value={form.input}
-                  disabled={uploaded}
                   placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2)"
                   onChange={handleChange}
                 />
@@ -271,13 +291,14 @@ export default function BatchQuery() {
                       aria-label="Upload a file containing search terms"
                       data-name="input"
                       accept=".tsv"
+                      ref={fileRef}
                       onChange={handleChange}
                     />
                     {fileError ? <div style={{ color: "red" }}>{fileError}</div> : <></>}
 
                     <div className="d-flex justify-content-between">
                       <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10_patient_id.tsv`}>
-                        Download Sample ICD-10 
+                        Download Sample ICD-10
                       </a>
 
                       <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`}>
@@ -294,6 +315,16 @@ export default function BatchQuery() {
                       disabled={form.inputType === "icdo3" && (!form.icdo3Site && !form.icdo3Morph)}
                     >
                       Submit
+                    </Button>
+                  </Col>
+                  <Col md={1}>
+                    <Button
+                      className="mt-1"
+                      variant="outline-danger"
+                      type="reset"
+                      size="sm"
+                    >
+                      Reset
                     </Button>
                   </Col>
                 </Row>
