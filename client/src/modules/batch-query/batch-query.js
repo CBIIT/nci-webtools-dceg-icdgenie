@@ -298,15 +298,15 @@ export default function BatchQuery() {
 
                     <div className="d-flex justify-content-between">
                       <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10_patient_id.tsv`}>
-                        Download Sample ICD-10
+                        Download ICD-10 Sample 
                       </a>
 
                       <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`}>
-                        Download Sample ICD-O-3
+                        Download ICD-O-3 Sample 
                       </a>
                     </div>
                   </Col>
-                  <Col md={1}>
+                  <Col xs={2} xl={1}>
                     <Button
                       className="mt-1"
                       variant="primary"
@@ -317,7 +317,7 @@ export default function BatchQuery() {
                       Submit
                     </Button>
                   </Col>
-                  <Col md={1}>
+                  <Col xs={2} xl={1}>
                     <Button
                       className="mt-1"
                       variant="outline-danger"
