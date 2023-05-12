@@ -10,7 +10,7 @@ import Modal from "react-bootstrap/Modal";
 import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
 import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { formState, resultsState } from "./batch-query.state";
-import { readFileAsText, exportTsv } from "./batch-query.utils";
+import { readFileAsText, exportTsv, ExcelFile, ExcelSheet } from "./batch-query.utils";
 import { useState, useRef } from "react";
 
 export default function BatchQuery() {
@@ -29,6 +29,23 @@ export default function BatchQuery() {
 
   console.log(form)
   console.log(results)
+
+  function exportResults() {
+    return [
+      {
+        columns: results.columns.map((e) => {
+          return { title: e.title, width: { wpx: 120 } }
+        }),
+        data: results.output.map((e) => {
+          const values = Object.values(e);
+          return values.map((f) => {
+            return { value: f }
+          })
+        })
+      }
+    ]
+  }
+
   async function handleChange(event) {
     let { type, name, value, files, dataset } = event.target;
 
@@ -343,13 +360,11 @@ export default function BatchQuery() {
               <div className="text-uppercase" style={{ fontSize: "14px", letterSpacing: "1.5px" }}>
                 <b>{results.output.length.toLocaleString()}</b> Results Found
               </div>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => exportTsv(results.output, "icd_genie_batch_export.tsv")}
-              >
-                Export CSV
-              </Button>
+              <ExcelFile
+                filename={`icd_genie_batch_export`}
+                element={<Button variant="primary" size="sm">Export Results</Button>}>
+                <ExcelSheet dataSet={exportResults()} name="Batch Query Results" />
+              </ExcelFile>
             </div>
             <div className="index border">
               <Grid rows={results.output} columns={results.columns}>
