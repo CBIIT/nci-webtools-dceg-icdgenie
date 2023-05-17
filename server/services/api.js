@@ -16,7 +16,8 @@ const createAwsOpensearchConnector = require("aws-opensearch-connector");
 const host = `https://${ADMIN}:${PASSWORD}@${DOMAIN}`;
 
 api.use(cors());
-api.use(json());
+api.use(json({limit: "40mb"}));
+
 
 api.get("/", (request, response) => {
   spec.servers = [{ url: APP_BASE_URL || "." }];
