@@ -21,14 +21,12 @@ export default function BatchQuery() {
   const [fileError, setFileError] = useState("")
   const [uploaded, setUploaded] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [pagination, setPagination] = useState([])
   const fileRef = useRef();
 
   const [integratedSortingColumnExtensions] = useState([
     { columnName: 'id', compare: (a, b) => { return a - b } },
   ]);
-
-  console.log(form)
-  console.log(results)
 
   function exportResults() {
     return [
@@ -100,6 +98,12 @@ export default function BatchQuery() {
     });
 
     setShowResults(true);
+    setPagination([
+      response.data.length && 10,
+      response.data.length >= 20 && 20,
+      response.data.length >= 50 && 50,
+      response.data.length >= 100 && 100
+    ].filter(Boolean))
 
     var columns;
     var columnExtensions;
@@ -121,7 +125,7 @@ export default function BatchQuery() {
     }
     else {
       columns = [
-        { name: "id", title: "Patient ID" },
+        { name: "id", title: "Participant ID" },
         { name: "morphCode", title: "Morphology Code" },
         { name: "siteCode", title: "Site Code" },
         { name: "morphology", title: "Morphology Description" },
@@ -138,7 +142,6 @@ export default function BatchQuery() {
       ]
     }
 
-    console.log(response.data)
     /*  
         const columns = [
           { name: "input", title: "Input" },
@@ -331,7 +334,7 @@ export default function BatchQuery() {
                       variant="primary"
                       type="submit"
                       size="sm"
-                      disabled={form.inputType === "icdo3" && (!form.icdo3Site && !form.icdo3Morph)}
+                      disabled={!form.input || (form.inputType === "icdo3" && (!form.icdo3Site && !form.icdo3Morph))}
                     >
                       Submit
                     </Button>
@@ -374,7 +377,7 @@ export default function BatchQuery() {
                 <IntegratedPaging />
                 <Table columnExtensions={results.columnExtensions} />
                 <TableHeaderRow showSortingControls />
-                <PagingPanel pageSizes={[10, 20, 50, 100]} />
+                <PagingPanel pageSizes={pagination} />
               </Grid>
             </div>
           </Container>
