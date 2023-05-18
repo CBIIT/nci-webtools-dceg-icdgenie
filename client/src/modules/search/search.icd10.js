@@ -166,24 +166,6 @@ export default function ICD10({ form, maps, search }) {
     return rootRows;
   }
 
-
-  async function showTranslationModal(icd10) {
-    try {
-      setLoading(true);
-      icd10 = icd10.replace(/-$/, "");
-      const rows = await axios.post("api/translate", { params: icd10 });
-      setModal({
-        show: true,
-        title: `ICD-O-3 Translation for ICD10 Code: ${icd10}`,
-        body: <ICDTranslations rows={rows.data} type="icd10" />,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   function IcdCodeTypeProvider({ value }) {
     return value
   }

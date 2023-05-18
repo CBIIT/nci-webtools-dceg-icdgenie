@@ -21,23 +21,6 @@ export default function ICDO3({ form, maps }) {
 
   const columnExtensions = [{ columnName: "description", width: 700, wordWrapEnabled: true }];
 
-  async function showTranslationModal(icdo3) {
-    try {
-      setLoading(true);
-      const rows = await axios.post("api/translate", { params: icdo3 });
-      setModal({
-        show: true,
-        title: `ICD-10 Translation for ICD-O-3 Code: ${icdo3}`,
-        body: <ICDTranslations rows={rows.data} type="icdo3" />,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-
   function preferredTermFormatter({ value }) {
     return value === "1" ? "Yes" : "No";
   }

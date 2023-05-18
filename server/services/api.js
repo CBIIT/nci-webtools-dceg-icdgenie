@@ -49,45 +49,6 @@ api.post("/batch", async (request, response) => {
   batch.batchQuery(request, response)
 });
 
-api.post("/translate", async (request, response) => {
-  const { logger } = request.app.locals;
-  var client = new Client({
-    node: host,
-    ssl: {
-      rejectUnauthorized: false
-    }
-  })
-  console.log("\"" + request.body.params + "\"")
-  var body = {
-    "query": {
-      "bool": {
-        "filter": [
-          {
-            "query_string": {
-              "query": "\"" + request.body.params + "\"",
-              "fields": ["icdo3", "icd10"],
-              "lenient": true
-            }
-          }
-        ],
-      }
-    },
-    "sort": [
-      {
-        "_script": {
-          "type": "number",
-          "order": "asc",
-          "script": "Long.parseLong(doc['_id'].value)"
-        }
-      }
-    ],
-    "size": 10000
-  }
-
-  const results = await client.search({ index: "translations", body })
-  response.json(results.body.hits.hits.map((e) => { return e._source }))
-})
-
 api.post("/browse", async (request, response) => {
   const { logger } = request.app.locals;
   var client = new Client({
