@@ -4,7 +4,6 @@ const { stringify } = require("csv-stringify");
 const icdgenie = require("./icdgenie");
 const icd10 = require("./icdgenie/icd10");
 const icdo3 = require("./icdgenie/icdo3");
-const translate = require("./icdgenie/translate");
 const batch = require("./icdgenie/batch");
 const spec = require("./icdgenie/spec");
 const { APP_BASE_URL, ADMIN, PASSWORD, DOMAIN } = process.env;
