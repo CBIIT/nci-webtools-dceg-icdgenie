@@ -110,7 +110,7 @@ export default function BatchQuery() {
 
     if (form.inputType === "icd10" || (form.icdo3Site !== form.icdo3Morph)) {
       columns = [
-        (form.icd10Id || form.icdo3Site || form.icdo3Morph) && { name: "id", title: "Patient ID" },
+        (form.icd10Id || form.icdo3Site || form.icdo3Morph) && { name: "id", title: "Participant ID" },
         form.inputType === "icd10" && { name: "code", title: "ICD-10 Code" },
         form.icdo3Site && { name: "code", title: "ICD-O-3 Site Code" },
         form.icdo3Morph && { name: "code", title: "ICD-O-3 Morphology Code" },
@@ -133,7 +133,7 @@ export default function BatchQuery() {
         { name: "indicator", title: "Indicator" }
       ]
       columnExtensions = [
-        { columnName: "id", width: "8rem" },
+        { columnName: "id", width: "9rem" },
         { columnName: "morphCode", width: "12rem" },
         { columnName: "siteCode", width: "10rem" },
         { columnName: "morphology", wordWrapEnabled: "true" },
