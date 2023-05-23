@@ -10,7 +10,7 @@ import ICDTranslations from "./search.translations";
 import axios from "axios";
 import Loader from "../common/loader";
 
-export default function ICD10({ form, maps, search }) {
+export default function ICD10({ maps, search }) {
   const setModal = useSetRecoilState(modalState);
 
   const [indexPanel, setIndexPanel] = useState(null)

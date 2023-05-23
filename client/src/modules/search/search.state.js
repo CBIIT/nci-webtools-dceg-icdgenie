@@ -6,23 +6,6 @@ export const searchState = atom({
   default: "",
 });
 
-export const resultsSelector = selectorFamily({
-  key: "search.resultsSelector",
-  get:
-    (query) =>
-    async ({ get }) => {
-      return query?.length > 0
-        ? await getSearchResults(query)
-        : {
-            indexData: [],
-            neoplasmData: [],
-            drugData: [],
-            injuryData: [],
-            icdo3Data: [],
-          };
-    },
-});
-
 export const modalState = atom({
   key: "search.modalState",
   default: {

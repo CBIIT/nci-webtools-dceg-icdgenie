@@ -9,7 +9,7 @@ import Loader from "../common/loader";
 import { modalState } from "./search.state";
 import { useSetRecoilState } from "recoil";
 
-export default function ICDO3({ form, maps }) {
+export default function ICDO3({ maps }) {
   const [loading, setLoading] = useState(false);
   const setModal = useSetRecoilState(modalState);
 
