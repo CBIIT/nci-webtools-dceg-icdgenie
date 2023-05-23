@@ -6,8 +6,6 @@ import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-rea
 import Container from "react-bootstrap/Container";
 import { useSetRecoilState } from "recoil";
 import { modalState } from "./search.state";
-import ICDTranslations from "./search.translations";
-import axios from "axios";
 import Loader from "../common/loader";
 
 export default function ICD10({ maps, search }) {

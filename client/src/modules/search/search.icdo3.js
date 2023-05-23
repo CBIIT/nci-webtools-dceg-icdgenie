@@ -4,7 +4,6 @@ import { DataTypeProvider, TableKeyboardNavigation } from "@devexpress/dx-react-
 import { Grid, Table, TableHeaderRow, VirtualTable } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import ICDTranslations from "./search.translations";
 import Loader from "../common/loader";
 import { modalState } from "./search.state";
 import { useSetRecoilState } from "recoil";
