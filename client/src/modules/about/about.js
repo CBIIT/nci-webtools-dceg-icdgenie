@@ -76,8 +76,7 @@ export default function About() {
               <h3 id="background" className="mb-4 blue-subheader">1. Background</h3>
               <p>
                 Accurate histological classification is important for facilitating studies of cancer epidemiology and
-                etiologic heterogeneity. ICD Genie is a web-based tool that can assist epidemiologists, pathologists,
-                research assistants, and data scientists to more easily access, translate and validate codes and text
+                etiologic heterogeneity. ICD Genie is a web-based tool that can assist epidemiologists, pathologists, and other biomedical researchers to more easily access, translate and validate codes and text
                 descriptions from the International Classification of Diseases (10th Edition) and International
                 Classification of Diseases for Oncology, 3rd Edition (ICD-O-3).
               </p>
