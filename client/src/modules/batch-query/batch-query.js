@@ -372,7 +372,7 @@ export default function BatchQuery() {
             <div className="index border">
               <Grid rows={results.output} columns={results.columns}>
                 <SortingState defaultSorting={[{ columnName: "id", direction: "asc" }]} />
-                <PagingState defaultCurrentPage={0} defaultPageSize={20} />
+                <PagingState defaultCurrentPage={0} defaultPageSize={10} />
                 <IntegratedSorting columnExtensions={integratedSortingColumnExtensions} />
                 <IntegratedPaging />
                 <Table columnExtensions={results.columnExtensions} />
