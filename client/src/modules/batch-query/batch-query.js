@@ -160,11 +160,12 @@ export default function BatchQuery() {
 
     mergeResults({
       loading: false,
-      output: response.data,
+      output: response.data.sort((a ,b) => a.id.localeCompare(b.id, 'en', { numeric: true } )),
       columns: columns,
       columnExtensions: columnExtensions
     });
   }
+
   async function handleReset() {
 
     if (fileRef.current)
