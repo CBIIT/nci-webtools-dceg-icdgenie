@@ -160,7 +160,7 @@ export default function BatchQuery() {
 
     mergeResults({
       loading: false,
-      output: response.data.sort((a ,b) => a.id.localeCompare(b.id, 'en', { numeric: true } )),
+      output: (form.icd10Id || form.icdo3Site || form.icdo3Morph) ? response.data.sort((a ,b) => a.id.localeCompare(b.id, 'en', { numeric: true } )) : response.data,
       columns: columns,
       columnExtensions: columnExtensions
     });
