@@ -40,7 +40,7 @@ async function batchQuery(request, response) {
         notFoundMsg = "Site code not found"
       }
 
-      await Promise.all(inputs[i].map(async (e) => {
+      results.push(await Promise.all(inputs[i].map(async (e) => {
 
         var patientId;
         var code;
@@ -114,21 +114,21 @@ async function batchQuery(request, response) {
             preferred = preferred === -1 ? 0 : preferred
           }
 
-          results = results.concat({
+          return({
             id: patientId,
             code: e[1],
             description: hits.length ? hits[preferred]._source.description : notFoundMsg
           })
         }
         else
-          results = results.concat({
+          return({
             code: e[0],
             description: hits.length ? hits[0]._source.description : notFoundMsg
           })
-      }))
+      })))
     }
     else {
-      await Promise.all(inputs[i].map(async (e) => {
+      results.push(await Promise.all(inputs[i].map(async (e) => {
         const patientId = e[0]
         const morphology = e[1]
         const site = e[2]
@@ -315,7 +315,7 @@ async function batchQuery(request, response) {
           indicator = (morphMsg === "NA" ? "Morphology is NA" : morphMsg) + ", " + (siteMsg === "NA" ? "Site is NA" : siteMsg)
         }
 
-        results = results.concat({
+        return({
           id: patientId,
           morphCode: morphology,
           siteCode: site,
@@ -324,7 +324,7 @@ async function batchQuery(request, response) {
           indicator: indicator
         })
 
-      }))
+      })))
     }
   }
 
@@ -332,9 +332,9 @@ async function batchQuery(request, response) {
   if (request.body.outputFormat === "csv") {
     response.set("Content-Type", "text/csv");
     response.set("Content-Disposition", `attachment; filename=icdgenie_batch_export.csv`);
-    stringify(results, { header: true }).pipe(response);
+    stringify(results.flat(), { header: true }).pipe(response);
   } else {
-    response.json(results);
+    response.json(results.flat());
   }
 }
 
