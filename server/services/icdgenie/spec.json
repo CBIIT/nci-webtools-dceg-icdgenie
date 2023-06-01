@@ -6,9 +6,6 @@
   "tags": [
     {
       "name": "Search"
-    },
-    {
-      "name": "Translate"
     }
   ],
   "paths": {
@@ -115,38 +112,6 @@
             "description": "Successful operation",
             "schema": {
               "$ref": "#/definitions/ICDO3SearchResponse"
-            }
-          },
-          "400": {
-            "description": "Invalid parameters supplied"
-          }
-        }
-      }
-    },
-    "/api/translate": {
-      "post": {
-        "tags": [
-          "Translate"
-        ],
-        "summary": "Translate between ICD-10 and ICD-O-3 codes",
-        "produces": [
-          "application/json"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/definitions/TranslateRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "schema": {
-              "$ref": "#/definitions/TranslateResponse"
             }
           },
           "400": {
