@@ -6,7 +6,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Loader from "../common/loader";
-import Modal from "react-bootstrap/Modal";
+import { useNavigate } from "react-router-dom";
 import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
 import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { formState, resultsState } from "./batch-query.state";
@@ -24,9 +24,13 @@ export default function BatchQuery() {
   const [pagination, setPagination] = useState([])
   const fileRef = useRef();
 
+  const navigate = useNavigate();
+
   const [integratedSortingColumnExtensions] = useState([
     { columnName: 'id', compare: (a, b) => { return a - b } },
   ]);
+
+  const [sortColumn, setSorting] = useState([{ columnName: "id", direction: "asc" }])
 
   function exportResults() {
     return [
@@ -93,6 +97,7 @@ export default function BatchQuery() {
       input: form.input,
       inputType: form.inputType,
       icd10Id: form.icd10Id,
+      icdo3Id: form.icdo3Id,
       icdo3Site: form.icdo3Site,
       icdo3Morph: form.icdo3Morph
     });
@@ -107,10 +112,16 @@ export default function BatchQuery() {
 
     var columns;
     var columnExtensions;
-
+    console.log(form)
     if (form.inputType === "icd10" || (form.icdo3Site !== form.icdo3Morph)) {
+
+      if(form.icd10Id || form.icdo3Id)
+        setSorting([{ columnName: "id", direction: "asc" }])
+      else
+        setSorting([{ columnName: "code", direction: "asc" }])
+
       columns = [
-        (form.icd10Id || form.icdo3Site || form.icdo3Morph) && { name: "id", title: "Participant ID" },
+        (form.icd10Id || form.icdo3Id) && { name: "id", title: "Participant ID" },
         form.inputType === "icd10" && { name: "code", title: "ICD-10 Code" },
         form.icdo3Site && { name: "code", title: "ICD-O-3 Site Code" },
         form.icdo3Morph && { name: "code", title: "ICD-O-3 Morphology Code" },
@@ -118,28 +129,35 @@ export default function BatchQuery() {
       ].filter(Boolean);
 
       columnExtensions = [
-        (form.icd10Id || form.icdo3Site || form.icdo3Morph) && { columnName: "id", width: "10rem" },
+        (form.icd10Id || form.icdo3Id) && { columnName: "id", width: "10rem" },
         { columnName: "code", width: "15rem" },
         { columnName: "description", wordWrapEnabled: "true" },
       ].filter(Boolean)
     }
     else {
+      
+      if(!form.icdo3Id)
+        setSorting([{ columnName: "morphCode", direction: "asc" }])
+      else 
+      setSorting([{ columnName: "id", direction: "asc" }])
+
       columns = [
-        { name: "id", title: "Participant ID" },
+        form.icdo3Id && { name: "id", title: "Participant ID" },
         { name: "morphCode", title: "Morphology Code" },
         { name: "siteCode", title: "Site Code" },
         { name: "morphology", title: "Morphology Description" },
         { name: "site", title: "Site Description" },
         { name: "indicator", title: "Indicator" }
-      ]
+      ].filter(Boolean);
+
       columnExtensions = [
-        { columnName: "id", width: "9rem" },
+        form.icdo3Id && { columnName: "id", width: "9rem" },
         { columnName: "morphCode", width: "12rem" },
         { columnName: "siteCode", width: "10rem" },
         { columnName: "morphology", wordWrapEnabled: "true" },
         { columnName: "site", wordWrapEnabled: "true" },
         { columnName: "indicator", wordWrapEnabled: "true" },
-      ]
+      ].filter(Boolean);
     }
 
     /*  
@@ -202,10 +220,24 @@ export default function BatchQuery() {
         <Loader show={results.loading} fullscreen />
         <Container className="py-2">
           <Row className="justify-content-center">
+            <Col md={8}>
+              <Form.Group>
+                <Form.Label>Select searchable type</Form.Label>
+                <p>We highly recommend that users review the <a href="javascript:void(0)"
+                    onClick={() => {
+                      navigate("/getting-started");
+                    }}
+                  >
+                    Getting Started
+                  </a> page for information on proper data formatting for optimal use of ICD Genie.</p>
+
+              </Form.Group>
+            </Col>
+          </Row>
+          <Row className="justify-content-center">
+
             <Col md={4}>
               <Form.Group className="mb-3">
-                <Form.Label>Select searchable type</Form.Label>
-
                 <Form.Check
                   label="ICD-10 Codes"
                   name="inputType"
@@ -217,7 +249,7 @@ export default function BatchQuery() {
                 />
                 <div className="ms-5">
                   <Form.Check
-                    label="Patient IDs"
+                    label="Participant IDs"
                     name="icd10Id"
                     type="checkbox"
                     id="icd10Id"
@@ -250,13 +282,14 @@ export default function BatchQuery() {
 
                 <div className="ms-5">
                   <Form.Check
-                    label="Patient IDs"
+                    label="Participant IDs"
                     name="icdo3Id"
                     type="checkbox"
                     id="icdo3Id"
                     value="icdo3Id"
-                    disabled={true}
-                    checked={form.inputType === "icdo3"}
+                    checked={form.icdo3Id}
+                    disabled={form.inputType === "icd10"}
+                    onClick={() => mergeForm({ ["icdo3Id"]: !form.icdo3Id })}
                   />
 
                   <Form.Check
@@ -321,11 +354,11 @@ export default function BatchQuery() {
 
                     <div className="d-flex justify-content-between">
                       <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10_patient_id.tsv`}>
-                        Download ICD-10 Sample 
+                        Download ICD-10 Sample
                       </a>
 
                       <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`}>
-                        Download ICD-O-3 Sample 
+                        Download ICD-O-3 Sample
                       </a>
                     </div>
                   </Col>
@@ -356,36 +389,38 @@ export default function BatchQuery() {
           </Row>
         </Container>
       </Form>
-      {showResults ? (
-        <div className="bg-light">
-          <hr />
-          <Container className="py-3">
-            <div className="mb-3 d-flex justify-content-between align-items-center">
-              <div className="text-uppercase" style={{ fontSize: "14px", letterSpacing: "1.5px" }}>
-                <b>{results.output.length.toLocaleString()}</b> Results Found
+      {
+        showResults ? (
+          <div className="bg-light">
+            <hr />
+            <Container className="py-3">
+              <div className="mb-3 d-flex justify-content-between align-items-center">
+                <div className="text-uppercase" style={{ fontSize: "14px", letterSpacing: "1.5px" }}>
+                  <b>{results.output.length.toLocaleString()}</b> Results Found
+                </div>
+                <ExcelFile
+                  filename={`icd_genie_batch_export`}
+                  element={<Button variant="primary" size="sm">Export Results</Button>}>
+                  <ExcelSheet dataSet={exportResults()} name="Batch Query Results" />
+                </ExcelFile>
               </div>
-              <ExcelFile
-                filename={`icd_genie_batch_export`}
-                element={<Button variant="primary" size="sm">Export Results</Button>}>
-                <ExcelSheet dataSet={exportResults()} name="Batch Query Results" />
-              </ExcelFile>
-            </div>
-            <div className="index border">
-              <Grid rows={results.output} columns={results.columns}>
-                <SortingState defaultSorting={[{ columnName: "id", direction: "asc" }]} />
-                <PagingState defaultCurrentPage={0} defaultPageSize={10} />
-                <IntegratedSorting columnExtensions={integratedSortingColumnExtensions} />
-                <IntegratedPaging />
-                <Table columnExtensions={results.columnExtensions} />
-                <TableHeaderRow showSortingControls />
-                <PagingPanel pageSizes={pagination} />
-              </Grid>
-            </div>
-          </Container>
-        </div>
-      ) : (
-        <> </>
-      )}
-    </div>
+              <div className="index border">
+                <Grid rows={results.output} columns={results.columns}>
+                  <SortingState sorting={sortColumn} />
+                  <PagingState defaultCurrentPage={0} defaultPageSize={10} />
+                  <IntegratedSorting columnExtensions={integratedSortingColumnExtensions} />
+                  <IntegratedPaging />
+                  <Table columnExtensions={results.columnExtensions} />
+                  <TableHeaderRow showSortingControls />
+                  <PagingPanel pageSizes={pagination} />
+                </Grid>
+              </div>
+            </Container>
+          </div>
+        ) : (
+          <> </>
+        )
+      }
+    </div >
   );
 }

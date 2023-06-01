@@ -6,7 +6,7 @@ var _ = require('lodash');
 async function batchQuery(request, response) {
   const { logger, database } = request.app.locals;
   logger.debug("batch: " + JSON.stringify(request.body));
-  const { input, inputType, icd10Id, icdo3Site, icdo3Morph } = request.body;
+  const { input, inputType, icd10Id, icdo3Id, icdo3Site, icdo3Morph } = request.body;
 
   var client = new Client({
     node: host,
@@ -26,9 +26,10 @@ async function batchQuery(request, response) {
 
   inputs = _.chunk(inputs, 20)
   console.log(inputs)
+  console.log(request.body)
   var results = [];
 
- for(var i = 0;i < inputs.length; i++) {
+  for (var i = 0; i < inputs.length; i++) {
 
     if (inputType === "icd10" || (icdo3Site !== icdo3Morph)) {
 
@@ -45,7 +46,7 @@ async function batchQuery(request, response) {
         var patientId;
         var code;
 
-        if (icd10Id || icdo3Site || icdo3Morph) {
+        if (icd10Id || icdo3Id) {
           patientId = e[0]
           code = "\"" + e[1] + "\""
           mustQuery = [
@@ -114,14 +115,14 @@ async function batchQuery(request, response) {
             preferred = preferred === -1 ? 0 : preferred
           }
 
-          return({
+          return ({
             id: patientId,
             code: e[1],
             description: hits.length ? hits[preferred]._source.description : notFoundMsg
           })
         }
         else
-          return({
+          return ({
             code: e[0],
             description: hits.length ? hits[0]._source.description : notFoundMsg
           })
@@ -129,9 +130,21 @@ async function batchQuery(request, response) {
     }
     else {
       results.push(await Promise.all(inputs[i].map(async (e) => {
-        const patientId = e[0]
-        const morphology = e[1]
-        const site = e[2]
+
+        var patientId;
+        var morphology;
+        var site;
+
+        if (icdo3Id) {
+          patientId = e[0]
+          morphology = e[1]
+          site = e[2]
+        }
+        else {
+          morphology = e[0]
+          site = e[1]
+        }
+
         var morphMsg = morphology === "NA" || morphology === "" ? "NA" : ""
         var siteMsg = site === "NA" || site === "" ? "NA" : ""
 
@@ -315,15 +328,25 @@ async function batchQuery(request, response) {
           indicator = (morphMsg === "NA" ? "Morphology is NA" : morphMsg) + ", " + (siteMsg === "NA" ? "Site is NA" : siteMsg)
         }
 
-        return({
-          id: patientId,
-          morphCode: morphology,
-          siteCode: site,
-          morphology: morphResults ? morphResults : morphMsg,
-          site: siteResults ? siteResults : siteMsg,
-          indicator: indicator
-        })
-
+        if (patientId) {
+          return ({
+            id: patientId,
+            morphCode: morphology,
+            siteCode: site,
+            morphology: morphResults ? morphResults : morphMsg,
+            site: siteResults ? siteResults : siteMsg,
+            indicator: indicator
+          })
+        }
+        else {
+          return ({
+            morphCode: morphology,
+            siteCode: site,
+            morphology: morphResults ? morphResults : morphMsg,
+            site: siteResults ? siteResults : siteMsg,
+            indicator: indicator
+          })
+        }
       })))
     }
   }

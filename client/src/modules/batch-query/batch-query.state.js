@@ -6,6 +6,7 @@ export const formState = atom({
     input: "",
     inputType: "icd10",
     icd10Id: false,
+    icdo3Id: false,
     icdo3Site: false,
     icdo3Morph: false,
     inputPlaceholder: "",
