@@ -1,17 +1,15 @@
 import { useRecoilState } from "recoil";
 import axios from "axios";
-import Form from "react-bootstrap/Form";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
 import Loader from "../common/loader";
+import { Form, Container, Row, Col, Button, Popover, OverlayTrigger } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
 import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { formState, resultsState } from "./batch-query.state";
 import { readFileAsText, exportTsv, ExcelFile, ExcelSheet } from "./batch-query.utils";
 import { useState, useRef } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 
 export default function BatchQuery() {
   const [form, setForm] = useRecoilState(formState);
@@ -115,7 +113,7 @@ export default function BatchQuery() {
     console.log(form)
     if (form.inputType === "icd10" || (form.icdo3Site !== form.icdo3Morph)) {
 
-      if(form.icd10Id || form.icdo3Id)
+      if (form.icd10Id || form.icdo3Id)
         setSorting([{ columnName: "id", direction: "asc" }])
       else
         setSorting([{ columnName: "code", direction: "asc" }])
@@ -135,11 +133,11 @@ export default function BatchQuery() {
       ].filter(Boolean)
     }
     else {
-      
-      if(!form.icdo3Id)
+
+      if (!form.icdo3Id)
         setSorting([{ columnName: "morphCode", direction: "asc" }])
-      else 
-      setSorting([{ columnName: "id", direction: "asc" }])
+      else
+        setSorting([{ columnName: "id", direction: "asc" }])
 
       columns = [
         form.icdo3Id && { name: "id", title: "Participant ID" },
@@ -224,19 +222,19 @@ export default function BatchQuery() {
               <Form.Group>
                 <Form.Label>Select searchable type</Form.Label>
                 <p>We highly recommend that users review the <a href="javascript:void(0)"
-                    onClick={() => {
-                      navigate("/getting-started");
-                    }}
-                  >
-                    Getting Started
-                  </a> page for information on proper data formatting for optimal use of ICD Genie.</p>
+                  onClick={() => {
+                    navigate("/getting-started");
+                  }}
+                >
+                  Getting Started
+                </a> page for information on proper data formatting for optimal use of ICD Genie.</p>
 
               </Form.Group>
             </Col>
           </Row>
           <Row className="justify-content-center">
 
-            <Col md={4}>
+            <Col md={6}>
               <Form.Group className="mb-3">
                 <Form.Check
                   label="ICD-10 Codes"
@@ -247,31 +245,68 @@ export default function BatchQuery() {
                   checked={form.inputType === "icd10"}
                   onChange={handleChange}
                 />
-                <div className="ms-5">
-                  <Form.Check
-                    label="Participant IDs"
-                    name="icd10Id"
-                    type="checkbox"
-                    id="icd10Id"
-                    value="icd10Id"
-                    checked={form.icd10Id}
-                    disabled={form.inputType === "icdo3"}
-                    onClick={() => mergeForm({ ["icd10Id"]: !form.icd10Id })}
-                  />
 
-                  <Form.Check
-                    label="Codes"
-                    name="icd10Code"
-                    type="checkbox"
-                    id="icd10CCode"
-                    value="icd10Code"
-                    disabled={true}
-                    checked={form.inputType === "icd10"}
-                  />
+                <div className="ms-5">
+                  <div className="d-flex">
+                    <Form.Check
+                      label="Participant ID"
+                      name="icd10Id"
+                      type="checkbox"
+                      id="icd10Id"
+                      value="icd10Id"
+                      checked={form.icd10Id}
+                      disabled={form.inputType === "icdo3"}
+                      onClick={() => mergeForm({ ["icd10Id"]: !form.icd10Id })}
+                    />
+                    <OverlayTrigger trigger="click" placement="right"
+                      overlay={<Popover id="icd10Id_tip">
+                        <Popover.Header>Participant ID</Popover.Header>
+                        <Popover.Body>
+                          A “Participant ID” refers to a single, unique identifier pertaining to a single individual (“participant”)
+                          in a study
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
+                  <div className="d-flex">
+                    <Form.Check
+                      label="Code"
+                      name="icd10Code"
+                      type="checkbox"
+                      id="icd10CCode"
+                      value="icd10Code"
+                      disabled={true}
+                      checked={form.inputType === "icd10"}
+                    />
+                    <OverlayTrigger trigger="click" placement="right"
+                      overlay={<Popover id="icd10_tip">
+                        <Popover.Header>ICD-10 Codes</Popover.Header>
+                        <Popover.Body>
+                          <p><i>The International Classification of Diseases, Tenth Revision (ICD-10) is a system created by the World Health Organization to categorize all diagnoses, symptoms, and procedures. </i></p>
+                          <div><b>Example Code:</b> W56.29 <i>(Translation: Accidental Contact with an Orca)</i></div>
+                          <ul>
+                            <li>Alphanumeric</li>
+                            <li>Can be up to 6 characters (7-character codes are not currently supported)</li>
+                            <li>First character is always a letter (except "U")</li>
+                            <li>Second and third characters are always a number</li>
+                            <li>Characters 4 through 6: either a number or letter</li>
+                          </ul>
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
                 </div>
 
                 <Form.Check
-                  label="ICD-O-3 Codes (Must Select Morphology and/or Site)"
+                  label="ICD-O-3 Codes"
                   name="inputType"
                   type="radio"
                   id="icdo3Input"
@@ -279,45 +314,99 @@ export default function BatchQuery() {
                   checked={form.inputType === "icdo3"}
                   onChange={handleChange}
                 />
+                <i>At a minimum : ICD-O-3 site code or ICD-O-3 morphology code must be selected</i>
 
                 <div className="ms-5">
-                  <Form.Check
-                    label="Participant IDs"
-                    name="icdo3Id"
-                    type="checkbox"
-                    id="icdo3Id"
-                    value="icdo3Id"
-                    checked={form.icdo3Id}
-                    disabled={form.inputType === "icd10"}
-                    onClick={() => mergeForm({ ["icdo3Id"]: !form.icdo3Id })}
-                  />
+                  <div className="d-flex">
+                    <Form.Check
+                      label="Participant ID"
+                      name="icdo3Id"
+                      type="checkbox"
+                      id="icdo3Id"
+                      value="icdo3Id"
+                      checked={form.icdo3Id}
+                      disabled={form.inputType === "icd10"}
+                      onClick={() => mergeForm({ ["icdo3Id"]: !form.icdo3Id })}
+                    />
+                    <OverlayTrigger trigger="click" placement="right"
+                      overlay={<Popover id="icdo3ID_tip">
+                        <Popover.Header>Participant ID</Popover.Header>
+                        <Popover.Body>
+                          A “Participant ID” refers to a single, unique identifier pertaining to a single individual (“participant”)
+                          in a study
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
 
-                  <Form.Check
-                    label="Morphology"
-                    name="icdo3Morph"
-                    type="checkbox"
-                    id="icdo3Morph"
-                    value="icdo3Morph"
-                    checked={form.icdo3Morph}
-                    disabled={form.inputType === "icd10"}
-                    onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
-                  />
-
-                  <Form.Check
-                    label="Site"
-                    name="icdo3Site"
-                    type="checkbox"
-                    id="icdo3Site"
-                    value="icdo3Site"
-                    checked={form.icdo3Site}
-                    disabled={form.inputType === "icd10"}
-                    onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
-                  />
-
+                  <div className="d-flex">
+                    <Form.Check
+                      label="Morphology"
+                      name="icdo3Morph"
+                      type="checkbox"
+                      id="icdo3Morph"
+                      value="icdo3Morph"
+                      checked={form.icdo3Morph}
+                      disabled={form.inputType === "icd10"}
+                      onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
+                    />
+                     <OverlayTrigger trigger="click" placement="right"
+                      overlay={<Popover id="icdo3Morph_tip">
+                        <Popover.Header>ICD-O-3 Morphology Code</Popover.Header>
+                        <Popover.Body>
+                          <p><i>The International Classification of Diseases for Oncology, Third Edition (ICD-O-3) is a system created by the World Health Organization to categorize cancer diagnoses.</i></p>
+                          <p><i>The morphology code captures the type of cell the tumor is composed of and the characteristic of the tumor itself. This may be referred to as “histology” or “histological term” in your data.</i></p>
+                          <div><b>Example Morphology Code:</b> 9140/3 <i>(Translation : Kaposi’s Sarcoma)</i></div>
+                          <ul>
+                            <li>Entirely Numeric</li>
+                            <li>Must have a forward slash after the fourth number (i.e., "/")</li>
+                            <li>Number after the slash is the behavior code – either “1”, “2,” or “3.” Behavior codes “6” and “9” are not supported at this time.</li>
+                          </ul>
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
+                  <div className="d-flex">
+                    <Form.Check
+                      label="Site"
+                      name="icdo3Site"
+                      type="checkbox"
+                      id="icdo3Site"
+                      value="icdo3Site"
+                      checked={form.icdo3Site}
+                      disabled={form.inputType === "icd10"}
+                      onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
+                    />
+                    <OverlayTrigger trigger="click" placement="right"
+                      overlay={<Popover id="icdo3Site_tip">
+                        <Popover.Header>ICD-O-3 Site code</Popover.Header>
+                        <Popover.Body>
+                          <p><i>The International Classification of Diseases for Oncology, Third Edition (ICD-O-3) is a system created by the World Health Organization to categorize cancer diagnoses.</i></p>
+                          <p><i>The site code indicates where a neoplasm was found. “Site code” in your data may be “topography” or “topographical information”.</i></p>
+                          <div><b>Example Site Code: </b>C71.9</div>
+                          <ul>
+                            <li>Alphanumeric; begins with “C” followed by 2 numbers, a period, and at least one more number</li>
+                          </ul>
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
                 </div>
               </Form.Group>
             </Col>
-            <Col md={4}>
+            <Col md={2}>
             </Col>
           </Row>
 
