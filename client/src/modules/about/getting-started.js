@@ -103,9 +103,9 @@ export default function Starter() {
               <h2 id="checklist" className="my-4 text-uppercase blue-subheader">
                 Checklist
               </h2>
-              <ol>
-                <li>Assess if you need to use</li>
-                <li style={{ listStyleType: "none" }}>
+              <ul style={{ listStyleType: "none" }}>
+                <li>1. Assess if you need to use</li>
+                <li >
                   <ul>
                     <li><a href="javascript:void(0);" onClick={() => { navigate("/search") }}>Search</a> for a single entry.</li>
                     <li><a href="javascript:void(0);" onClick={() => { navigate("/batch-query") }}>Batch Query</a> ({"<"} 5000 rows)</li>
@@ -113,9 +113,9 @@ export default function Starter() {
                   </ul>
                 </li>
                 <li>
-                  Figure out what you will use as input values e.g.,
+                  2. Figure out what you will use as input values e.g.,
                 </li>
-                <li style={{ listStyleType: "none" }}>
+                <li>
                   <ul>
                     <li>Participant identifiers</li>
                     <li>ICD-10 codes</li>
@@ -123,8 +123,9 @@ export default function Starter() {
                     <li>Text diagnoses [available for <a href="javascript:void(0);" onClick={() => { navigate("/search") }}>"Search"</a> (single query) only]</li>
                   </ul>
                 </li>
-                <li>Ensure your input values are properly formatted. Guidance is provided <HashLink smooth to="/getting-started/#formatting">below</HashLink></li>
-              </ol>
+                <li>3. Ensure your input values are properly formatted. Guidance is provided <HashLink smooth to="/getting-started/#formatting">below</HashLink></li>
+                <li>4. Determine your desired output (ICD-10 codes, ICD-O-3 codes or text diagnoses)</li>
+              </ul>
             </Container>
           </Col>
         </Row>
