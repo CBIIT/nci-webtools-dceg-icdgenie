@@ -60,11 +60,10 @@
     margin-top: -1em;
     margin-left: 0.5em;
   }
-
   table thead tr {
     border: 0.75px solid #97b4cb;
+    background-color: #5a6b91;
     background: linear-gradient(270deg, #3f95b1 0%, #52445d 100%);
-    background: -moz-linear-gradient(270deg, #3f95b1 0%, #52445d 100%);
   }
 }
 
@@ -79,11 +78,10 @@
     margin-top: -1em;
     margin-left: 0.5em;
   }
-
   table thead tr {
     border: 0.75px solid #97b4cb;
+    background-color: #5a6b91;
     background: linear-gradient(270deg, #3f95b1 0%, #52445d 100%);
-    background: -moz-linear-gradient(right, #3f95b1 0%, #52445d 100%);
   }
 }
 
@@ -159,7 +157,7 @@
   color: white !important;
 }
 
-.table> :not(caption)>*>* {
+.table > :not(caption) > * > * {
   padding: 0.25rem 0.75rem !important;
 }
 
