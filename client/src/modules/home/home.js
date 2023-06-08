@@ -75,7 +75,7 @@ export default function Home() {
                 <a href="https://dceg.cancer.gov/about/organization/tdrp/iteb" target="_blank">
                   Integrative Tumor Epidemiology Branch
                 </a>{" "}
-                with assistance developing the tool from Brian Park B.S., Ben Chen B.S., Madhu Kanigicherla B.S., Pramiti Ganguli B.S., Hannah Stogsdill B.A., Kai-Ling
+                with assistance developing the tool from Brian Park B.S., Ben Chen B.S., Madhu Kanigicherla M.S., Pramiti Ganguli B.S., Hannah Stogsdill B.A., Kai-Ling
                 Chen M.S. and Ye Wu Ph.D. of NCI’s{" "}
                 <a href="https://datascience.cancer.gov/" target="_blank">
                   Center for Biomedical Informatics and Information Technology.
