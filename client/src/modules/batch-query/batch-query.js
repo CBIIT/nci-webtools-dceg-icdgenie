@@ -249,7 +249,7 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label="Participant ID"
+                      label={<label>Particpant ID <i className="text-muted">(Optional)</i></label>}
                       name="icd10Id"
                       type="checkbox"
                       id="icd10Id"
@@ -258,7 +258,7 @@ export default function BatchQuery() {
                       disabled={form.inputType === "icdo3"}
                       onClick={() => mergeForm({ ["icd10Id"]: !form.icd10Id })}
                     />
-                    <OverlayTrigger trigger="click" placement="right"
+                    <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd10Id_tip">
                         <Popover.Header>Participant ID</Popover.Header>
                         <Popover.Body>
@@ -268,7 +268,7 @@ export default function BatchQuery() {
                       </Popover>
                       }>
                       <div>
-                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
                       </div>
                     </OverlayTrigger>
                   </div>
@@ -282,7 +282,7 @@ export default function BatchQuery() {
                       disabled={true}
                       checked={form.inputType === "icd10"}
                     />
-                    <OverlayTrigger trigger="click" placement="right"
+                    <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd10_tip">
                         <Popover.Header>ICD-10 Codes</Popover.Header>
                         <Popover.Body>
@@ -299,7 +299,7 @@ export default function BatchQuery() {
                       </Popover>
                       }>
                       <div>
-                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
                       </div>
                     </OverlayTrigger>
                   </div>
@@ -319,7 +319,7 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label="Participant ID"
+                      label={<label>Particpant ID <i className="text-muted">(Optional)</i></label>}
                       name="icdo3Id"
                       type="checkbox"
                       id="icdo3Id"
@@ -328,7 +328,7 @@ export default function BatchQuery() {
                       disabled={form.inputType === "icd10"}
                       onClick={() => mergeForm({ ["icdo3Id"]: !form.icdo3Id })}
                     />
-                    <OverlayTrigger trigger="click" placement="right"
+                    <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icdo3ID_tip">
                         <Popover.Header>Participant ID</Popover.Header>
                         <Popover.Body>
@@ -338,7 +338,7 @@ export default function BatchQuery() {
                       </Popover>
                       }>
                       <div>
-                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
                       </div>
                     </OverlayTrigger>
                   </div>
@@ -354,7 +354,7 @@ export default function BatchQuery() {
                       disabled={form.inputType === "icd10"}
                       onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
                     />
-                     <OverlayTrigger trigger="click" placement="right"
+                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icdo3Morph_tip">
                         <Popover.Header>ICD-O-3 Morphology Code</Popover.Header>
                         <Popover.Body>
@@ -370,7 +370,7 @@ export default function BatchQuery() {
                       </Popover>
                       }>
                       <div>
-                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
                       </div>
                     </OverlayTrigger>
                   </div>
@@ -385,7 +385,7 @@ export default function BatchQuery() {
                       disabled={form.inputType === "icd10"}
                       onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
                     />
-                    <OverlayTrigger trigger="click" placement="right"
+                    <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icdo3Site_tip">
                         <Popover.Header>ICD-O-3 Site code</Popover.Header>
                         <Popover.Body>
@@ -399,7 +399,7 @@ export default function BatchQuery() {
                       </Popover>
                       }>
                       <div>
-                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" style={{ cursor: "pointer" }} />
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
                       </div>
                     </OverlayTrigger>
                   </div>
