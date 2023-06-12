@@ -3,13 +3,13 @@ import axios from "axios";
 import Loader from "../common/loader";
 import { Form, Container, Row, Col, Button, Popover, OverlayTrigger } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
-import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
 import { formState, resultsState } from "./batch-query.state";
 import { readFileAsText, exportTsv, ExcelFile, ExcelSheet } from "./batch-query.utils";
 import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
+
+import BatchTable from "../../components/batch-table";
 
 export default function BatchQuery() {
   const [form, setForm] = useRecoilState(formState);
@@ -19,14 +19,9 @@ export default function BatchQuery() {
   const [fileError, setFileError] = useState("")
   const [uploaded, setUploaded] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [pagination, setPagination] = useState([])
   const fileRef = useRef();
 
   const navigate = useNavigate();
-
-  const [integratedSortingColumnExtensions] = useState([
-    { columnName: 'id', compare: (a, b) => { return a - b } },
-  ]);
 
   const [sortColumn, setSorting] = useState([{ columnName: "id", direction: "asc" }])
 
@@ -101,12 +96,6 @@ export default function BatchQuery() {
     });
 
     setShowResults(true);
-    setPagination([
-      response.data.length && 10,
-      response.data.length >= 20 && 20,
-      response.data.length >= 50 && 50,
-      response.data.length >= 100 && 100
-    ].filter(Boolean))
 
     var columns;
     var columnExtensions;
@@ -493,16 +482,8 @@ export default function BatchQuery() {
                   <ExcelSheet dataSet={exportResults()} name="Batch Query Results" />
                 </ExcelFile>
               </div>
-              <div className="index border">
-                <Grid rows={results.output} columns={results.columns}>
-                  <SortingState sorting={sortColumn} />
-                  <PagingState defaultCurrentPage={0} defaultPageSize={10} />
-                  <IntegratedSorting columnExtensions={integratedSortingColumnExtensions} />
-                  <IntegratedPaging />
-                  <Table columnExtensions={results.columnExtensions} />
-                  <TableHeaderRow showSortingControls />
-                  <PagingPanel pageSizes={pagination} />
-                </Grid>
+              <div className="d-flex index border">
+                <BatchTable results={results} sorting={sortColumn}/>
               </div>
             </Container>
           </div>
