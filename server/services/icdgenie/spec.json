@@ -75,66 +75,6 @@
     }
   },
   "definitions": {
-    "ICD10SearchResponse": {
-      "type": "object",
-      "properties": {
-        "icdo3": {
-          "type": "array"
-        }
-      }
-    },
-    "ICDO3SearchResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "histology": {
-          "type": "string"
-        },
-        "behavior": {
-          "type": "string"
-        },
-        "preferred": {
-          "type": "integer"
-        },
-        "description": {
-          "type": "string"
-        }
-      }
-    },
-    "TranslateRequest": {
-      "type": "object",
-      "properties": {
-        "params": {
-          "type": "string",
-          "description": "ICD-10 code or ICD-O-3 code is expected",
-          "default": "C10.0"
-        }
-      }
-    },
-    "TranslateResponse": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "icd10": {
-          "type": "string"
-        },
-        "icdo3": {
-          "type": "string"
-        },
-        "icd10Description": {
-          "type": "string"
-        },
-        "icdo3Description": {
-          "type": "string"
-        }
-      }
-    },
     "SearchRequest": {
       "type": "object",
       "properties": {
@@ -155,57 +95,53 @@
     "BatchExportRequest": {
       "type": "object",
       "properties": {
+        "input": {
+          "type": "string",
+          "description": "A newline-delimited list of input entries. Each line is deliminated by a tab"
+        },
         "inputType": {
           "type": "string",
           "description": "Specifies the type of input data.",
           "enum": [
-            "keywords",
-            "icdo3",
-            "icd10"
+            "icd10",
+            "icdo3"
           ],
-          "default": "keywords"
+          "default": "icd10"
         },
-        "input": {
-          "type": "string",
-          "description": "A newline-delimited list of input entries to search or translate."
-        },
-        "outputType": {
-          "type": "string",
-          "description": "Specifies the type of output data.",
+        "id": {
+          "type": "bool",
+          "description": "Specifies if input contains a participant id column.",
           "enum": [
-            "icdo3",
-            "icd10"
+            true,
+            false
           ],
-          "default": "icdo3"
+          "default": false
         },
-        "outputFormat": {
-          "type": "string",
-          "description": "Specifies the output data format. Use 'csv' to export data as a csv file.",
+        "icdo3Morph": {
+          "type": "bool",
+          "description": "Specifies if input contains a morphology code column (ICD-O-3 Inputs Only).",
           "enum": [
-            "json",
-            "csv"
+            true,
+            false
           ],
-          "default": "json"
+          "default": false
+        },
+        "icdo3Site": {
+          "type": "bool",
+          "description": "Specifies if input contains a site code column (ICD-O-3 Inputs Only).",
+          "enum": [
+            true,
+            false
+          ],
+          "default": false
         }
       }
     },
     "BatchExportResponse": {
       "type": "object",
       "properties": {
-        "input": {
-          "type": "string"
-        },
-        "icd10": {
-          "type": "string"
-        },
-        "icdo3": {
-          "type": "string"
-        },
-        "icd10Description": {
-          "type": "string"
-        },
-        "icdo3Description": {
-          "type": "string"
+        "results": {
+          "type": "array"
         }
       }
     }
