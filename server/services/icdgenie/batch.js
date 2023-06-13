@@ -6,7 +6,7 @@ var _ = require('lodash');
 async function batchQuery(request, response) {
   const { logger, database } = request.app.locals;
   logger.debug("batch: " + JSON.stringify(request.body));
-  const { input, inputType, icd10Id, icdo3Id, icdo3Site, icdo3Morph } = request.body;
+  const { input, inputType, id, icdo3Site, icdo3Morph } = request.body;
 
   var client = new Client({
     node: host,
@@ -46,7 +46,7 @@ async function batchQuery(request, response) {
         var patientId;
         var code;
 
-        if (icd10Id || icdo3Id) {
+        if (id) {
           patientId = e[0]
           code = "\"" + e[1] + "\""
           mustQuery = [
@@ -135,7 +135,7 @@ async function batchQuery(request, response) {
         var morphology;
         var site;
 
-        if (icdo3Id) {
+        if (id) {
           patientId = e[0]
           morphology = e[1]
           site = e[2]

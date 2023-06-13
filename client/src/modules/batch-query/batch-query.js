@@ -89,7 +89,7 @@ export default function BatchQuery() {
     const response = await axios.post("api/batch", {
       input: form.input,
       inputType: form.inputType,
-      icd10Id: form.icd10Id,
+      id: form.icd10Id || form.icdo3Id,
       icdo3Id: form.icdo3Id,
       icdo3Site: form.icdo3Site,
       icdo3Morph: form.icdo3Morph
