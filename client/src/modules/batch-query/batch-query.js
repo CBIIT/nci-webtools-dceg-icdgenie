@@ -68,6 +68,7 @@ export default function BatchQuery() {
     if (name === "inputType") {
       mergeForm({
         icd10Id: false,
+        icdo3Id: false,
         icdo3Site: false,
         icdo3Morph: false,
         [name]: value
