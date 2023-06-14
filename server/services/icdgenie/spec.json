@@ -46,7 +46,7 @@
         "tags": [
           "Batch Export"
         ],
-        "summary": "Batch export search and/or translation results for ICD-10 and ICD-O-3 codes",
+        "summary": "Batch export search results for ICD-10 and ICD-O-3 codes",
         "produces": [
           "application/json"
         ],
