@@ -1,5 +1,6 @@
-import { Grid, Table, TableHeaderRow, PagingPanel } from "@devexpress/dx-react-grid-bootstrap4";
+import { Grid, Table, TableHeaderRow } from "@devexpress/dx-react-grid-bootstrap4";
 import { SortingState, IntegratedSorting, PagingState, IntegratedPaging } from "@devexpress/dx-react-grid";
+import { PagingPanel } from "./paging-panel/paging-panel"
 import { useState } from "react";
 
 export default function BatchTable({ results, sorting }) {
