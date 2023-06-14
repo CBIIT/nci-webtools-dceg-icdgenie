@@ -239,7 +239,7 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={<label>Particpant ID <i className="text-muted">(Optional)</i></label>}
+                      label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
                       name="icd10Id"
                       type="checkbox"
                       id="icd10Id"
@@ -309,7 +309,7 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={<label>Particpant ID <i className="text-muted">(Optional)</i></label>}
+                      label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
                       name="icdo3Id"
                       type="checkbox"
                       id="icdo3Id"
