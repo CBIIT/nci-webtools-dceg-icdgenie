@@ -123,7 +123,7 @@ export default function Search() {
     setValid(true)
     setInput(query)
     setSearchTerm(query)
-    const response = await axios.post("api/opensearch", { search: query })
+    const response = await axios.post("api/search", { search: query })
     const results = {
       tabular: processSearch(response.data.tabular.filter((e) => e._source.type === "entry")),
       neoplasm: processSearch(response.data.neoplasm),

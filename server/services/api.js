@@ -26,7 +26,7 @@ api.post("/batch", async (request, response) => {
   batch.batchQuery(request, response)
 });
 
-api.post("/opensearch", async (request, response) => {
+api.post("/search", async (request, response) => {
   search.opensearch(request,response)
 })
 

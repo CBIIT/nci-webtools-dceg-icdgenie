@@ -9,7 +9,7 @@
     }
   ],
   "paths": {
-    "/api/opensearch": {
+    "/api/search": {
       "post": {
         "tags": [
           "Search"
