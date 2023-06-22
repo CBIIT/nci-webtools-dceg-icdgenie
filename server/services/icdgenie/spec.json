@@ -80,7 +80,8 @@
       "properties": {
         "search": {
           "type": "string",
-          "description": "A keyword, ICD-10 code, or ICD-O-3 code"
+          "description": "A keyword, ICD-10 code, or ICD-O-3 code",
+          "default": "stomach"
         }
       }
     },
@@ -97,7 +98,8 @@
       "properties": {
         "input": {
           "type": "string",
-          "description": "A newline-delimited list of input entries. Each line is deliminated by a tab"
+          "description": "A newline-delimited list of input entries. Each value on a line is deliminated by a tab",
+          "default": "1\tT81.535\n2\tNA\n3\tK50.013"
         },
         "inputType": {
           "type": "string",
@@ -115,7 +117,7 @@
             true,
             false
           ],
-          "default": false
+          "default": true
         },
         "icdo3Morph": {
           "type": "bool",
