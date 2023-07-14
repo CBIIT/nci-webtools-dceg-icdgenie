@@ -344,7 +344,7 @@ export default function BatchQuery() {
                       disabled={form.inputType === "icd10"}
                       onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
                     />
-                     <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icdo3Morph_tip">
                         <Popover.Header>ICD-O-3 Morphology Code</Popover.Header>
                         <Popover.Body>
@@ -477,14 +477,39 @@ export default function BatchQuery() {
                 <div className="text-uppercase" style={{ fontSize: "14px", letterSpacing: "1.5px" }}>
                   <b>{results.output.length.toLocaleString()}</b> Results Found
                 </div>
-                <ExcelFile
-                  filename={`icd_genie_batch_export`}
-                  element={<Button variant="primary" size="sm">Export Results</Button>}>
-                  <ExcelSheet dataSet={exportResults()} name="Batch Query Results" />
-                </ExcelFile>
+                <Row className="align-items-center">
+                  <Col xl={10} className="me-0 pe-0">
+                  <ExcelFile
+                    filename={`icd_genie_batch_export`}
+                    className="pe-0"
+                    element={<Button variant="primary" size="sm">Export Results</Button>}>
+                    <ExcelSheet dataSet={exportResults()} name="Batch Query Results" />
+                  </ExcelFile>
+                  </Col>
+                  <Col xl={2} className="ps-0">
+                  <OverlayTrigger trigger="click" placement="top" rootClose
+                    overlay={<Popover id="icd10Id_tip">
+                      <Popover.Header>Participant ID</Popover.Header>
+                      <Popover.Body>
+                        <p>To rename and set the save location of the export file you must have the following settings enabled for your browser. If you do not have these settings on the file will be saved with a generic name to your default download folder.</p>
+                        <div>Chrome:</div>
+                        <p>Settings -{">"} Downloads -{">"} Enable "Ask me what to do with each download"</p>
+                        <div>Firefox:</div>
+                        <p>Settings -{">"} Search for Download section -{">"} Check "Always ask you where to save files"</p>
+                        <div>Edge:</div>
+                        <p>Settings -{">"} Downloads -{">"} Enable "Ask me what to do with each download"</p>
+                      </Popover.Body>
+                    </Popover>
+                    }>
+                    <div>
+                      <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
+                    </div>
+                  </OverlayTrigger>
+                  </Col>
+                </Row>
               </div>
               <div className="d-flex index border">
-                <BatchTable results={results} sorting={sortColumn}/>
+                <BatchTable results={results} sorting={sortColumn} />
               </div>
             </Container>
           </div>
