@@ -84,7 +84,7 @@ export default function About() {
               <p>
                 To address these challenges, we developed ICD Genie as a publicly available web tool to facilitate the translation of ICD-10 and ICD-O-3 codes to human-readable text. By improving accessibility and by making existing cancer classification and coding schemes more readily understandable and searchable, ICD Genie will help accelerate descriptive and molecular epidemiological studies of cancer. The incorporation of ICD-10 in ICD Genie renders the tool useful for studies of other non-neoplastic diseases.
               </p>
-              <p>CD Genie is not intended to be used by cancer registrars or for cancer surveillance purposes. Cancer registrars should visit the Surveillance, Epidemiology, and End Results Program website (<a href="https://seer.cancer.gov/" target="_blank">https://seer.cancer.gov/</a>) for more information about coding guidelines and resources.
+              <p>ICD Genie is not intended to be used by cancer registrars or for cancer surveillance purposes. Cancer registrars should visit the Surveillance, Epidemiology, and End Results Program website (<a href="https://seer.cancer.gov/" target="_blank">https://seer.cancer.gov/</a>) for more information about coding guidelines and resources.
               </p>
             </Container>
           </Col>
