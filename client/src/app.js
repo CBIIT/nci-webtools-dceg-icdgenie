@@ -6,20 +6,15 @@ import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
 import Loader from "./modules/common/loader";
 import ErrorBoundary from "./modules/common/error-boundary";
-import HomeImage from "./modules/home/images/landing-page.png";
+import Home from "./modules/home/home";
+import Search from "./modules/search/search";
+import ApiAccess from "./modules/api-access/api-access";
+import About from "./modules/about/about";
+import Resources from "./modules/about/resources";
+import FAQ from "./modules/about/faq";
+import Started from "./modules/about/getting-started";
+import BatchQuery from "./modules/batch-query/batch-query";
 import "./styles/main.scss";
-
-// preload lazy-loaded page components
-const Home = preloadLazyComponent(() => import("./modules/home/home"));
-const Search = preloadLazyComponent(() => import("./modules/search/search"));
-const ApiAccess = preloadLazyComponent(() => import("./modules/api-access/api-access"));
-const About = preloadLazyComponent(() => import("./modules/about/about"));
-const BatchQuery = preloadLazyComponent(() => import("./modules/batch-query/batch-query"));
-
-function preloadLazyComponent(factory) {
-  const loader = factory();
-  return lazy(() => loader);
-}
 
 export default function App() {
   const links = [
@@ -27,6 +22,11 @@ export default function App() {
       route: "/",
       title: "Home",
       component: Home,
+    },
+    {
+      route: "/getting-started",
+      title: "Getting Started",
+      component: Started,
     },
     {
       route: "/search",
@@ -53,14 +53,24 @@ export default function App() {
   return (
     <RecoilRoot>
       <Router basename={process.env.PUBLIC_URL}>
-        <div className="d-flex flex-column flex-grow-1 cover-image" style={{ backgroundImage: `url(${HomeImage})` }}>
-          <Navbar expand="sm" variant="dark" className="py-1 flex-none-auto">
+        <div className="d-flex flex-column flex-grow-1">
+          <Navbar
+            expand="lg"
+            variant="dark"
+            className="py-0 flex-none-auto shadow"
+            style={{ backgroundColor: "#F8F9A" }}
+          >
             <Container>
               <Navbar.Toggle aria-controls="app-navbar" />
               <Navbar.Collapse id="app-navbar">
                 <Nav className="d-flex w-100 justify-content-center">
                   {links.map((link, index) => (
-                    <NavLink key={`navlink-${index}`} to={link.route} className="nav-link my-2 mx-3">
+                    <NavLink
+                      key={`navlink-${index}`}
+                      to={link.route}
+                      className="nav-link mx-3"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
                       {link.title}
                     </NavLink>
                   ))}

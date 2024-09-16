@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@opensearch-project/opensearch": "^2.0.0",
+    "aws-opensearch-connector": "^1.1.0",
     "better-sqlite3": "^7.6.0",
     "cors": "^2.8.5",
     "csv": "^6.0.5",

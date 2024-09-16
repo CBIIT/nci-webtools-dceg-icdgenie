@@ -1,8 +1,9 @@
-# FROM ${BASE_IMAGE:-oraclelinux:8-slim}
-FROM quay.io/centos/centos:stream9
+FROM public.ecr.aws/amazonlinux/amazonlinux:2023
 
 RUN dnf -y update \
  && dnf -y install \
+    make \
+    gcc-c++ \
     nodejs \
     npm \
  && dnf clean all

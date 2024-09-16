@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
 import { TreeDataState, CustomTreeData, DataTypeProvider } from "@devexpress/dx-react-grid";
@@ -6,13 +6,33 @@ import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-rea
 import Container from "react-bootstrap/Container";
 import { useSetRecoilState } from "recoil";
 import { modalState } from "./search.state";
-import ICDTranslations from "./search.translations";
-import axios from "axios";
 import Loader from "../common/loader";
 
-export default function ICD10({ form }) {
+export default function ICD10({ maps, search }) {
   const setModal = useSetRecoilState(modalState);
+
+  const [indexPanel, setIndexPanel] = useState(null)
+  const [neoplasmPanel, setNeoplasmPanel] = useState(null)
+  const [drugPanel, setDrugPanel] = useState(null)
+  const [injuryPanel, setInjuryPanel] = useState(null)
   const [loading, setLoading] = useState(false);
+  const [tabularOpen, setTabularOpen] = useState([])
+  const [neoplasmOpen, setNeoplasmOpen] = useState([])
+  const [drugOpen, setDrugOpen] = useState([])
+  const [injuryOpen, setInjuryOpen] = useState([])
+
+  useEffect(() => {
+
+    setIndexPanel(maps.tabular.size ? "0" : null)
+    setNeoplasmPanel(maps.neoplasm.size ? "0" : null)
+    setDrugPanel(maps.drug.size ? "0" : null)
+    setInjuryPanel(maps.injury.size ? "0" : null)
+
+    setTabularOpen(expandTreeData(Array.from(maps.tabular)))
+    setNeoplasmOpen(expandTreeData(Array.from(maps.neoplasm)))
+    setDrugOpen(expandTreeData(Array.from(maps.drug)))
+    setInjuryOpen(expandTreeData(Array.from(maps.injury)))
+  }, [maps])
 
   const indexColumns = [
     { name: "description", title: "Description" },
@@ -20,7 +40,7 @@ export default function ICD10({ form }) {
   ];
 
   const neoplasmColumns = [
-    { name: "neoplasm", title: "Neoplasm" },
+    { name: "description", title: "Neoplasm" },
     { name: "malignantPrimary", title: "Malignant Primary" },
     { name: "malignantSecondary", title: "Malignant Secondary" },
     { name: "carcinomaInSitu", title: "Ca in situ" },
@@ -30,7 +50,7 @@ export default function ICD10({ form }) {
   ];
 
   const drugColumns = [
-    { name: "substance", title: "Substance" },
+    { name: "description", title: "Substance" },
     { name: "poisoningAccidental", title: "Accidental Poisoning" },
     { name: "poisoningIntentionalSelfHarm", title: "Intentional Self Harm Poisoning" },
     { name: "poisoningAssault", title: "Assault Poisoning" },
@@ -39,73 +59,136 @@ export default function ICD10({ form }) {
     { name: "underdosing", title: "Underdosing" },
   ];
 
-  const indexColumnExtension = [{ columnName: "description", width: 800, wordWrapEnabled: true }];
+
+  const indexColumnExtension = [{ columnName: "description", width: "45rem", wordWrapEnabled: true }];
 
   const neoplasmColumnExtension = [
-    { columnName: "neoplasm", width: 400, wordWrapEnabled: true },
-    { columnName: "malignantPrimary", wordWrapEnabled: true },
-    { columnName: "malignantSecondary", wordWrapEnabled: true },
-    { columnName: "uncertainBehavior", wordWrapEnabled: true },
-    { columnName: "unspecifiedBehavior", wordWrapEnabled: true },
+    { columnName: "description", width: "25rem", wordWrapEnabled: true },
+    { columnName: "malignantPrimary", width: "7rem", wordWrapEnabled: true },
+    { columnName: "malignantSecondary", width: "7rem", wordWrapEnabled: true },
+    { columnName: "carcinomaInSitu", width: "8rem", wordWrapEnabled: true },
+    { columnName: "benign", width: "6rem", wordWrapEnabled: true },
+    { columnName: "uncertainBehavior", width: "8rem", wordWrapEnabled: true },
+    { columnName: "unspecifiedBehavior", width: "8rem", wordWrapEnabled: true },
   ];
 
   const drugColumnExtension = [
-    { columnName: "substance", width: 400, wordWrapEnabled: true },
-    { columnName: "poisoningAccidental", wordWrapEnabled: true },
-    { columnName: "poisoningIntentionalSelfHarm", wordWrapEnabled: true },
-    { columnName: "poisoningAssault", wordWrapEnabled: true },
-    { columnName: "poisoningUndetermined", wordWrapEnabled: true },
+    { columnName: "description", width: "25rem", wordWrapEnabled: true },
+    { columnName: "poisoningAccidental", width: "7rem", wordWrapEnabled: true },
+    { columnName: "poisoningIntentionalSelfHarm", width: "7rem", wordWrapEnabled: true },
+    { columnName: "poisoningAssault", width: "7rem", wordWrapEnabled: true },
+    { columnName: "poisoningUndetermined", width: "8rem", wordWrapEnabled: true },
+    { columnName: "adverseEffect", width: "6rem", wordWrapEnabled: true },
+    { columnName: "adverseEffect", width: "6rem", wordWrapEnabled: true },
   ];
 
+  function expandTreeData(map) {
+    const node = map.find(e => e[1].code === search)
+    if (node) {
+      const toReturn = Array.from(node[1].parents, id => map.findIndex((e) => e[0] === id))
+      return toReturn
+    }
+
+    return []
+  }
+
   function getChildRows(row, rootRows) {
+    console.log(row)
+    if (row)
+      console.log(row.children)
     return row ? row.children : rootRows;
   }
 
-  async function showTranslationModal(icd10) {
-    try {
-      setLoading(true);
-      icd10 = icd10.replace(/-$/, "");
-      const rows = await axios.get("api/translate", { params: { icd10 } });
-      setModal({
-        show: true,
-        title: `ICD-O-3 Translation for ICD10 Code: ${icd10}`,
-        body: <ICDTranslations rows={rows.data} type="icd10" />,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
+  function getTabularChildRows(row, rootRows) {
+
+    if (row) {
+      if (row.children.length === 0)
+        return null
+
+      var children = []
+      row.children.map((child) => {
+        children = children.concat(maps.tabular.get(child))
+      })
+
+      return children
     }
+    return rootRows;
   }
 
-  function icdCodeFormatter({ value }) {
-    const isValidCode = /[A-Z]+\d+(\.\d+)?/i.test(value);
-    return isValidCode ? (
-      <Button className="p-0" variant="link" onClick={() => showTranslationModal(value)}>
-        {value}
-      </Button>
-    ) : (
-      value
-    );
+  function getNeoplasmChildRows(row, rootRows) {
+
+    if (row) {
+      if (row.children.length === 0)
+        return null
+
+      var children = []
+      row.children.map((child) => {
+        children = children.concat(maps.neoplasm.get(child))
+      })
+
+      return children
+    }
+    return rootRows;
   }
 
-  function IcdCodeTypeProvider(props) {
-    return <DataTypeProvider formatterComponent={icdCodeFormatter} {...props} />;
+
+  function getDrugChildRows(row, rootRows) {
+
+    if (row) {
+      if (row.children.length === 0)
+        return null
+
+      var children = []
+      row.children.map((child) => {
+        children = children.concat(maps.drug.get(child))
+      })
+
+      return children
+    }
+    return rootRows;
+  }
+
+  function getInjuryChildRows(row, rootRows) {
+
+    if (row) {
+      if (row.children.length === 0)
+        return null
+
+      var children = []
+      row.children.map((child) => {
+        children = children.concat(maps.injury.get(child))
+      })
+
+      return children
+    }
+    return rootRows;
+  }
+
+  function IcdCodeTypeProvider({ value }) {
+    return value
+  }
+
+  function handleAccordion(panel, setPanel) {
+
+    return panel === null ? setPanel("0") : setPanel(null)
   }
 
   return (
-    <Container className="py-5 col-xl-8 col-sm-12">
+    <Container className="py-5 col-xl-10 col-sm-12">
       <Loader show={loading} fullscreen />
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 index">
+      <Accordion onSelect={() => { maps.tabular.size ? handleAccordion(indexPanel, setIndexPanel) : setIndexPanel(null) }} activeKey={indexPanel} className={`mb-4 ${maps.tabular.size ? "index" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">INDEX TABLE</span>
           </Accordion.Header>
           <Accordion.Body>
-            <Grid rows={form.indexData} columns={indexColumns}>
+            <Grid rows={maps.tabular ? Array.from(maps.tabular.values()).filter((node) => node.parents.length === 0) : []} columns={indexColumns}>
               <IcdCodeTypeProvider for={["code"]} />
-              <TreeDataState />
-              <CustomTreeData getChildRows={getChildRows} />
+              <TreeDataState
+                expandedRowIds={tabularOpen}
+                onExpandedRowIdsChange={setTabularOpen}
+              />
+              <CustomTreeData getChildRows={getTabularChildRows} />
               <Table columnExtensions={indexColumnExtension} />
               <TableHeaderRow />
               <TableTreeColumn for="description" />
@@ -114,13 +197,13 @@ export default function ICD10({ form }) {
         </Accordion.Item>
       </Accordion>
 
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 neoplasm">
+      <Accordion onSelect={() => { maps.neoplasm.size ? handleAccordion(neoplasmPanel, setNeoplasmPanel) : setNeoplasmPanel(null) }} activeKey={neoplasmPanel} className={`mb-4 ${maps.neoplasm.size ? "neoplasm" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">NEOPLASM TABLE</span>
           </Accordion.Header>
           <Accordion.Body>
-            <Grid rows={form.neoplasmData} columns={neoplasmColumns}>
+            <Grid rows={maps.neoplasm ? Array.from(maps.neoplasm.values()).filter((node) => node.parents.length === 0) : []} columns={neoplasmColumns}>
               <IcdCodeTypeProvider
                 for={[
                   "malignantPrimary",
@@ -131,23 +214,26 @@ export default function ICD10({ form }) {
                   "unspecifiedBehavior",
                 ]}
               />
-              <TreeDataState />
-              <CustomTreeData getChildRows={getChildRows} />
+              <TreeDataState
+                expandedRowIds={neoplasmOpen}
+                onExpandedRowIdsChange={setNeoplasmOpen}
+              />
+              <CustomTreeData getChildRows={getNeoplasmChildRows} />
               <Table columnExtensions={neoplasmColumnExtension} />
               <TableHeaderRow />
-              <TableTreeColumn for="neoplasm" />
+              <TableTreeColumn for="description" />
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
 
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 drug">
+      <Accordion onSelect={() => { maps.drug.size ? handleAccordion(drugPanel, setDrugPanel) : setDrugPanel(null) }} activeKey={drugPanel} className={`mb-4 ${maps.drug.size ? "drug" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">DRUG TABLE</span>
           </Accordion.Header>
           <Accordion.Body>
-            <Grid rows={form.drugData} columns={drugColumns}>
+            <Grid rows={maps.drug ? Array.from(maps.drug.values()).filter((node) => node.parents.length === 0) : []} columns={drugColumns}>
               <IcdCodeTypeProvider
                 for={[
                   "poisoningAccidental",
@@ -158,26 +244,32 @@ export default function ICD10({ form }) {
                   "underdosing",
                 ]}
               />
-              <TreeDataState />
-              <CustomTreeData getChildRows={getChildRows} />
+              <TreeDataState
+                expandedRowIds={drugOpen}
+                onExpandedRowIdsChange={setDrugOpen}
+              />
+              <CustomTreeData getChildRows={getDrugChildRows} />
               <Table columnExtensions={drugColumnExtension} />
               <TableHeaderRow />
-              <TableTreeColumn for="substance" />
+              <TableTreeColumn for="description" />
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
 
-      <Accordion defaultActiveKey="0" alwaysOpen className="mb-4 injury">
+      <Accordion onSelect={() => { maps.injury.size ? handleAccordion(injuryPanel, setInjuryPanel) : setInjuryPanel(null) }} activeKey={injuryPanel} className={`mb-4 ${maps.injury.size ? "injury" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">INJURY TABLE</span>
           </Accordion.Header>
           <Accordion.Body>
-            <Grid rows={form.injuryData} columns={indexColumns}>
+            <Grid rows={maps.injury ? Array.from(maps.injury.values()).filter((node) => node.parents.length === 0) : []} columns={indexColumns}>
               <IcdCodeTypeProvider for={["code"]} />
-              <TreeDataState />
-              <CustomTreeData getChildRows={getChildRows} />
+              <TreeDataState
+                expandedRowIds={injuryOpen}
+                onExpandedRowIdsChange={setInjuryOpen}
+              />
+              <CustomTreeData getChildRows={getInjuryChildRows} />
               <Table columnExtensions={indexColumnExtension} />
               <TableHeaderRow />
               <TableTreeColumn for="description" />

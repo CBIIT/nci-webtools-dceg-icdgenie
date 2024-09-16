@@ -4,8 +4,11 @@ export const formState = atom({
   key: "batchQuery.formState",
   default: {
     input: "",
-    inputType: "keywords",
-    outputType: "icd10",
+    inputType: "icd10",
+    icd10Id: false,
+    icdo3Id: false,
+    icdo3Site: false,
+    icdo3Morph: false,
     inputPlaceholder: "",
   },
 });

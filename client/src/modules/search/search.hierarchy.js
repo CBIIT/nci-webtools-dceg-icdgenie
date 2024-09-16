@@ -2,13 +2,13 @@ import Accordion from "react-bootstrap/Accordion";
 import Container from "react-bootstrap/Container";
 import D3Tree, { prepareTreeData } from "../common/tree";
 
-export default function ICD10Hierarchy({ form }) {
-  const { indexData, neoplasmData, drugData, injuryData } = form;
+export default function ICD10Hierarchy({ form, maps }) {
+  const { tabular, neoplasm, drug, injury } = maps;
 
-  const indexTree = prepareTreeData(indexData, "Index");
-  const neoplasmTree = prepareTreeData(neoplasmData, "Neoplasm", { label: (d) => d.neoplasm });
-  const drugTree = prepareTreeData(drugData, "Drug", { label: (d) => d.substance });
-  const injuryTree = prepareTreeData(injuryData, "Injury");
+  const indexTree = prepareTreeData(tabular ? tabular : [], "Index");
+  const neoplasmTree = prepareTreeData(neoplasm ? neoplasm : [], "Neoplasm", { label: (d) => d.description });
+  const drugTree = prepareTreeData(drug ? drug : [], "Drug", { label: (d) => d.description });
+  const injuryTree = prepareTreeData(injury ? injury : [], "Injury");
 
   return (
     <Container className="py-5 col-xl-8 col-sm-12">
@@ -18,7 +18,7 @@ export default function ICD10Hierarchy({ form }) {
             <span className="accordion-font">INDEX HIERARCHY</span>
           </Accordion.Header>
           <Accordion.Body className="overflow-auto">
-            {indexData.length ?
+            {indexTree.data ?
               <D3Tree {...indexTree} className="mw-100" style={{ maxHeight: "800px" }} />
               :
               <big className="d-flex justify-content-center my-4 text-muted" >
@@ -34,7 +34,7 @@ export default function ICD10Hierarchy({ form }) {
             <span className="accordion-font">NEOPLASM HIERARCHY</span>
           </Accordion.Header>
           <Accordion.Body className="overflow-auto">
-            {neoplasmData.length ?
+            {neoplasmTree.data ?
               <D3Tree {...neoplasmTree} className="mw-100" style={{ maxHeight: "800px" }} />
               :
               <big className="d-flex justify-content-center my-4 text-muted" >
@@ -50,7 +50,7 @@ export default function ICD10Hierarchy({ form }) {
             <span className="accordion-font">DRUG HIERARCHY</span>
           </Accordion.Header>
           <Accordion.Body className="overflow-auto">
-            {drugData.length ?
+            {drugTree.data ?
               <D3Tree {...drugTree} className="mw-100" style={{ maxHeight: "800px" }} />
               :
               <big className="d-flex justify-content-center my-4 text-muted" >
@@ -66,7 +66,7 @@ export default function ICD10Hierarchy({ form }) {
             <span className="accordion-font">INJURY HIERARCHY</span>
           </Accordion.Header>
           <Accordion.Body className="overflow-auto">
-            {injuryData.length ?
+            {injuryTree.data ?
               <D3Tree {...injuryTree} className="mw-100" style={{ maxHeight: "800px" }} />
               :
               <big className="d-flex justify-content-center my-4 text-muted" >

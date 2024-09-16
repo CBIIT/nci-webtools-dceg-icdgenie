@@ -14,30 +14,39 @@ export default function D3Tree({ data, options, className, style }) {
   return <div ref={nodeRef} className={className} style={style} />;
 }
 
-function flattenArray(arr, getChildren = (d) => d.children) {
+function flattenArray(arr, map) {
   let items = [];
   for (const item of arr) {
-    items.push(item);
-    let children = getChildren(item);
+    items.push({description: item.description, code: item.code, parentId: item.parentId, id: item.key });
+
+    var children = []
+    item.children.map((child) => {
+      children = children.concat(map.get(child))
+    })
+ 
     if (children?.length > 0) {
-      items = items.concat(flattenArray(children, getChildren));
+      items = items.concat(flattenArray(children.map((d) => ({ ...d, parentId: item.key })), map));
     }
+
+    
   }
   return items;
 }
 
-export function prepareTreeData(records, rootLabel, options = {}) {
+export function prepareTreeData(map, rootLabel, options = {}) {
+
+  const records = Array.from(map.values()).filter((node) => node.parents.length === 0)
   if (!records.length) return { data: null };
 
-  const children = flattenArray(records.map((d) => ({ ...d, parentId: 0 })));
-  const data = {
+  const children = flattenArray(records.map((d) => ({ ...d, parentId: -1 })), map);
+  const data = [{
     description: rootLabel,
     code: "",
-    id: 0,
+    id: -1,
     parentId: null,
-    children,
-  };
+  }].concat(children);
 
+  
   options = {
     label: (d) => d.description + " " + d.code,
     tree: d3.cluster,
@@ -80,6 +89,7 @@ export function createTree(
     haloWidth = 3, // padding around the labels
   } = {},
 ) {
+
   // If id and parentId options are specified, or the path option, use d3.stratify
   // to convert tabular data to a hierarchy; otherwise we assume that the data is
   // specified as an object {children} with nested objects (a.k.a. the “flare.json”
@@ -88,8 +98,8 @@ export function createTree(
     path != null
       ? d3.stratify().path(path)(data)
       : id != null || parentId != null
-      ? d3.stratify().id(id).parentId(parentId)(data)
-      : d3.hierarchy(data, children);
+        ? d3.stratify().id(id).parentId(parentId)(data)
+        : d3.hierarchy(data, children);
 
   // Compute labels and titles.
   const descendants = root.descendants();
@@ -121,7 +131,7 @@ export function createTree(
     .attr("height", height)
     .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
     .attr("font-family", "sans-serif")
-    .attr("font-size", 12);
+    .attr("font-size", 14);
 
   svg
     .append("g")

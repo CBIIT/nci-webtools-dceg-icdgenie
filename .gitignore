@@ -1,6 +1,8 @@
 node_modules
+icd10tabular.json
 config.json
 logs
 coverage
 dist
 .env
+*.xml
