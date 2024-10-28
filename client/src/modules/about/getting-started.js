@@ -263,7 +263,7 @@ export default function Starter() {
                     </tbody>
                   </table>
                   <Row className="justify-content-center my-2" style={{ textDecoration: "underline", fontWeight: "bold" }}>Data Dictionary for the Epidemiology Project</Row>
-                  <img src={DataDictionary} style={{ width: "50%" }} />
+                  <img src={DataDictionary} style={{ width: "50%" }} alt="Data dictionary preview for the epidemiology project"/>
                   <div className="my-2">After comparing the format of the data with criteria in “Formatted ICD Codes” it was determined that “Type.code” is the ICD-O-3 morphology code, where the “ .  “ needs to be replaced with a “/” and “Site.code” is the ICD-O-3 site code, missing the letter “C” as a prefix. Your data could require additional formatting to be compatible with ICD Genie requirements. </div>
                   <div className="my-3">The above data format was reformatted to the following for ICD Genie:</div>
                   <Row className="justify-content-center my-2" style={{ textDecoration: "underline", fontWeight: "bold" }}>Data for the Epidemiology Project, Corrected</Row>

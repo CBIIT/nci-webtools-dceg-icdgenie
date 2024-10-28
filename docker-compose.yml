@@ -27,6 +27,7 @@ services:
     image: public.ecr.aws/opensearchproject/opensearch:latest
     environment:
       discovery.type: single-node
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: SkyWalker2024!
     ports:
       - "9200:9200"
       - "9600:9600"

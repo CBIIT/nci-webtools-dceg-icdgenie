@@ -200,3 +200,7 @@
 .page-item {
   cursor: pointer;
 }
+
+.disabled .accordion-button{
+  background-color: #595959 !important;
+}
