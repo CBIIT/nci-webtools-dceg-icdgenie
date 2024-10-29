@@ -309,7 +309,12 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
+                      //label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
+                      label={
+                        <span style={{ color: '#4A4A4A', fontWeight: 'normal' }}>
+                          Participant ID <i style={{ color: '#4A4A4A', fontWeight: 'normal' }}>(Optional)</i>
+                        </span>
+                      }
                       name="icdo3Id"
                       type="checkbox"
                       id="icdo3Id"
@@ -403,12 +408,13 @@ export default function BatchQuery() {
           <Row className="justify-content-center">
             <Col md={8}>
               <Form.Group className="mb-1">
-                <Form.Label>
+                <Form.Label htmlFor="codeInput">
                   Please upload a file (.tsv) or enter a list of ICD-10 codes or ICD-O-3 codes
                 </Form.Label>
                 <Form.Control
                   className="mb-3"
                   as="textarea"
+                  id="codeInput"
                   name="input"
                   rows={2}
                   value={form.input}
