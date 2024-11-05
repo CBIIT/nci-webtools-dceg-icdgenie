@@ -251,3 +251,8 @@
 .swagger-ui .response-col_status .response-undocumented{
   color:#595959;
 }
+
+/* CSS to change color of integer values in Swagger UI JSON response body */
+.swagger-ui .microlight .number {
+  color: #e4ff33; /* color for integers */
+}

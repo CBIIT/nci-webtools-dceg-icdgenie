@@ -47,9 +47,9 @@ const SwaggerButtonLabelInjector = () => {
       });
 
       // If all labels are added, clear the interval
-      if (labelsAdded > 0) {
-        console.log('Aria-labels added to Swagger UI buttons');
-      }
+    //   if (labelsAdded > 0) {
+    //     console.log('Aria-labels added to Swagger UI buttons');
+    //   }
     };
 
     // Use setInterval to attempt adding labels every second
