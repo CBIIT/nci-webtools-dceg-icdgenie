@@ -1,6 +1,7 @@
 import Container from "react-bootstrap/Container";
 import SwaggerUI from "swagger-ui-react";
 import SwaggerLabelInjector from "../../components/swagger-ui/swagger-injecttion";
+import SwaggerColorCustomizer from "../../components/swagger-ui/swagger-color-customizer";
 
 export default function ApiAccess() {
   return (
@@ -19,6 +20,8 @@ export default function ApiAccess() {
         <SwaggerUI url={process.env.PUBLIC_URL + "/api"} />
         {/* Add SwaggerLabelInjector to observe and inject the label */}
         <SwaggerLabelInjector />
+        {/* Custom integer color styling */}
+        <SwaggerColorCustomizer />
       </Container>
     </div>
   );
