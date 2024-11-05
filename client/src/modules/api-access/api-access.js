@@ -2,6 +2,7 @@ import Container from "react-bootstrap/Container";
 import SwaggerUI from "swagger-ui-react";
 import SwaggerLabelInjector from "../../components/swagger-ui/swagger-injecttion";
 import SwaggerColorCustomizer from "../../components/swagger-ui/swagger-color-customizer";
+import SwaggerScrollablePreEnhancer from "../../components/swagger-ui/swagger-scrollable";
 
 export default function ApiAccess() {
   return (
@@ -22,6 +23,7 @@ export default function ApiAccess() {
         <SwaggerLabelInjector />
         {/* Custom integer color styling */}
         <SwaggerColorCustomizer />
+        <SwaggerScrollablePreEnhancer />
       </Container>
     </div>
   );
