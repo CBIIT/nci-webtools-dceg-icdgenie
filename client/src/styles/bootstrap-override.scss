@@ -205,6 +205,38 @@
   background-color: #595959 !important;
 }
 
+
+
+.swagger-ui .opblock.opblock-post .opblock-summary-method { 
+  background-color: #185394 !important; /* Change POST method block color */
+}
+
+
+.opblock-section-header .opblock-title span {
+  color: #d90000 !important; /* Darker red with better contrast */
+}
+
+.swagger-ui .btn.cancel {
+  background-color: #0000;
+  border-color: #B30000 !important;
+  color: #B30000 !important;
+}
+
+.swagger-ui .btn.execute {
+  background-color: #19579F !important;
+  border-color: #19579F !important;
+}
+
+.swagger-ui .opblock.opblock-post {
+  background: #F0F7FF;
+  border-color: #8CC8EE;
+}
 .swagger-ui .opblock.opblock-post .opblock-summary-method {
-  background: #1D6343 !important;
+  background: #8CC8EE;
+}
+.swagger-ui .opblock.opblock-post .opblock-summary {
+  border-color: #8CC8EE;
+}
+.swagger-ui .opblock.opblock-post .tab-header .tab-item.active h4 span:after {
+  background: #8CC8EE;
 }
