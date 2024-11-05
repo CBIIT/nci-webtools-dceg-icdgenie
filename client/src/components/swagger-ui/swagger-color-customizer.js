@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import Container from 'react-bootstrap/Container';
-import SwaggerUI from 'swagger-ui-react';
+
 
 const SwaggerColorCustomizer = () => {
   useEffect(() => {
@@ -10,25 +9,28 @@ const SwaggerColorCustomizer = () => {
         '#operations-Search-post_api_search .response-col_description span[style*="color: rgb(211, 99, 99);"]'
       );
 
+      let colorChanged = false;
+
       integerSpans.forEach((span) => {
         // Update the inline style to a new color
         span.style.color = '#8ee827'; // Replace with your desired color
+        colorChanged = true;
       });
+
+      // Stop the interval if colors have been changed
+      if (colorChanged) {
+        console.log("Color change applied to integer values.");
+        clearInterval(intervalId);
+      }
     };
 
-    // Initial call to change integer colors
-    changeIntegerColor();
+    // Set up an interval to retry color application every 500ms
+    const intervalId = setInterval(() => {
+      changeIntegerColor();
+    }, 500);
 
-    // Use MutationObserver to apply styling when content updates
-    const observer = new MutationObserver(changeIntegerColor);
-    const targetNode = document.querySelector('#operations-Search-post_api_search');
-
-    if (targetNode) {
-      observer.observe(targetNode, { childList: true, subtree: true });
-    }
-
-    // Cleanup observer on component unmount
-    return () => observer.disconnect();
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
   }, []);
 
   return null;
