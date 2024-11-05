@@ -241,6 +241,13 @@
   background: #8CC8EE;
 }
 
-.swagger-ui .download-contents, .swagger-ui .curl-command .copy-to-clipboard{
+.swagger-ui .download-contents,
+.swagger-ui .curl-command .copy-to-clipboard, 
+.swagger-ui .copy-to-clipboard,
+.swagger-ui .download-contents{
   background: #545964 !important;
+}
+
+.swagger-ui .response-col_status .response-undocumented{
+  color:#595959;
 }

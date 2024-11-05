@@ -1,5 +1,6 @@
 import Container from "react-bootstrap/Container";
 import SwaggerUI from "swagger-ui-react";
+import SwaggerLabelInjector from "../../components/swagger-ui/swagger-injecttion";
 
 export default function ApiAccess() {
   return (
@@ -16,6 +17,8 @@ export default function ApiAccess() {
           and ICD-O-3 codes. The following resources are available:
         </p>
         <SwaggerUI url={process.env.PUBLIC_URL + "/api"} />
+        {/* Add SwaggerLabelInjector to observe and inject the label */}
+        <SwaggerLabelInjector />
       </Container>
     </div>
   );
