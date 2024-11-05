@@ -13,21 +13,21 @@ const SwaggerColorCustomizer = () => {
 
       integerSpans.forEach((span) => {
         // Update the inline style to a new color
-        span.style.color = '#8ee827'; // Replace with your desired color
+        span.style.color = '#f2ee0f'; // color of the integer number
         colorChanged = true;
       });
 
       // Stop the interval if colors have been changed
       if (colorChanged) {
-        console.log("Color change applied to integer values.");
+        //console.log("Color change applied to integer values.");
         clearInterval(intervalId);
       }
     };
 
-    // Set up an interval to retry color application every 500ms
+    // Set up an interval to retry color application every 1s
     const intervalId = setInterval(() => {
       changeIntegerColor();
-    }, 500);
+    }, 1000);
 
     // Cleanup interval on component unmount
     return () => clearInterval(intervalId);
