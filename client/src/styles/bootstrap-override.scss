@@ -240,3 +240,7 @@
 .swagger-ui .opblock.opblock-post .tab-header .tab-item.active h4 span:after {
   background: #8CC8EE;
 }
+
+.swagger-ui .download-contents, .swagger-ui .curl-command .copy-to-clipboard{
+  background: #545964 !important;
+}
