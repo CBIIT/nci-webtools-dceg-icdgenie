@@ -1,4 +1,4 @@
-FROM public.ecr.aws/amazonlinux/amazonlinux:2022
+FROM --platform=linux/amd64 public.ecr.aws/amazonlinux/amazonlinux:2023
 
 RUN dnf -y update \
  && dnf -y install \
@@ -20,4 +20,4 @@ RUN npm install
 # copy the rest of the application
 COPY database /app/database/
 
-CMD npm run import
+CMD sh import.sh
