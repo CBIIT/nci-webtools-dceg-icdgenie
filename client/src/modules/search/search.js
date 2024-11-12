@@ -175,7 +175,7 @@ export default function Search() {
                     <FontAwesomeIcon icon={faArrowRight} className="text-muted" />
                   </Button>
                 </InputGroup>
-                {!valid && <div style={{ color: "red" }}>
+                {!valid && <div style={{ color: "#AD0000" }}>
                   Your search text must be at least 3 characters long
                 </div>}
               </form>
@@ -189,7 +189,7 @@ export default function Search() {
                   ))}
                 </span> :
                   submitted && maps.tabular.size === 0 && maps.neoplasm.size === 0 && maps.drug.size === 0 && maps.injury.size === 0 && maps.icdo3.length === 0?
-                    <span style={{ color: "red" }} className="mx-1">No Results Found</span>
+                    <span style={{ color: "#AD0000" }} className="mx-1">No Results Found</span>
                     : <></>}
 
             </Col>
