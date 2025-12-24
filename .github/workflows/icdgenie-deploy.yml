@@ -1,0 +1,197 @@
+name: Deploy ICDGenie to AWS ECS
+
+on:
+  workflow_dispatch:
+    inputs:
+      tier:
+        description: 'Deployment tier'
+        required: true
+        type: choice
+        options:
+          - dev
+          - qa
+          - stage
+          - prod
+      rebuild_frontend:
+        description: 'Rebuild frontend image'
+        type: boolean
+        default: true
+      rebuild_backend:
+        description: 'Rebuild backend image'
+        type: boolean
+        default: true
+      rebuild_data_import:
+        description: 'Rebuild data import image'
+        type: boolean
+        default: true
+      import_data:
+        description: 'Execute data import'
+        type: boolean
+        default: false
+      no_cache:
+        description: 'Build without cache'
+        type: boolean
+        default: false
+
+env:
+  APP: icdgenie
+  AWS_REGION: us-east-1
+  FRONTEND_CONTAINER_PORT: 80
+  BACKEND_CONTAINER_PORT: 9000
+  FRONTEND_APP_PATH: /
+  ECS_CPU_UNITS: 1 vCPU
+  ECS_MEMORY_UNITS: 2 GB
+  ECS_DATA_IMPORT_CPU_UNITS: 2 vCPU
+  ECS_DATA_IMPORT_MEMORY_UNITS: 4 GB
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup environment variables
+        run: |
+          echo "TIER=${{ inputs.tier }}" >> $GITHUB_ENV
+          echo "TIER_UPPER=$(echo ${{ inputs.tier }} | tr '[:lower:]' '[:upper:]')" >> $GITHUB_ENV
+          echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
+          echo "APP_GIT_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
+          echo "PARAMETER_PATH=/analysistools/${{ inputs.tier }}/${{ env.APP }}" >> $GITHUB_ENV
+          
+          # Set image tier
+          if [[ "${{ inputs.tier }}" == "prod" || "${{ inputs.tier }}" == "stage" ]]; then
+            echo "IMAGE_TIER=release" >> $GITHUB_ENV
+          else
+            echo "IMAGE_TIER=development" >> $GITHUB_ENV
+          fi
+
+      - name: Get AWS account ID
+        run: |
+          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
+          echo "DOCKER_REGISTRY=$AWS_ACCOUNT_ID.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_ENV
+          echo "IMAGE_REPOSITORY=$AWS_ACCOUNT_ID.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.APP }}" >> $GITHUB_ENV
+
+      - name: Set image tags
+        run: |
+          echo "FRONTEND_IMAGE=${{ env.IMAGE_REPOSITORY }}:${{ env.IMAGE_TIER }}-frontend-${{ env.APP_GIT_TAG }}-${{ env.DATETIME }}" >> $GITHUB_ENV
+          echo "BACKEND_IMAGE=${{ env.IMAGE_REPOSITORY }}:${{ env.IMAGE_TIER }}-backend-${{ env.APP_GIT_TAG }}-${{ env.DATETIME }}" >> $GITHUB_ENV
+          echo "DATA_IMPORT_IMAGE=${{ env.IMAGE_REPOSITORY }}:${{ env.IMAGE_TIER }}-data-import-${{ env.APP_GIT_TAG }}-${{ env.DATETIME }}" >> $GITHUB_ENV
+          echo "FRONTEND_IMAGE_LATEST=${{ env.IMAGE_REPOSITORY }}:${{ env.IMAGE_TIER }}-frontend-latest" >> $GITHUB_ENV
+          echo "BACKEND_IMAGE_LATEST=${{ env.IMAGE_REPOSITORY }}:${{ env.IMAGE_TIER }}-backend-latest" >> $GITHUB_ENV
+          echo "DATA_IMPORT_IMAGE_LATEST=${{ env.IMAGE_REPOSITORY }}:${{ env.IMAGE_TIER }}-data-import-latest" >> $GITHUB_ENV
+
+      - name: Retrieve AWS SSM parameters
+        run: |
+          PARAMS=$(aws ssm get-parameters-by-path --path ${{ env.PARAMETER_PATH }} --output json)
+          
+          echo "SUBNET_IDS=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/subnet_ids") | .Value')" >> $GITHUB_ENV
+          echo "SECURITY_GROUP_IDS=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/security_group_ids") | .Value')" >> $GITHUB_ENV
+          echo "ECS_CLUSTER=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/ecs_cluster") | .Value')" >> $GITHUB_ENV
+          echo "ECS_WEB_TASK=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/ecs_web_task") | .Value')" >> $GITHUB_ENV
+          echo "ECS_DATA_IMPORT_TASK=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/ecs_data_import_task") | .Value')" >> $GITHUB_ENV
+          echo "ECS_WEB_SERVICE=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/ecs_web_service") | .Value')" >> $GITHUB_ENV
+          echo "ROLE_ARN=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/role_arn") | .Value')" >> $GITHUB_ENV
+
+      - name: Login to Amazon ECR
+        run: aws ecr get-login-password | docker login --username AWS --password-stdin ${{ env.DOCKER_REGISTRY }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push backend image
+        if: inputs.rebuild_backend == true
+        env:
+          DOCKER_BUILDKIT: ${{ inputs.no_cache && '0' || '1' }}
+        run: |
+          docker build \
+            --pull \
+            --ulimit nofile=65536:65536 \
+            -t ${{ env.BACKEND_IMAGE }} \
+            -t ${{ env.BACKEND_IMAGE_LATEST }} \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            ${{ inputs.no_cache && '--no-cache' || format('--cache-from {0}', env.BACKEND_IMAGE_LATEST) }} \
+            -f docker/backend.dockerfile \
+            .
+          
+          docker push ${{ env.BACKEND_IMAGE }}
+          docker push ${{ env.BACKEND_IMAGE_LATEST }}
+
+      - name: Build and push data import image
+        if: inputs.rebuild_data_import == true
+        env:
+          DOCKER_BUILDKIT: ${{ inputs.no_cache && '0' || '1' }}
+        run: |
+          docker build \
+            --pull \
+            --ulimit nofile=65536:65536 \
+            -t ${{ env.DATA_IMPORT_IMAGE }} \
+            -t ${{ env.DATA_IMPORT_IMAGE_LATEST }} \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            ${{ inputs.no_cache && '--no-cache' || format('--cache-from {0}', env.DATA_IMPORT_IMAGE_LATEST) }} \
+            -f docker/data-import.dockerfile \
+            .
+          
+          docker push ${{ env.DATA_IMPORT_IMAGE }}
+          docker push ${{ env.DATA_IMPORT_IMAGE_LATEST }}
+
+      - name: Build and push frontend image
+        if: inputs.rebuild_frontend == true
+        env:
+          DOCKER_BUILDKIT: ${{ inputs.no_cache && '0' || '1' }}
+        run: |
+          docker build \
+            --pull \
+            --ulimit nofile=65536:65536 \
+            -t ${{ env.FRONTEND_IMAGE }} \
+            -t ${{ env.FRONTEND_IMAGE_LATEST }} \
+            --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --build-arg APP_PATH=${{ env.FRONTEND_APP_PATH }} \
+            ${{ inputs.no_cache && '--no-cache' || format('--cache-from {0}', env.FRONTEND_IMAGE_LATEST) }} \
+            -f docker/frontend.dockerfile \
+            .
+          
+          docker push ${{ env.FRONTEND_IMAGE }}
+          docker push ${{ env.FRONTEND_IMAGE_LATEST }}
+
+      - name: Prepare task definitions
+        run: |
+          mkdir -p ecs-tasks
+          envsubst < .github/aws/web.yml > ecs-tasks/web.yml
+          envsubst < .github/aws/data-import.yml > ecs-tasks/data-import.yml
+
+      - name: Register web task definition
+        run: aws ecs register-task-definition --cli-input-yaml file://ecs-tasks/web.yml
+
+      - name: Register data import task definition
+        run: aws ecs register-task-definition --cli-input-yaml file://ecs-tasks/data-import.yml
+
+      - name: Update ECS service
+        run: |
+          aws ecs update-service \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --service ${{ env.ECS_WEB_SERVICE }} \
+            --task-definition ${{ env.ECS_WEB_TASK }} \
+            --desired-count 1 \
+            --force-new-deployment
+
+      - name: Run data import task
+        if: inputs.import_data == true
+        run: |
+          aws ecs run-task \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --count 1 \
+            --launch-type FARGATE \
+            --network-configuration "awsvpcConfiguration={subnets=[${{ env.SUBNET_IDS }}],securityGroups=[${{ env.SECURITY_GROUP_IDS }}]}" \
+            --task-definition ${{ env.ECS_DATA_IMPORT_TASK }}
