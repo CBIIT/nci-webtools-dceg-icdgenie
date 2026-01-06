@@ -1,11 +1,17 @@
 name: Deploy ICDGenie to AWS ECS
 
 on:
+  push:
+    branches:
+      - dev
+      - qa
+      - stage
+      - main
   workflow_dispatch:
     inputs:
       tier:
-        description: 'Deployment tier'
-        required: true
+        description: 'Deployment tier (auto-detected from branch if empty)'
+        required: false
         type: choice
         options:
           - dev
@@ -63,14 +69,37 @@ jobs:
 
       - name: Setup environment variables
         run: |
-          echo "TIER=${{ inputs.tier }}" >> $GITHUB_ENV
-          echo "TIER_UPPER=$(echo ${{ inputs.tier }} | tr '[:lower:]' '[:upper:]')" >> $GITHUB_ENV
+          # Determine tier from input or branch name
+          if [[ -n "${{ inputs.tier }}" ]]; then
+            TIER="${{ inputs.tier }}"
+          else
+            case "${{ github.ref_name }}" in
+              dev)
+                TIER="dev"
+                ;;
+              qa)
+                TIER="qa"
+                ;;
+              stage)
+                TIER="stage"
+                ;;
+              main)
+                TIER="prod"
+                ;;
+              *)
+                TIER="dev"
+                ;;
+            esac
+          fi
+          
+          echo "TIER=$TIER" >> $GITHUB_ENV
+          echo "TIER_UPPER=$(echo $TIER | tr '[:lower:]' '[:upper:]')" >> $GITHUB_ENV
           echo "DATETIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_ENV
           echo "APP_GIT_TAG=${GITHUB_SHA::7}" >> $GITHUB_ENV
-          echo "PARAMETER_PATH=/analysistools/${{ inputs.tier }}/${{ env.APP }}" >> $GITHUB_ENV
+          echo "PARAMETER_PATH=/analysistools/$TIER/${{ env.APP }}" >> $GITHUB_ENV
           
           # Set image tier
-          if [[ "${{ inputs.tier }}" == "prod" || "${{ inputs.tier }}" == "stage" ]]; then
+          if [[ "$TIER" == "prod" || "$TIER" == "stage" ]]; then
             echo "IMAGE_TIER=release" >> $GITHUB_ENV
           else
             echo "IMAGE_TIER=development" >> $GITHUB_ENV
@@ -111,7 +140,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push backend image
-        if: inputs.rebuild_backend == true
+        if: ${{ github.event_name == 'push' || inputs.rebuild_backend == true }}
         env:
           DOCKER_BUILDKIT: ${{ inputs.no_cache && '0' || '1' }}
         run: |
@@ -129,7 +158,7 @@ jobs:
           docker push ${{ env.BACKEND_IMAGE_LATEST }}
 
       - name: Build and push data import image
-        if: inputs.rebuild_data_import == true
+        if: ${{ github.event_name == 'push' || inputs.rebuild_data_import == true }}
         env:
           DOCKER_BUILDKIT: ${{ inputs.no_cache && '0' || '1' }}
         run: |
@@ -147,7 +176,7 @@ jobs:
           docker push ${{ env.DATA_IMPORT_IMAGE_LATEST }}
 
       - name: Build and push frontend image
-        if: inputs.rebuild_frontend == true
+        if: ${{ github.event_name == 'push' || inputs.rebuild_frontend == true }}
         env:
           DOCKER_BUILDKIT: ${{ inputs.no_cache && '0' || '1' }}
         run: |
