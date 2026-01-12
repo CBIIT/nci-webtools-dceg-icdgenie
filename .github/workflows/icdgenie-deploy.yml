@@ -31,6 +31,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.tier }}
     permissions:
       id-token: write
       contents: read
