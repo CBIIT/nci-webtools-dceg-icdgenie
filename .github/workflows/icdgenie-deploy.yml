@@ -1,5 +1,4 @@
 name: Deploy ICDGenie to AWS ECS
-
 on:
   push:
     branches:
@@ -18,30 +17,15 @@ on:
           - qa
           - stage
           - prod
-      rebuild_frontend:
-        description: 'Rebuild frontend image'
-        type: boolean
-        default: true
-      rebuild_backend:
-        description: 'Rebuild backend image'
-        type: boolean
-        default: true
-      rebuild_data_import:
-        description: 'Rebuild data import image'
-        type: boolean
-        default: true
       import_data:
         description: 'Execute data import'
-        type: boolean
-        default: false
-      no_cache:
-        description: 'Build without cache'
         type: boolean
         default: false
 
 env:
   APP: icdgenie
   AWS_REGION: us-east-1
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
   FRONTEND_CONTAINER_PORT: 80
   BACKEND_CONTAINER_PORT: 9000
   FRONTEND_APP_PATH: /
@@ -53,6 +37,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.tier }}
     permissions:
       id-token: write
       contents: read
@@ -64,7 +49,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/ec2-role-analysistools-${{ inputs.tier }}-role
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Setup environment variables
@@ -105,12 +90,10 @@ jobs:
             echo "IMAGE_TIER=development" >> $GITHUB_ENV
           fi
 
-      - name: Get AWS account ID
+      - name: Set Docker registry and repository
         run: |
-          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
-          echo "DOCKER_REGISTRY=$AWS_ACCOUNT_ID.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_ENV
-          echo "IMAGE_REPOSITORY=$AWS_ACCOUNT_ID.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.APP }}" >> $GITHUB_ENV
+          echo "DOCKER_REGISTRY=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com" >> $GITHUB_ENV
+          echo "IMAGE_REPOSITORY=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.APP }}" >> $GITHUB_ENV
 
       - name: Set image tags
         run: |
@@ -140,59 +123,42 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build and push backend image
-        if: ${{ github.event_name == 'push' || inputs.rebuild_backend == true }}
-        env:
-          DOCKER_BUILDKIT: ${{ inputs.no_cache && '0' || '1' }}
-        run: |
-          docker build \
-            --pull \
-            --ulimit nofile=65536:65536 \
-            -t ${{ env.BACKEND_IMAGE }} \
-            -t ${{ env.BACKEND_IMAGE_LATEST }} \
-            --build-arg BUILDKIT_INLINE_CACHE=1 \
-            ${{ inputs.no_cache && '--no-cache' || format('--cache-from {0}', env.BACKEND_IMAGE_LATEST) }} \
-            -f docker/backend.dockerfile \
-            .
-          
-          docker push ${{ env.BACKEND_IMAGE }}
-          docker push ${{ env.BACKEND_IMAGE_LATEST }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/backend.dockerfile
+          push: true
+          tags: |
+            ${{ env.BACKEND_IMAGE }}
+            ${{ env.BACKEND_IMAGE_LATEST }}
+          cache-from: type=registry,ref=${{ env.BACKEND_IMAGE_LATEST }}
+          cache-to: type=inline
 
       - name: Build and push data import image
-        if: ${{ github.event_name == 'push' || inputs.rebuild_data_import == true }}
-        env:
-          DOCKER_BUILDKIT: ${{ inputs.no_cache && '0' || '1' }}
-        run: |
-          docker build \
-            --pull \
-            --ulimit nofile=65536:65536 \
-            -t ${{ env.DATA_IMPORT_IMAGE }} \
-            -t ${{ env.DATA_IMPORT_IMAGE_LATEST }} \
-            --build-arg BUILDKIT_INLINE_CACHE=1 \
-            ${{ inputs.no_cache && '--no-cache' || format('--cache-from {0}', env.DATA_IMPORT_IMAGE_LATEST) }} \
-            -f docker/data-import.dockerfile \
-            .
-          
-          docker push ${{ env.DATA_IMPORT_IMAGE }}
-          docker push ${{ env.DATA_IMPORT_IMAGE_LATEST }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/data-import.dockerfile
+          push: true
+          tags: |
+            ${{ env.DATA_IMPORT_IMAGE }}
+            ${{ env.DATA_IMPORT_IMAGE_LATEST }}
+          cache-from: type=registry,ref=${{ env.DATA_IMPORT_IMAGE_LATEST }}
+          cache-to: type=inline
 
       - name: Build and push frontend image
-        if: ${{ github.event_name == 'push' || inputs.rebuild_frontend == true }}
-        env:
-          DOCKER_BUILDKIT: ${{ inputs.no_cache && '0' || '1' }}
-        run: |
-          docker build \
-            --pull \
-            --ulimit nofile=65536:65536 \
-            -t ${{ env.FRONTEND_IMAGE }} \
-            -t ${{ env.FRONTEND_IMAGE_LATEST }} \
-            --build-arg BUILDKIT_INLINE_CACHE=1 \
-            --build-arg APP_PATH=${{ env.FRONTEND_APP_PATH }} \
-            ${{ inputs.no_cache && '--no-cache' || format('--cache-from {0}', env.FRONTEND_IMAGE_LATEST) }} \
-            -f docker/frontend.dockerfile \
-            .
-          
-          docker push ${{ env.FRONTEND_IMAGE }}
-          docker push ${{ env.FRONTEND_IMAGE_LATEST }}
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/frontend.dockerfile
+          push: true
+          build-args: |
+            APP_PATH=${{ env.FRONTEND_APP_PATH }}
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}
+            ${{ env.FRONTEND_IMAGE_LATEST }}
+          cache-from: type=registry,ref=${{ env.FRONTEND_IMAGE_LATEST }}
+          cache-to: type=inline
 
       - name: Prepare task definitions
         run: |
