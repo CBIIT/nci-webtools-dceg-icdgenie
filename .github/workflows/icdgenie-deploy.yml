@@ -1,5 +1,4 @@
 name: Deploy ICDGenie to AWS ECS
-
 on:
   workflow_dispatch:
     inputs:
