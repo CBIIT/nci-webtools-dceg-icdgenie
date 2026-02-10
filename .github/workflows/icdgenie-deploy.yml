@@ -114,7 +114,7 @@ jobs:
           tags: |
             ${{ env.DATA_IMPORT_IMAGE }}
             ${{ env.DATA_IMPORT_IMAGE_LATEST }}
-          cache-from: type=registry,ref=${{ env.BACKEND_IMAGE_LATEST }}
+          cache-from: type=registry,ref=${{ env.DATA_IMPORT_IMAGE_LATEST }}
           cache-to: type=inline
 
       - name: Build and push frontend image
@@ -128,7 +128,7 @@ jobs:
           tags: |
             ${{ env.FRONTEND_IMAGE }}
             ${{ env.FRONTEND_IMAGE_LATEST }}
-          cache-from: type=registry,ref=${{ env.BACKEND_IMAGE_LATEST }}
+          cache-from: type=registry,ref=${{ env.FRONTEND_IMAGE_LATEST }}
           cache-to: type=inline
 
       - name: Prepare task definitions
