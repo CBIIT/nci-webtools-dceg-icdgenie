@@ -18,6 +18,7 @@ on:
 
 jobs:
   deploy:
+    timeout-minutes: 60
     runs-on: ubuntu-latest
     environment: ${{ inputs.tier }}
     env:
@@ -42,7 +43,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5.1.0
         with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github-actions-cicd
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/power-user-github-actions-cicd
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Setup environment variables
@@ -101,8 +102,8 @@ jobs:
           tags: |
             ${{ env.BACKEND_IMAGE }}
             ${{ env.BACKEND_IMAGE_LATEST }}
-          cache-from: type=registry,ref=${{ env.IMAGE_REPOSITORY }}:backend-cache
-          cache-to: type=registry,ref=${{ env.IMAGE_REPOSITORY }}:backend-cache,mode=max
+          cache-from: type=registry,ref=${{ env.BACKEND_IMAGE_LATEST }}
+          cache-to: type=inline
 
       - name: Build and push data import image
         uses: docker/build-push-action@v5
@@ -113,8 +114,8 @@ jobs:
           tags: |
             ${{ env.DATA_IMPORT_IMAGE }}
             ${{ env.DATA_IMPORT_IMAGE_LATEST }}
-          cache-from: type=registry,ref=${{ env.IMAGE_REPOSITORY }}:data-import-cache
-          cache-to: type=registry,ref=${{ env.IMAGE_REPOSITORY }}:data-import-cache,mode=max
+          cache-from: type=registry,ref=${{ env.BACKEND_IMAGE_LATEST }}
+          cache-to: type=inline
 
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
@@ -127,8 +128,8 @@ jobs:
           tags: |
             ${{ env.FRONTEND_IMAGE }}
             ${{ env.FRONTEND_IMAGE_LATEST }}
-          cache-from: type=registry,ref=${{ env.IMAGE_REPOSITORY }}:frontend-cache
-          cache-to: type=registry,ref=${{ env.IMAGE_REPOSITORY }}:frontend-cache,mode=max
+          cache-from: type=registry,ref=${{ env.BACKEND_IMAGE_LATEST }}
+          cache-to: type=inline
 
       - name: Prepare task definitions
         run: |
