@@ -364,7 +364,7 @@ export default function Starter() {
                   title="formatting"
                   width="80%"
                   height="400vw"
-                  src="https://nci.rev.vbrick.com/embed?id=5008d4e6-38c4-431f-96f7-e999f284f3b4"
+                  src="https://cdn.jsdelivr.net/gh/CBIIT/nci-webtools-dceg-icdgenie@main-videos/22-1202-Checking_ICD_O_3_ICD_10_Codes.mp4"
                   allowFullScreen
                 ></iframe>
                 <h3 style={{ fontWeight: "bold" }}>Using the Tool</h3>
@@ -375,7 +375,7 @@ export default function Starter() {
                   title="batch"
                   width="80%"
                   height="400vw"
-                  src="https://nci.rev.vbrick.com/embed?id=6f9e1353-f6bf-4725-bd4e-2b03509e18a5"
+                  src="https://cdn.jsdelivr.net/gh/CBIIT/nci-webtools-dceg-icdgenie@main-videos/22-1201-How_to_Use_ICDgenie_s_Batch_Query_Tool.mp4"
                   allowFullScreen
                 ></iframe>
               </Container>
