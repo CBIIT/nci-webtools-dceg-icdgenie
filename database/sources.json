@@ -72,5 +72,10 @@
     "filePath": "data/icd10cm_icdo3_mapping.csv",
     "table": "icd10_icdo3_mapping",
     "headers": ["icd10", "icd10Description", "icdo3", "icdo3Description"]
+  },
+  {
+    "filePath": "data/icdo4_morphology.csv",
+    "table": "icdo4_morphology",
+    "headers": ["code", "level", "preferred", "description"]
   }
 ]

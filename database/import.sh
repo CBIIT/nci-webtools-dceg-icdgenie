@@ -11,3 +11,4 @@ curl -k -XPOST -u "$ADMIN:$PASSWORD" "https://$DOMAIN/_bulk" --data-binary @data
 curl -k -XPOST -u "$ADMIN:$PASSWORD" "https://$DOMAIN/_bulk" --data-binary @data/icd10tabular.json -H "Content-Type: application/json"
 curl -k -XPOST -u "$ADMIN:$PASSWORD" "https://$DOMAIN/_bulk" --data-binary @data/icdo3.json -H "Content-Type: application/json"
 curl -k -XPOST -u "$ADMIN:$PASSWORD" "https://$DOMAIN/_bulk" --data-binary @data/translations.json -H "Content-Type: application/json"
+curl -k -XPOST -u "$ADMIN:$PASSWORD" "https://$DOMAIN/_bulk" --data-binary @data/icdo4.json -H "Content-Type: application/json"
