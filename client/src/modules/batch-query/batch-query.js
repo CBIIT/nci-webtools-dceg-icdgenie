@@ -68,9 +68,14 @@ export default function BatchQuery() {
     if (name === "inputType") {
       mergeForm({
         icd10Id: false,
+        icd10pcsId: false,
+        icd11Id: false,
         icdo3Id: false,
         icdo3Site: false,
         icdo3Morph: false,
+        icdo4Id: false,
+        icdo4Site: false,
+        icdo4Morph: false,
         [name]: value
       })
     }
@@ -90,10 +95,13 @@ export default function BatchQuery() {
     const response = await axios.post("api/batch", {
       input: form.input,
       inputType: form.inputType,
-      id: form.icd10Id || form.icdo3Id,
+      id: form.icd10Id || form.icd10pcsId || form.icd11Id || form.icdo3Id || form.icdo4Id,
       icdo3Id: form.icdo3Id,
       icdo3Site: form.icdo3Site,
-      icdo3Morph: form.icdo3Morph
+      icdo3Morph: form.icdo3Morph,
+      icdo4Id: form.icdo4Id,
+      icdo4Site: form.icdo4Site,
+      icdo4Morph: form.icdo4Morph
     });
 
     setShowResults(true);
@@ -185,8 +193,14 @@ export default function BatchQuery() {
       input: "",
       inputType: "icd10",
       icd10Id: false,
+      icd10pcsId: false,
+      icd11Id: false,
+      icdo3Id: false,
       icdo3Site: false,
       icdo3Morph: false,
+      icdo4Id: false,
+      icdo4Site: false,
+      icdo4Morph: false,
     })
 
     mergeResults({
@@ -224,8 +238,9 @@ export default function BatchQuery() {
           </Row>
           <Row className="justify-content-center">
 
-            <Col md={6}>
+            <Col md={4}>
               <Form.Group className="mb-3">
+                {/* ICD-10 Codes */}
                 <Form.Check
                   label="ICD-10 Codes"
                   name="inputType"
@@ -245,14 +260,14 @@ export default function BatchQuery() {
                       id="icd10Id"
                       value="icd10Id"
                       checked={form.icd10Id}
-                      disabled={form.inputType === "icdo3"}
+                      disabled={form.inputType !== "icd10"}
                       onClick={() => mergeForm({ ["icd10Id"]: !form.icd10Id })}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd10Id_tip">
                         <Popover.Header>Participant ID</Popover.Header>
                         <Popover.Body>
-                          A “Participant ID” refers to a single, unique identifier pertaining to a single individual (“participant”)
+                          A "Participant ID" refers to a single, unique identifier pertaining to a single individual ("participant")
                           in a study
                         </Popover.Body>
                       </Popover>
@@ -295,6 +310,147 @@ export default function BatchQuery() {
                   </div>
                 </div>
 
+                {/* ICD-10-PCS Codes */}
+                <Form.Check
+                  label="ICD-10-PCS Codes"
+                  name="inputType"
+                  type="radio"
+                  id="icd10pcsInput"
+                  value="icd10pcs"
+                  checked={form.inputType === "icd10pcs"}
+                  onChange={handleChange}
+                  className="mt-3"
+                />
+
+                <div className="ms-5">
+                  <div className="d-flex">
+                    <Form.Check
+                      label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
+                      name="icd10pcsId"
+                      type="checkbox"
+                      id="icd10pcsId"
+                      value="icd10pcsId"
+                      checked={form.icd10pcsId}
+                      disabled={form.inputType !== "icd10pcs"}
+                      onClick={() => mergeForm({ ["icd10pcsId"]: !form.icd10pcsId })}
+                    />
+                    <OverlayTrigger trigger="click" placement="right" rootClose
+                      overlay={<Popover id="icd10pcsId_tip">
+                        <Popover.Header>Participant ID</Popover.Header>
+                        <Popover.Body>
+                          A "Participant ID" refers to a single, unique identifier pertaining to a single individual ("participant")
+                          in a study
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
+                  <div className="d-flex">
+                    <Form.Check
+                      label="Code"
+                      name="icd10pcsCode"
+                      type="checkbox"
+                      id="icd10pcsCode"
+                      value="icd10pcsCode"
+                      disabled={true}
+                      checked={form.inputType === "icd10pcs"}
+                    />
+                    <OverlayTrigger trigger="click" placement="right" rootClose
+                      overlay={<Popover id="icd10pcs_tip">
+                        <Popover.Header>ICD-10-PCS Codes</Popover.Header>
+                        <Popover.Body>
+                          <p><i>ICD-10-PCS (Procedure Coding System) is a seven-character alphanumeric code set used for inpatient hospital procedures.</i></p>
+                          <div><b>Example Code:</b> 4A0Z76Z</div>
+                          <ul>
+                            <li>Always 7 characters</li>
+                            <li>Alphanumeric, no decimals</li>
+                          </ul>
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
+                </div>
+
+                {/* ICD-11 Codes */}
+                <Form.Check
+                  label="ICD-11 Codes"
+                  name="inputType"
+                  type="radio"
+                  id="icd11Input"
+                  value="icd11"
+                  checked={form.inputType === "icd11"}
+                  onChange={handleChange}
+                  className="mt-3"
+                />
+
+                <div className="ms-5">
+                  <div className="d-flex">
+                    <Form.Check
+                      label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
+                      name="icd11Id"
+                      type="checkbox"
+                      id="icd11Id"
+                      value="icd11Id"
+                      checked={form.icd11Id}
+                      disabled={form.inputType !== "icd11"}
+                      onClick={() => mergeForm({ ["icd11Id"]: !form.icd11Id })}
+                    />
+                    <OverlayTrigger trigger="click" placement="right" rootClose
+                      overlay={<Popover id="icd11Id_tip">
+                        <Popover.Header>Participant ID</Popover.Header>
+                        <Popover.Body>
+                          A "Participant ID" refers to a single, unique identifier pertaining to a single individual ("participant")
+                          in a study
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
+                  <div className="d-flex">
+                    <Form.Check
+                      label="Code"
+                      name="icd11Code"
+                      type="checkbox"
+                      id="icd11Code"
+                      value="icd11Code"
+                      disabled={true}
+                      checked={form.inputType === "icd11"}
+                    />
+                    <OverlayTrigger trigger="click" placement="right" rootClose
+                      overlay={<Popover id="icd11_tip">
+                        <Popover.Header>ICD-11 Codes</Popover.Header>
+                        <Popover.Body>
+                          <p><i>The International Classification of Diseases, 11th Revision (ICD-11) is the latest WHO classification for diagnoses.</i></p>
+                          <div><b>Example Code:</b> 1B70.0Y</div>
+                          <ul>
+                            <li>Alphanumeric with optional dots</li>
+                            <li>May end in Y (other specified) or Z (unspecified)</li>
+                          </ul>
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
+                </div>
+              </Form.Group>
+            </Col>
+
+            <Col md={4}>
+              <Form.Group className="mb-3">
+                {/* ICD-O-3 Codes */}
                 <Form.Check
                   label="ICD-O-3 Codes"
                   name="inputType"
@@ -309,7 +465,6 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      //label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
                       label={
                         <span style={{ color: '#4A4A4A', fontWeight: 'normal' }}>
                           Participant ID <i style={{ color: '#4A4A4A', fontWeight: 'normal' }}>(Optional)</i>
@@ -320,14 +475,14 @@ export default function BatchQuery() {
                       id="icdo3Id"
                       value="icdo3Id"
                       checked={form.icdo3Id}
-                      disabled={form.inputType === "icd10"}
+                      disabled={form.inputType !== "icdo3"}
                       onClick={() => mergeForm({ ["icdo3Id"]: !form.icdo3Id })}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icdo3ID_tip">
                         <Popover.Header>Participant ID</Popover.Header>
                         <Popover.Body>
-                          A “Participant ID” refers to a single, unique identifier pertaining to a single individual (“participant”)
+                          A "Participant ID" refers to a single, unique identifier pertaining to a single individual ("participant")
                           in a study
                         </Popover.Body>
                       </Popover>
@@ -346,7 +501,7 @@ export default function BatchQuery() {
                       id="icdo3Morph"
                       value="icdo3Morph"
                       checked={form.icdo3Morph}
-                      disabled={form.inputType === "icd10"}
+                      disabled={form.inputType !== "icdo3"}
                       onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
@@ -354,12 +509,12 @@ export default function BatchQuery() {
                         <Popover.Header>ICD-O-3 Morphology Code</Popover.Header>
                         <Popover.Body>
                           <p><i>The International Classification of Diseases for Oncology, Third Edition (ICD-O-3) is a system created by the World Health Organization to categorize cancer diagnoses.</i></p>
-                          <p><i>The morphology code captures the type of cell the tumor is composed of and the characteristic of the tumor itself. This may be referred to as “histology” or “histological term” in your data.</i></p>
-                          <div><b>Example Morphology Code:</b> 9140/3 <i>(Translation : Kaposi’s Sarcoma)</i></div>
+                          <p><i>The morphology code captures the type of cell the tumor is composed of and the characteristic of the tumor itself. This may be referred to as "histology" or "histological term" in your data.</i></p>
+                          <div><b>Example Morphology Code:</b> 9140/3 <i>(Translation : Kaposi's Sarcoma)</i></div>
                           <ul>
                             <li>Entirely Numeric</li>
                             <li>Must have a forward slash after the fourth number (i.e., "/")</li>
-                            <li>Number after the slash is the behavior code – either “1”, “2,” or “3.” Behavior codes “6” and “9” are not supported at this time.</li>
+                            <li>Number after the slash is the behavior code – either "1", "2," or "3." Behavior codes "6" and "9" are not supported at this time.</li>
                           </ul>
                         </Popover.Body>
                       </Popover>
@@ -377,7 +532,7 @@ export default function BatchQuery() {
                       id="icdo3Site"
                       value="icdo3Site"
                       checked={form.icdo3Site}
-                      disabled={form.inputType === "icd10"}
+                      disabled={form.inputType !== "icdo3"}
                       onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
@@ -385,10 +540,116 @@ export default function BatchQuery() {
                         <Popover.Header>ICD-O-3 Site code</Popover.Header>
                         <Popover.Body>
                           <p><i>The International Classification of Diseases for Oncology, Third Edition (ICD-O-3) is a system created by the World Health Organization to categorize cancer diagnoses.</i></p>
-                          <p><i>The site code indicates where a neoplasm was found. “Site code” in your data may be “topography” or “topographical information”.</i></p>
+                          <p><i>The site code indicates where a neoplasm was found. "Site code" in your data may be "topography" or "topographical information".</i></p>
                           <div><b>Example Site Code: </b>C71.9</div>
                           <ul>
-                            <li>Alphanumeric; begins with “C” followed by 2 numbers, a period, and at least one more number</li>
+                            <li>Alphanumeric; begins with "C" followed by 2 numbers, a period, and at least one more number</li>
+                          </ul>
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
+                </div>
+
+                {/* ICD-O-4 Codes */}
+                <Form.Check
+                  label="ICD-O-4 Codes"
+                  name="inputType"
+                  type="radio"
+                  id="icdo4Input"
+                  value="icdo4"
+                  checked={form.inputType === "icdo4"}
+                  onChange={handleChange}
+                  className="mt-3"
+                />
+                <i>At a minimum : ICD-O-4 site code or ICD-O-4 morphology code must be selected</i>
+
+                <div className="ms-5">
+                  <div className="d-flex">
+                    <Form.Check
+                      label={
+                        <span style={{ color: '#4A4A4A', fontWeight: 'normal' }}>
+                          Participant ID <i style={{ color: '#4A4A4A', fontWeight: 'normal' }}>(Optional)</i>
+                        </span>
+                      }
+                      name="icdo4Id"
+                      type="checkbox"
+                      id="icdo4Id"
+                      value="icdo4Id"
+                      checked={form.icdo4Id}
+                      disabled={form.inputType !== "icdo4"}
+                      onClick={() => mergeForm({ ["icdo4Id"]: !form.icdo4Id })}
+                    />
+                    <OverlayTrigger trigger="click" placement="right" rootClose
+                      overlay={<Popover id="icdo4Id_tip">
+                        <Popover.Header>Participant ID</Popover.Header>
+                        <Popover.Body>
+                          A "Participant ID" refers to a single, unique identifier pertaining to a single individual ("participant")
+                          in a study
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
+
+                  <div className="d-flex">
+                    <Form.Check
+                      label="Morphology"
+                      name="icdo4Morph"
+                      type="checkbox"
+                      id="icdo4Morph"
+                      value="icdo4Morph"
+                      checked={form.icdo4Morph}
+                      disabled={form.inputType !== "icdo4"}
+                      onClick={() => mergeForm({ ["icdo4Morph"]: !form.icdo4Morph })}
+                    />
+                    <OverlayTrigger trigger="click" placement="right" rootClose
+                      overlay={<Popover id="icdo4Morph_tip">
+                        <Popover.Header>ICD-O-4 Morphology Code</Popover.Header>
+                        <Popover.Body>
+                          <p><i>The International Classification of Diseases for Oncology, Fourth Edition (ICD-O-4) is the latest WHO system to categorize cancer diagnoses.</i></p>
+                          <p><i>The morphology code captures the type of cell the tumor is composed of and the characteristic of the tumor itself.</i></p>
+                          <div><b>Example Morphology Code:</b> 80000/3</div>
+                          <ul>
+                            <li>Entirely Numeric</li>
+                            <li>5 digits before the forward slash (vs 4 digits in ICD-O-3)</li>
+                            <li>Number after the slash is the behavior code</li>
+                          </ul>
+                        </Popover.Body>
+                      </Popover>
+                      }>
+                      <div>
+                        <FontAwesomeIcon icon={faCircleQuestion} className="mx-1" size="sm" style={{ cursor: "pointer" }} />
+                      </div>
+                    </OverlayTrigger>
+                  </div>
+                  <div className="d-flex">
+                    <Form.Check
+                      label="Site"
+                      name="icdo4Site"
+                      type="checkbox"
+                      id="icdo4Site"
+                      value="icdo4Site"
+                      checked={form.icdo4Site}
+                      disabled={form.inputType !== "icdo4"}
+                      onClick={() => mergeForm({ ["icdo4Site"]: !form.icdo4Site })}
+                    />
+                    <OverlayTrigger trigger="click" placement="right" rootClose
+                      overlay={<Popover id="icdo4Site_tip">
+                        <Popover.Header>ICD-O-4 Site Code</Popover.Header>
+                        <Popover.Body>
+                          <p><i>The site code indicates where a neoplasm was found (topography).</i></p>
+                          <div><b>Example Site Code: </b>C71.9</div>
+                          <ul>
+                            <li>Alphanumeric; begins with "C" followed by 2 numbers, a period, and at least one more number</li>
+                            <li>Uses the same C00-C80 range as ICD-O-3</li>
                           </ul>
                         </Popover.Body>
                       </Popover>
@@ -401,15 +662,13 @@ export default function BatchQuery() {
                 </div>
               </Form.Group>
             </Col>
-            <Col md={2}>
-            </Col>
           </Row>
 
           <Row className="justify-content-center">
             <Col md={8}>
               <Form.Group className="mb-1">
                 <Form.Label htmlFor="codeInput">
-                  Please upload a file (.tsv) or enter a list of ICD-10 codes or ICD-O-3 codes
+                  Please upload a file (.tsv) or enter a list of codes
                 </Form.Label>
                 <Form.Control
                   className="mb-3"
@@ -419,7 +678,7 @@ export default function BatchQuery() {
                   rows={2}
                   value={form.input}
                   disabled={uploaded}
-                  placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2)"
+                  placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2), ICD-10-PCS Codes (Ex. 4A0Z76Z), ICD-11 Codes (Ex. 1B70.0Y), ICD-O-4 Codes (Ex. 80000/3)"
                   onChange={handleChange}
                 />
                 <Row>
@@ -437,13 +696,21 @@ export default function BatchQuery() {
                     />
                     {fileError ? <div style={{ color: "red" }}>{fileError}</div> : <></>}
 
-                    <div className="d-flex justify-content-between">
+                    <div className="d-flex flex-wrap gap-3 mt-1">
                       <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10_patient_id.tsv`}>
                         Download ICD-10 Sample
                       </a>
-
                       <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`}>
                         Download ICD-O-3 Sample
+                      </a>
+                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10pcs.tsv`}>
+                        Download ICD-10-PCS Sample
+                      </a>
+                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd11.tsv`}>
+                        Download ICD-11 Sample
+                      </a>
+                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo4.tsv`}>
+                        Download ICD-O-4 Sample
                       </a>
                     </div>
                   </Col>
@@ -453,7 +720,7 @@ export default function BatchQuery() {
                       variant="primary"
                       type="submit"
                       size="sm"
-                      disabled={!form.input || (form.inputType === "icdo3" && (!form.icdo3Site && !form.icdo3Morph))}
+                      disabled={!form.input || (form.inputType === "icdo3" && (!form.icdo3Site && !form.icdo3Morph)) || (form.inputType === "icdo4" && (!form.icdo4Site && !form.icdo4Morph))}
                     >
                       Submit
                     </Button>
