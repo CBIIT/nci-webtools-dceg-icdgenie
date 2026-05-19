@@ -31,6 +31,11 @@ create index index__icd10_injury__path on icd10_injury("path");
 create index index__icd10_injury__description on icd10_injury("description");
 create index index__icd10_injury__code on icd10_injury("code");
 
+create index index__icd11__entityId on icd11("entityId");
+create index index__icd11__code on icd11("code");
+create index index__icd11__description on icd11("description");
+create index index__icd11__parentEntityId on icd11("parentEntityId");
+
 create index index__icd10_neoplasm__path on icd10_neoplasm("path");
 create index index__icd10_neoplasm__neoplasm on icd10_neoplasm("neoplasm");
 create index index__icd10_neoplasm__malignantPrimary on icd10_neoplasm("malignantPrimary");

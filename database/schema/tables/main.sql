@@ -55,6 +55,18 @@ create table "icd10_injury"
     "code" text
 );
 
+create table "icd11"
+(
+    "id" integer primary key,
+    "entityId" text,
+    "code" text,
+    "description" text,
+    "classKind" text,
+    "depthInKind" integer,
+    "chapterNo" text,
+    "parentEntityId" text
+);
+
 create table "icd10_neoplasm"
 (
     "id" integer primary key,
