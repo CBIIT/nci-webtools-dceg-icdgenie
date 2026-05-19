@@ -1,26 +1,85 @@
-import { DataTypeProvider } from "@devexpress/dx-react-grid";
-import { Grid, Table, TableHeaderRow } from "@devexpress/dx-react-grid-bootstrap4";
+import { useEffect, useState } from "react";
+import Accordion from "react-bootstrap/Accordion";
+import { TreeDataState, CustomTreeData, DataTypeProvider } from "@devexpress/dx-react-grid";
+import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
 
-export default function ICD11({ maps }) {
+export default function ICD11({ maps, search }) {
+  const [panel, setPanel] = useState(null);
+  const [expandedRows, setExpandedRows] = useState([]);
+
+  useEffect(() => {
+    setPanel(maps.icd11.size ? "0" : null);
+    setExpandedRows(expandTreeData(Array.from(maps.icd11)));
+  }, [maps]);
+
   const columns = [
     { name: "description", title: "Description" },
     { name: "code", title: "Code" },
   ];
 
-  const columnExtensions = [{ columnName: "description", wordWrapEnabled: true }];
+  const columnExtensions = [{ columnName: "description", width: "45rem", wordWrapEnabled: true }];
+
+  function expandTreeData(map) {
+    const node = map.find((e) => e[1].code === search);
+    if (node) {
+      return Array.from(node[1].parents, (id) => map.findIndex((e) => e[0] === id));
+    }
+    return [];
+  }
+
+  function getChildRows(row, rootRows) {
+    if (row) {
+      if (row.children.length === 0) return null;
+      var children = [];
+      row.children.map((child) => {
+        children = children.concat(maps.icd11.get(child));
+      });
+      return children;
+    }
+    return rootRows;
+  }
 
   function IcdCodeTypeProvider({ value }) {
     return value;
   }
 
+  function handleAccordion() {
+    return panel === null ? setPanel("0") : setPanel(null);
+  }
+
   return (
-    <Container className="py-5 h-100 col-xl-10 col-sm-12 index">
-      <Grid rows={maps.icd11 ? maps.icd11.map((e) => e._source) : []} columns={columns}>
-        <IcdCodeTypeProvider for={["code"]} />
-        <Table columnExtensions={columnExtensions} noDataCellComponent={() => <td />} />
-        <TableHeaderRow />
-      </Grid>
+    <Container className="py-5 col-xl-10 col-sm-12">
+      <Accordion
+        onSelect={() => {
+          maps.icd11.size ? handleAccordion() : setPanel(null);
+        }}
+        activeKey={panel}
+        className={`mb-4 ${maps.icd11.size ? "index" : "disabled"}`}
+      >
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>
+            <span className="accordion-font">ICD-11 CODES</span>
+          </Accordion.Header>
+          <Accordion.Body>
+            <Grid
+              rows={
+                maps.icd11
+                  ? Array.from(maps.icd11.values()).filter((node) => node.parents.length === 0)
+                  : []
+              }
+              columns={columns}
+            >
+              <IcdCodeTypeProvider for={["code"]} />
+              <TreeDataState expandedRowIds={expandedRows} onExpandedRowIdsChange={setExpandedRows} />
+              <CustomTreeData getChildRows={getChildRows} />
+              <Table columnExtensions={columnExtensions} />
+              <TableHeaderRow />
+              <TableTreeColumn for="description" />
+            </Grid>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
     </Container>
   );
 }
