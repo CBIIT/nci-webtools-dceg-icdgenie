@@ -55,6 +55,13 @@ create table "icd10_injury"
     "code" text
 );
 
+create table "icd10_pcs"
+(
+    "id" integer primary key,
+    "code" text,
+    "description" text
+);
+
 create table "icd10_neoplasm"
 (
     "id" integer primary key,
