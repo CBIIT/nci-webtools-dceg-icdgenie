@@ -109,8 +109,92 @@ export default function BatchQuery() {
     var columns;
     var columnExtensions;
     console.log(form)
-    if (form.inputType === "icd10" || (form.icdo3Site !== form.icdo3Morph)) {
 
+    if (form.inputType === "icd10pcs") {
+      // ICD-10-PCS: single code lookup
+      if (form.icd10pcsId)
+        setSorting([{ columnName: "id", direction: "asc" }])
+      else
+        setSorting([{ columnName: "code", direction: "asc" }])
+
+      columns = [
+        form.icd10pcsId && { name: "id", title: "Participant ID" },
+        { name: "code", title: "ICD-10-PCS Code" },
+        { name: "description", title: "Description" }
+      ].filter(Boolean);
+
+      columnExtensions = [
+        form.icd10pcsId && { columnName: "id", width: "10rem" },
+        { columnName: "code", width: "15rem" },
+        { columnName: "description", wordWrapEnabled: "true" },
+      ].filter(Boolean)
+    }
+    else if (form.inputType === "icd11") {
+      // ICD-11: single code lookup
+      if (form.icd11Id)
+        setSorting([{ columnName: "id", direction: "asc" }])
+      else
+        setSorting([{ columnName: "code", direction: "asc" }])
+
+      columns = [
+        form.icd11Id && { name: "id", title: "Participant ID" },
+        { name: "code", title: "ICD-11 Code" },
+        { name: "description", title: "Description" }
+      ].filter(Boolean);
+
+      columnExtensions = [
+        form.icd11Id && { columnName: "id", width: "10rem" },
+        { columnName: "code", width: "15rem" },
+        { columnName: "description", wordWrapEnabled: "true" },
+      ].filter(Boolean)
+    }
+    else if (form.inputType === "icdo4" && form.icdo4Site !== form.icdo4Morph) {
+      // ICD-O-4: single field (morph only or site only)
+      if (form.icdo4Id)
+        setSorting([{ columnName: "id", direction: "asc" }])
+      else
+        setSorting([{ columnName: "code", direction: "asc" }])
+
+      columns = [
+        form.icdo4Id && { name: "id", title: "Participant ID" },
+        form.icdo4Morph && { name: "code", title: "ICD-O-4 Morphology Code" },
+        form.icdo4Site && { name: "code", title: "ICD-O-4 Site Code" },
+        { name: "description", title: "Description" }
+      ].filter(Boolean);
+
+      columnExtensions = [
+        form.icdo4Id && { columnName: "id", width: "10rem" },
+        { columnName: "code", width: "15rem" },
+        { columnName: "description", wordWrapEnabled: "true" },
+      ].filter(Boolean)
+    }
+    else if (form.inputType === "icdo4" && form.icdo4Site && form.icdo4Morph) {
+      // ICD-O-4: both morph + site
+      if (form.icdo4Id)
+        setSorting([{ columnName: "id", direction: "asc" }])
+      else
+        setSorting([{ columnName: "morphCode", direction: "asc" }])
+
+      columns = [
+        form.icdo4Id && { name: "id", title: "Participant ID" },
+        { name: "morphCode", title: "Morphology Code" },
+        { name: "siteCode", title: "Site Code" },
+        { name: "morphology", title: "Morphology Description" },
+        { name: "site", title: "Site Description" },
+        { name: "indicator", title: "Indicator" }
+      ].filter(Boolean);
+
+      columnExtensions = [
+        form.icdo4Id && { columnName: "id", width: "9rem" },
+        { columnName: "morphCode", width: "12rem" },
+        { columnName: "siteCode", width: "10rem" },
+        { columnName: "morphology", wordWrapEnabled: "true" },
+        { columnName: "site", wordWrapEnabled: "true" },
+        { columnName: "indicator", wordWrapEnabled: "true" },
+      ].filter(Boolean);
+    }
+    else if (form.inputType === "icd10" || (form.inputType === "icdo3" && form.icdo3Site !== form.icdo3Morph)) {
+      // ICD-10 or ICD-O-3 single field (existing logic)
       if (form.icd10Id || form.icdo3Id)
         setSorting([{ columnName: "id", direction: "asc" }])
       else
@@ -131,7 +215,7 @@ export default function BatchQuery() {
       ].filter(Boolean)
     }
     else {
-
+      // ICD-O-3 both morph + site (existing logic)
       if (!form.icdo3Id)
         setSorting([{ columnName: "morphCode", direction: "asc" }])
       else
@@ -155,22 +239,6 @@ export default function BatchQuery() {
         { columnName: "indicator", wordWrapEnabled: "true" },
       ].filter(Boolean);
     }
-
-    /*  
-        const columns = [
-          { name: "input", title: "Input" },
-          form.outputType === "icdo3" && { name: "code", title: "ICD-O-3 Code(s)" },
-          form.outputType === "icdo3" && { name: "description", title: "Description" },
-          form.outputType === "icd10" && { name: "code", title: "ICD-10 Code(s)" },
-          form.outputType === "icd10" && { name: "description", title: "Description" },
-        ].filter(Boolean);
-    
-        const columnExtensions = [
-          { columnName: "input", width: "10rem" },
-          { columnName: "code", width: "15rem" },
-          form.outputType === "icdo3" && { columnName: "description", wordWrapEnabled: true },
-          form.outputType === "icd10" && { columnName: "description", wordWrapEnabled: true },
-        ].filter(Boolean);*/
 
     mergeResults({
       loading: false,
