@@ -179,7 +179,7 @@ export default function ICD10({ maps, search }) {
       <Accordion onSelect={() => { maps.tabular.size ? handleAccordion(indexPanel, setIndexPanel) : setIndexPanel(null) }} activeKey={indexPanel} className={`mb-4 ${maps.tabular.size ? "index" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
-            <span className="accordion-font">INDEX TABLE</span>
+            <span className="accordion-font">TABULAR LIST</span>
           </Accordion.Header>
           <Accordion.Body>
             <Grid rows={maps.tabular ? Array.from(maps.tabular.values()).filter((node) => node.parents.length === 0) : []} columns={indexColumns}>
