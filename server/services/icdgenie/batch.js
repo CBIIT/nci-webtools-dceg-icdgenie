@@ -3,6 +3,20 @@ const { APP_BASE_URL, ADMIN, PASSWORD, DOMAIN } = process.env;
 const host = `https://${ADMIN}:${PASSWORD}@${DOMAIN}`;
 var _ = require('lodash');
 
+// AC #6 Level priority: Preferred > Synonym (joined "or") > Related (joined "or")
+function applyLevelPriority(hits) {
+  const preferred = hits.filter(h => h._source.level === "Preferred")
+  if (preferred.length > 0) return preferred[0]._source.description
+
+  const synonyms = hits.filter(h => h._source.level === "Synonym")
+  if (synonyms.length > 0) return synonyms.map(h => h._source.description).join(" or ")
+
+  const related = hits.filter(h => h._source.level === "Related")
+  if (related.length > 0) return related.map(h => h._source.description).join(" or ")
+
+  return hits[0]._source.description
+}
+
 async function batchQuery(request, response) {
   const { logger, database } = request.app.locals;
   logger.debug("batch: " + JSON.stringify(request.body));
@@ -169,6 +183,8 @@ async function batchQuery(request, response) {
         var siteResults;
         var indicator = morphMsg === "NA" && siteMsg === "NA" ? "NA" : "";
 
+        var allMorphHits = [];
+
         if (morphMsg !== "NA") {
           const body = {
             "query": {
@@ -181,14 +197,14 @@ async function batchQuery(request, response) {
           }
 
           const query = await client.search({ index: "icdo4", body: body });
-          const hits = query.body.hits.hits
-          if (hits.length === 0) {
+          allMorphHits = query.body.hits.hits
+          if (allMorphHits.length === 0) {
             morphMsg = "Morphology not found"
           }
           else {
-            // Level priority: Preferred > Synonym > Related
-            var preferredHit = hits.find(h => h._source.level === "Preferred")
-            morphResults = preferredHit ? preferredHit._source.description : hits[0]._source.description
+            // Default: use Preferred term
+            var preferredHit = allMorphHits.find(h => h._source.level === "Preferred")
+            morphResults = preferredHit ? preferredHit._source.description : allMorphHits[0]._source.description
             morphMsg = morphResults
           }
         }
@@ -230,12 +246,26 @@ async function batchQuery(request, response) {
           }
 
           const query = await client.search({ index: "translations_icdo4", body: body });
-          const hits = query.body.hits.hits
+          const comboHits = query.body.hits.hits
 
-          if (hits.length) {
+          if (comboHits.length) {
+            // Combo found — apply Level priority to morph rows matching this ICD-10 reference
+            // Filter morph hits to rows whose codeReference contains the site code
+            const sitePrefix = site.split(".")[0] + "."
+            const matchingRows = allMorphHits.filter(h => {
+              const ref = h._source.codeReference || ""
+              return ref.includes(site) || ref.includes(sitePrefix.slice(0, -1) + "._")
+            })
+
+            if (matchingRows.length > 0) {
+              morphResults = applyLevelPriority(matchingRows)
+            }
+            // else keep Preferred from all hits
+
             indicator = morphResults + ", " + siteResults
           }
           else {
+            // Combo not found — morphResults stays as Preferred term
             indicator = "Combination not found"
           }
         }
