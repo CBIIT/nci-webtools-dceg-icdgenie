@@ -55,6 +55,16 @@ create table "icd10_injury"
     "code" text
 );
 
+create table "icdo4_morphology"
+(
+    "id" integer primary key,
+    "code" text,
+    "level" text,
+    "preferred" boolean,
+    "description" text,
+    "codeReference" text
+);
+
 create table "icd10_neoplasm"
 (
     "id" integer primary key,
