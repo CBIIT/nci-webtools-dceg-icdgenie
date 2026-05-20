@@ -66,36 +66,47 @@ async function opensearch(request, response) {
   }
 
   //Prefix and suffix search for single words, exact match for multi word queries
-  //Code + keyword searches (contains "/") use AND logic so each term must match independently
+  //Code + keyword searches (contains "/") use AND logic — each term is a separate filter clause
   const words = search.split(" ")
   const hasCode = search.includes("/")
+  const isCodeKeywordSearch = hasCode && words.length > 1
 
   let query;
   if (words.length === 1 && !hasCode) {
     query = "*" + search + "*"
-  } else if (hasCode && words.length > 1) {
-    query = words.map(w => w.includes("/") ? w : "*" + w + "*").join(" AND ")
+  } else if (isCodeKeywordSearch) {
+    query = "\"" + words.find(w => w.includes("/")) + "\""
   } else {
     query = "\"" + search + "\""
   }
 
   logger.info(query)
 
+  const filterClauses = isCodeKeywordSearch
+    ? words.map(w => ({
+        "query_string": {
+          "query": w.includes("/") ? "\"" + w + "\"" : "*" + w + "*",
+          "fields": ["*"],
+          "lenient": true,
+          "analyze_wildcard": true,
+          "allow_leading_wildcard": true
+        }
+      }))
+    : [{
+        "query_string": {
+          "query": query,
+          "fields": ["*"],
+          "lenient": true,
+          "analyze_wildcard": true,
+          "allow_leading_wildcard": true,
+          "fuzziness": search.includes("/") ? "0" : "AUTO"
+        }
+      }]
+
   var body = {
     "query": {
       "bool": {
-        "filter": [
-          {
-            "query_string": {
-              "query": query,
-              "fields": ["*"],
-              "lenient": true,
-              "analyze_wildcard": true,
-              "allow_leading_wildcard": true,
-              "fuzziness": search.includes("/") ? "0" : "AUTO"
-            }
-          }
-        ],
+        "filter": filterClauses,
         "must_not": [
           {
             "query_string": {
