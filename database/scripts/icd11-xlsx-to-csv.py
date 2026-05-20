@@ -14,6 +14,10 @@ output_path = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_OUTPUT
 wb = openpyxl.load_workbook(input_path, read_only=True)
 ws = wb.active
 
+# Synthetic IDs for rows without Foundation URI (Y/Z codes)
+# Start at 900000000 to avoid collision with real entity IDs
+synthetic_id_counter = 900000000
+
 def extract_entity_id(uri):
     """Extract numeric entity ID from Foundation URI."""
     if not uri:
@@ -30,8 +34,8 @@ with open(output_path, 'w', newline='') as f:
     writer = csv.writer(f)
     writer.writerow(['entityId', 'code', 'title', 'classKind', 'depthInKind', 'chapterNo', 'parentEntityId'])
 
-    skipped = 0
     written = 0
+    synthetic = 0
     for row in ws.iter_rows(min_row=2, values_only=True):  # Skip header row
         foundation_uri = row[0]   # Column 1: Foundation URI
         code = row[2]             # Column 3: Code
@@ -44,10 +48,10 @@ with open(output_path, 'w', newline='') as f:
         entity_id = extract_entity_id(foundation_uri)
         parent_entity_id = extract_entity_id(parent_uri)
 
-        # Skip rows without entity IDs
+        # Generate synthetic ID for rows without Foundation URI (Y/Z codes)
         if not entity_id:
-            skipped += 1
-            continue
+            entity_id = str(synthetic_id_counter + synthetic)
+            synthetic += 1
 
         writer.writerow([
             entity_id,
@@ -62,4 +66,4 @@ with open(output_path, 'w', newline='') as f:
 
 wb.close()
 print(f'Converted {input_path} -> {output_path}')
-print(f'Written: {written}, Skipped (no entity ID): {skipped}')
+print(f'Written: {written} (including {synthetic} with synthetic IDs)')
