@@ -6,7 +6,7 @@ var _ = require('lodash');
 async function batchQuery(request, response) {
   const { logger, database } = request.app.locals;
   logger.debug("batch: " + JSON.stringify(request.body));
-  const { input, inputType, id, icdo3Site, icdo3Morph } = request.body;
+  const { input, inputType, id, icdo3Site, icdo3Morph, icdo4Site, icdo4Morph } = request.body;
 
   var client = new Client({
     node: host,
@@ -31,13 +31,22 @@ async function batchQuery(request, response) {
 
   for (var i = 0; i < inputs.length; i++) {
 
-    if (inputType === "icd10" || (icdo3Site !== icdo3Morph)) {
+    if (inputType === "icd10pcs") {
+      index = "icd10pcs"
+      notFoundMsg = "ICD-10-PCS code not found"
+    }
+    else if (inputType === "icd11") {
+      index = "icd11"
+      notFoundMsg = "ICD-11 code not found"
+    }
 
-      if (icdo3Morph) {
+    if (inputType === "icd10" || inputType === "icd10pcs" || inputType === "icd11" || (inputType === "icdo3" && icdo3Site !== icdo3Morph)) {
+
+      if (inputType === "icdo3" && icdo3Morph) {
         index = "icdo3"
         notFoundMsg = "Morphology code not found"
       }
-      else if (icdo3Site) {
+      else if (inputType === "icdo3" && icdo3Site) {
         notFoundMsg = "Site code not found"
       }
 
@@ -110,7 +119,7 @@ async function batchQuery(request, response) {
         if (patientId) {
           var preferred = 0;
 
-          if (icdo3Morph) {
+          if (inputType === "icdo3" && icdo3Morph) {
             preferred = hits.indexOf((e) => { e._source.preferred === "1" })
             preferred = preferred === -1 ? 0 : preferred
           }
