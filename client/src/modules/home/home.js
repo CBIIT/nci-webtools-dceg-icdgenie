@@ -28,7 +28,7 @@ export default function Home() {
                 search={search}
                 setSearch={setSearch}
                 handleSubmit={handleSubmit}
-                placeholder="Search ICD Genie"
+                placeholder="Search by Keywords, ICD-10, ICD-O-3, ICD-11 or ICD-O-4 code"
               />
             </Col>
           </Row>

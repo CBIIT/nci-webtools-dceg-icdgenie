@@ -65,26 +65,48 @@ async function opensearch(request, response) {
     console.log(search)
   }
 
-  //Prefix and suffix search for single words, exact match for icdo-3 and multi word queries
-  const query = search.split(" ").length === 1 && !search.includes("/") ? "*" + search + "*" : "\"" + search + "\""
+  //Prefix and suffix search for single words, exact match for multi word queries
+  //Code + keyword searches (contains "/") use AND logic — each term is a separate filter clause
+  const words = search.split(" ")
+  const hasCode = search.includes("/")
+  const isCodeKeywordSearch = hasCode && words.length > 1
+
+  let query;
+  if (words.length === 1 && !hasCode) {
+    query = "*" + search + "*"
+  } else if (isCodeKeywordSearch) {
+    query = "\"" + words.find(w => w.includes("/")) + "\""
+  } else {
+    query = "\"" + search + "\""
+  }
 
   logger.info(query)
+
+  const filterClauses = isCodeKeywordSearch
+    ? words.map(w => ({
+        "query_string": {
+          "query": w.includes("/") ? "\"" + w + "\"" : "*" + w + "*",
+          "fields": ["*"],
+          "lenient": true,
+          "analyze_wildcard": true,
+          "allow_leading_wildcard": true
+        }
+      }))
+    : [{
+        "query_string": {
+          "query": query,
+          "fields": ["*"],
+          "lenient": true,
+          "analyze_wildcard": true,
+          "allow_leading_wildcard": true,
+          "fuzziness": search.includes("/") ? "0" : "AUTO"
+        }
+      }]
 
   var body = {
     "query": {
       "bool": {
-        "filter": [
-          {
-            "query_string": {
-              "query": query,
-              "fields": ["*"],
-              "lenient": true,
-              "analyze_wildcard": true,
-              "allow_leading_wildcard": true,
-              "fuzziness": search.includes("/") ? "0" : "AUTO"
-            }
-          }
-        ],
+        "filter": filterClauses,
         "must_not": [
           {
             "query_string": {
@@ -115,12 +137,13 @@ async function opensearch(request, response) {
     "size": 500
   }
 
-  const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result] = await Promise.all([
+  const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result, icdo4Result] = await Promise.all([
     client.search({ index: "tabular", body }),
     client.search({ index: "neoplasm", body }),
     client.search({ index: "drug", body }),
     client.search({ index: "injury", body }),
-    client.search({ index: "icdo3", body })
+    client.search({ index: "icdo3", body }),
+    client.search({ index: "icdo4", body })
   ])
 
 
@@ -130,6 +153,7 @@ async function opensearch(request, response) {
     drug: drugResult.body.hits.hits,
     injury: injuryResult.body.hits.hits,
     icdo3: icdo3Result.body.hits.hits,
+    icdo4: icdo4Result.body.hits.hits,
     showSuggestions: true,
     fuzzyTerms: [],
   }
@@ -139,14 +163,16 @@ async function opensearch(request, response) {
   const drugOptions = drugResult.body.suggest["spell-check"][0].options;
   const injuryOptions = injuryResult.body.suggest["spell-check"][0].options;
   const icdo3Options = !search.includes("/") ? icdo3Result.body.suggest["spell-check"][0].options : []
+  const icdo4Options = !search.includes("/") ? icdo4Result.body.suggest["spell-check"][0].options : []
 
-  if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length) {
-    const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy] = await Promise.all([
+  if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length || results.icdo4.length) {
+    const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy, icdo4Fuzzy] = await Promise.all([
       fuzzySearch(tabularOptions, client, "tabular"),
       fuzzySearch(neoplasmOptions, client, "neoplasm"),
       fuzzySearch(drugOptions, client, "drug"),
       fuzzySearch(injuryOptions, client, "injury"),
-      fuzzySearch(icdo3Options, client, "icdo3")
+      fuzzySearch(icdo3Options, client, "icdo3"),
+      fuzzySearch(icdo4Options, client, "icdo4")
     ])
 
     results.tabular = results.tabular.concat(tabularFuzzy)
@@ -154,6 +180,7 @@ async function opensearch(request, response) {
     results.drug = results.drug.concat(drugFuzzy)
     results.injury = results.injury.concat(injuryFuzzy)
     results.icdo3 = results.icdo3.concat(icdo3Fuzzy)
+    results.icdo4 = results.icdo4.concat(icdo4Fuzzy)
     results.showSuggestions = false
   }
   else {
@@ -163,7 +190,8 @@ async function opensearch(request, response) {
       ...neoplasmOptions.filter(e => e.score >= minScore).map(e => e.text),
       ...drugOptions.filter(e => e.score >= minScore).map(e => e.text),
       ...injuryOptions.filter(e => e.score >= minScore).map(e => e.text),
-      ...icdo3Options.filter(e => e.score >= minScore).map(e => e.text)
+      ...icdo3Options.filter(e => e.score >= minScore).map(e => e.text),
+      ...icdo4Options.filter(e => e.score >= minScore).map(e => e.text)
     ])]
   }
 
