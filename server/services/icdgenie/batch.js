@@ -40,13 +40,20 @@ async function batchQuery(request, response) {
       notFoundMsg = "ICD-11 code not found"
     }
 
-    if (inputType === "icd10" || inputType === "icd10pcs" || inputType === "icd11" || (inputType === "icdo3" && icdo3Site !== icdo3Morph)) {
+    if (inputType === "icd10" || inputType === "icd10pcs" || inputType === "icd11" || (inputType === "icdo3" && icdo3Site !== icdo3Morph) || (inputType === "icdo4" && icdo4Site !== icdo4Morph)) {
 
       if (inputType === "icdo3" && icdo3Morph) {
         index = "icdo3"
         notFoundMsg = "Morphology code not found"
       }
       else if (inputType === "icdo3" && icdo3Site) {
+        notFoundMsg = "Site code not found"
+      }
+      else if (inputType === "icdo4" && icdo4Morph) {
+        index = "icdo4"
+        notFoundMsg = "ICD-O-4 morphology code not found"
+      }
+      else if (inputType === "icdo4" && icdo4Site) {
         notFoundMsg = "Site code not found"
       }
 
