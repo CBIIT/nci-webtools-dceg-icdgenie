@@ -18,10 +18,10 @@ export default function SearchResults({ query, maps, search }) {
 
   useEffect(() => {
     if (hasIcd10) setTab("icd10Codes")
-    else if (hasIcdo3) setTab("icdo3Codes")
-    else if (hasIcd11) setTab("icd11Codes")
-    else if (hasIcdo4) setTab("icdo4Codes")
     else if (hasIcd10pcs) setTab("icd10pcsCodes")
+    else if (hasIcd11) setTab("icd11Codes")
+    else if (hasIcdo3) setTab("icdo3Codes")
+    else if (hasIcdo4) setTab("icdo4Codes")
     else setTab("icd10Codes")
   }, [maps])
 
@@ -38,14 +38,14 @@ export default function SearchResults({ query, maps, search }) {
       <Tab eventKey="icd10pcsCodes" title="ICD-10-PCS Codes">
         <ICD10PCS maps={maps} />
       </Tab>
+      <Tab eventKey="icd11Codes" title="ICD-11 Codes">
+        <ICD11 maps={maps} />
+      </Tab>
       <Tab eventKey="icdo3Codes" title="ICD-O-3 Codes">
         <ICDO3 maps={maps} />
       </Tab>
       <Tab eventKey="icdo4Codes" title="ICD-O-4 Codes">
         <ICDO4 maps={maps} />
-      </Tab>
-      <Tab eventKey="icd11Codes" title="ICD-11 Codes">
-        <ICD11 maps={maps} />
       </Tab>
     </Tabs>
   );
