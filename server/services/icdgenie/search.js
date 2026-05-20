@@ -65,8 +65,19 @@ async function opensearch(request, response) {
     console.log(search)
   }
 
-  //Prefix and suffix search for single words, exact match for icdo-3 and multi word queries
-  const query = search.split(" ").length === 1 && !search.includes("/") ? "*" + search + "*" : "\"" + search + "\""
+  //Prefix and suffix search for single words, exact match for multi word queries
+  //Code + keyword searches (contains "/") use AND logic so each term must match independently
+  const words = search.split(" ")
+  const hasCode = search.includes("/")
+
+  let query;
+  if (words.length === 1 && !hasCode) {
+    query = "*" + search + "*"
+  } else if (hasCode && words.length > 1) {
+    query = words.map(w => w.includes("/") ? w : "*" + w + "*").join(" AND ")
+  } else {
+    query = "\"" + search + "\""
+  }
 
   logger.info(query)
 
