@@ -309,15 +309,18 @@ export default function BatchQuery() {
             <Col md={4}>
               <Form.Group className="mb-3">
                 {/* ICD-10 Codes */}
-                <Form.Check
-                  label="ICD-10 Codes"
-                  name="inputType"
-                  type="radio"
-                  id="icd10Input"
-                  value="icd10"
-                  checked={form.inputType === "icd10"}
-                  onChange={handleChange}
-                />
+                <div className="d-flex align-items-center gap-2">
+                  <Form.Check
+                    label="ICD-10 Codes"
+                    name="inputType"
+                    type="radio"
+                    id="icd10Input"
+                    value="icd10"
+                    checked={form.inputType === "icd10"}
+                    onChange={handleChange}
+                  />
+                  <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10_patient_id.tsv`} className="small">(download sample)</a>
+                </div>
 
                 <div className="ms-5">
                   <div className="d-flex">
@@ -379,16 +382,18 @@ export default function BatchQuery() {
                 </div>
 
                 {/* ICD-10-PCS Codes */}
-                <Form.Check
-                  label="ICD-10-PCS Codes"
-                  name="inputType"
-                  type="radio"
-                  id="icd10pcsInput"
-                  value="icd10pcs"
-                  checked={form.inputType === "icd10pcs"}
-                  onChange={handleChange}
-                  className="mt-3"
-                />
+                <div className="d-flex align-items-center gap-2 mt-3">
+                  <Form.Check
+                    label="ICD-10-PCS Codes"
+                    name="inputType"
+                    type="radio"
+                    id="icd10pcsInput"
+                    value="icd10pcs"
+                    checked={form.inputType === "icd10pcs"}
+                    onChange={handleChange}
+                  />
+                  <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10pcs.tsv`} className="small">(download sample)</a>
+                </div>
 
                 <div className="ms-5">
                   <div className="d-flex">
@@ -447,16 +452,18 @@ export default function BatchQuery() {
                 </div>
 
                 {/* ICD-11 Codes */}
-                <Form.Check
-                  label="ICD-11 Codes"
-                  name="inputType"
-                  type="radio"
-                  id="icd11Input"
-                  value="icd11"
-                  checked={form.inputType === "icd11"}
-                  onChange={handleChange}
-                  className="mt-3"
-                />
+                <div className="d-flex align-items-center gap-2 mt-3">
+                  <Form.Check
+                    label="ICD-11 Codes"
+                    name="inputType"
+                    type="radio"
+                    id="icd11Input"
+                    value="icd11"
+                    checked={form.inputType === "icd11"}
+                    onChange={handleChange}
+                  />
+                  <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd11.tsv`} className="small">(download sample)</a>
+                </div>
 
                 <div className="ms-5">
                   <div className="d-flex">
@@ -519,15 +526,18 @@ export default function BatchQuery() {
             <Col md={4}>
               <Form.Group className="mb-3">
                 {/* ICD-O-3 Codes */}
-                <Form.Check
-                  label="ICD-O-3 Codes"
-                  name="inputType"
-                  type="radio"
-                  id="icdo3Input"
-                  value="icdo3"
-                  checked={form.inputType === "icdo3"}
-                  onChange={handleChange}
-                />
+                <div className="d-flex align-items-center gap-2">
+                  <Form.Check
+                    label="ICD-O-3 Codes"
+                    name="inputType"
+                    type="radio"
+                    id="icdo3Input"
+                    value="icdo3"
+                    checked={form.inputType === "icdo3"}
+                    onChange={handleChange}
+                  />
+                  <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`} className="small">(download sample)</a>
+                </div>
                 <i>At a minimum : ICD-O-3 site code or ICD-O-3 morphology code must be selected</i>
 
                 <div className="ms-5">
@@ -546,7 +556,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo3"}
                       onClick={() => mergeForm({ ["icdo3Id"]: !form.icdo3Id })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo3ID_tip">
                         <Popover.Header>Participant ID</Popover.Header>
                         <Popover.Body>
@@ -572,7 +582,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo3"}
                       onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo3Morph_tip">
                         <Popover.Header>ICD-O-3 Morphology Code</Popover.Header>
                         <Popover.Body>
@@ -603,7 +613,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo3"}
                       onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo3Site_tip">
                         <Popover.Header>ICD-O-3 Site code</Popover.Header>
                         <Popover.Body>
@@ -624,16 +634,18 @@ export default function BatchQuery() {
                 </div>
 
                 {/* ICD-O-4 Codes */}
-                <Form.Check
-                  label="ICD-O-4 Codes"
-                  name="inputType"
-                  type="radio"
-                  id="icdo4Input"
-                  value="icdo4"
-                  checked={form.inputType === "icdo4"}
-                  onChange={handleChange}
-                  className="mt-3"
-                />
+                <div className="d-flex align-items-center gap-2 mt-3">
+                  <Form.Check
+                    label="ICD-O-4 Codes"
+                    name="inputType"
+                    type="radio"
+                    id="icdo4Input"
+                    value="icdo4"
+                    checked={form.inputType === "icdo4"}
+                    onChange={handleChange}
+                  />
+                  <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo4.tsv`} className="small">(download sample)</a>
+                </div>
                 <i>At a minimum : ICD-O-4 site code or ICD-O-4 morphology code must be selected</i>
 
                 <div className="ms-5">
@@ -652,7 +664,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo4"}
                       onClick={() => mergeForm({ ["icdo4Id"]: !form.icdo4Id })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo4Id_tip">
                         <Popover.Header>Participant ID</Popover.Header>
                         <Popover.Body>
@@ -678,7 +690,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo4"}
                       onClick={() => mergeForm({ ["icdo4Morph"]: !form.icdo4Morph })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo4Morph_tip">
                         <Popover.Header>ICD-O-4 Morphology Code</Popover.Header>
                         <Popover.Body>
@@ -709,7 +721,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo4"}
                       onClick={() => mergeForm({ ["icdo4Site"]: !form.icdo4Site })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo4Site_tip">
                         <Popover.Header>ICD-O-4 Site Code</Popover.Header>
                         <Popover.Body>
@@ -738,18 +750,7 @@ export default function BatchQuery() {
                 <Form.Label htmlFor="codeInput">
                   Please upload a file (.tsv) or enter a list of codes
                 </Form.Label>
-                <Form.Control
-                  className="mb-3"
-                  as="textarea"
-                  id="codeInput"
-                  name="input"
-                  rows={2}
-                  value={form.input}
-                  disabled={uploaded}
-                  placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2), ICD-10-PCS Codes (Ex. 4A0Z76Z), ICD-11 Codes (Ex. 1B70.0Y), ICD-O-4 Codes (Ex. 80000/3)"
-                  onChange={handleChange}
-                />
-                <Row>
+                <Row className="mb-2">
                   <Col md={6}>
                     <input
                       type="file"
@@ -763,47 +764,36 @@ export default function BatchQuery() {
                       onChange={handleChange}
                     />
                     {fileError ? <div style={{ color: "red" }}>{fileError}</div> : <></>}
-
-                    <div className="d-flex flex-wrap gap-3 mt-1">
-                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10_patient_id.tsv`}>
-                        Download ICD-10 Sample
-                      </a>
-                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`}>
-                        Download ICD-O-3 Sample
-                      </a>
-                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd10pcs.tsv`}>
-                        Download ICD-10-PCS Sample
-                      </a>
-                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icd11.tsv`}>
-                        Download ICD-11 Sample
-                      </a>
-                      <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo4.tsv`}>
-                        Download ICD-O-4 Sample
-                      </a>
-                    </div>
-                  </Col>
-                  <Col xs={2} xl={1}>
-                    <Button
-                      className="mt-1"
-                      variant="primary"
-                      type="submit"
-                      size="sm"
-                      disabled={!form.input || (form.inputType === "icdo3" && (!form.icdo3Site && !form.icdo3Morph)) || (form.inputType === "icdo4" && (!form.icdo4Site && !form.icdo4Morph))}
-                    >
-                      Submit
-                    </Button>
-                  </Col>
-                  <Col xs={2} xl={1}>
-                    <Button
-                      className="mt-1"
-                      variant="outline-danger"
-                      type="reset"
-                      size="sm"
-                    >
-                      Reset
-                    </Button>
                   </Col>
                 </Row>
+                <Form.Control
+                  className="mb-2"
+                  as="textarea"
+                  id="codeInput"
+                  name="input"
+                  rows={2}
+                  value={form.input}
+                  disabled={uploaded}
+                  placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2), ICD-10-PCS Codes (Ex. 4A0Z76Z), ICD-11 Codes (Ex. 1B70.0Y), ICD-O-4 Codes (Ex. 80000/3)"
+                  onChange={handleChange}
+                />
+                <div className="d-flex justify-content-end gap-2">
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    size="sm"
+                    disabled={!form.input || (form.inputType === "icdo3" && (!form.icdo3Site && !form.icdo3Morph)) || (form.inputType === "icdo4" && (!form.icdo4Site && !form.icdo4Morph))}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                    type="reset"
+                    size="sm"
+                  >
+                    Reset
+                  </Button>
+                </div>
               </Form.Group>
             </Col>
           </Row>
