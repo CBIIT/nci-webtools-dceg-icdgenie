@@ -488,7 +488,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo3"}
                       onClick={() => mergeForm({ ["icdo3Id"]: !form.icdo3Id })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo3ID_tip">
                         <Popover.Header>Participant ID</Popover.Header>
                         <Popover.Body>
@@ -514,7 +514,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo3"}
                       onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo3Morph_tip">
                         <Popover.Header>ICD-O-3 Morphology Code</Popover.Header>
                         <Popover.Body>
@@ -545,7 +545,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo3"}
                       onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo3Site_tip">
                         <Popover.Header>ICD-O-3 Site code</Popover.Header>
                         <Popover.Body>
@@ -596,7 +596,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo4"}
                       onClick={() => mergeForm({ ["icdo4Id"]: !form.icdo4Id })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo4Id_tip">
                         <Popover.Header>Participant ID</Popover.Header>
                         <Popover.Body>
@@ -622,7 +622,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo4"}
                       onClick={() => mergeForm({ ["icdo4Morph"]: !form.icdo4Morph })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo4Morph_tip">
                         <Popover.Header>ICD-O-4 Morphology Code</Popover.Header>
                         <Popover.Body>
@@ -653,7 +653,7 @@ export default function BatchQuery() {
                       disabled={form.inputType !== "icdo4"}
                       onClick={() => mergeForm({ ["icdo4Site"]: !form.icdo4Site })}
                     />
-                    <OverlayTrigger trigger="click" placement="right" rootClose
+                    <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo4Site_tip">
                         <Popover.Header>ICD-O-4 Site Code</Popover.Header>
                         <Popover.Body>
