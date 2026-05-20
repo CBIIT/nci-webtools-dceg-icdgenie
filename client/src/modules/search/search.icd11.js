@@ -32,10 +32,11 @@ export default function ICD11({ maps, search }) {
     if (row) {
       if (row.children.length === 0) return null;
       var children = [];
-      row.children.map((child) => {
-        children = children.concat(maps.icd11.get(child));
+      row.children.forEach((child) => {
+        const childNode = maps.icd11.get(child);
+        if (childNode) children.push(childNode);
       });
-      return children;
+      return children.length > 0 ? children : null;
     }
     return rootRows;
   }
