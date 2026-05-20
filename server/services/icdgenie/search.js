@@ -65,48 +65,26 @@ async function opensearch(request, response) {
     console.log(search)
   }
 
-  //Prefix and suffix search for single words, exact match for multi word queries
-  //Code + keyword searches (contains "/") use AND logic — each term is a separate filter clause
-  const words = search.split(" ")
-  const hasCode = search.includes("/")
-  const isCodeKeywordSearch = hasCode && words.length > 1
-
-  let query;
-  if (words.length === 1 && !hasCode) {
-    query = "*" + search + "*"
-  } else if (isCodeKeywordSearch) {
-    query = "\"" + words.find(w => w.includes("/")) + "\""
-  } else {
-    query = "\"" + search + "\""
-  }
+  //Prefix and suffix search for single words, exact match for icdo-3 and multi word queries
+  const query = search.split(" ").length === 1 && !search.includes("/") ? "*" + search + "*" : "\"" + search + "\""
 
   logger.info(query)
-
-  const filterClauses = isCodeKeywordSearch
-    ? words.map(w => ({
-        "query_string": {
-          "query": w.includes("/") ? "\"" + w + "\"" : "*" + w + "*",
-          "fields": ["*"],
-          "lenient": true,
-          "analyze_wildcard": true,
-          "allow_leading_wildcard": true
-        }
-      }))
-    : [{
-        "query_string": {
-          "query": query,
-          "fields": ["*"],
-          "lenient": true,
-          "analyze_wildcard": true,
-          "allow_leading_wildcard": true,
-          "fuzziness": search.includes("/") ? "0" : "AUTO"
-        }
-      }]
 
   var body = {
     "query": {
       "bool": {
-        "filter": filterClauses,
+        "filter": [
+          {
+            "query_string": {
+              "query": query,
+              "fields": ["*"],
+              "lenient": true,
+              "analyze_wildcard": true,
+              "allow_leading_wildcard": true,
+              "fuzziness": search.includes("/") ? "0" : "AUTO"
+            }
+          }
+        ],
         "must_not": [
           {
             "query_string": {
