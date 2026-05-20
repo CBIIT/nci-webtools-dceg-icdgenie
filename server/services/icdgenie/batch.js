@@ -1,4 +1,5 @@
 const { Client } = require("@opensearch-project/opensearch")
+const { stringify } = require("csv-stringify")
 const { APP_BASE_URL, ADMIN, PASSWORD, DOMAIN } = process.env;
 const host = `https://${ADMIN}:${PASSWORD}@${DOMAIN}`;
 var _ = require('lodash');
@@ -19,8 +20,8 @@ function applyLevelPriority(hits) {
 
 async function batchQuery(request, response) {
   const { logger, database } = request.app.locals;
-  logger.debug("batch: " + JSON.stringify(request.body));
   const { input, inputType, id, icdo3Site, icdo3Morph, icdo4Site, icdo4Morph } = request.body;
+  logger.debug("batch query: inputType=" + inputType);
 
   var client = new Client({
     node: host,
@@ -39,9 +40,9 @@ async function batchQuery(request, response) {
     .map((e) => e.split("\t").map((f) => f.trim().replace(/\"/g, "")))
 
   inputs = _.chunk(inputs, 20)
-  console.log(inputs)
-  console.log(request.body)
   var results = [];
+
+  try {
 
   for (var i = 0; i < inputs.length; i++) {
 
@@ -527,6 +528,11 @@ async function batchQuery(request, response) {
     stringify(results.flat(), { header: true }).pipe(response);
   } else {
     response.json(results.flat());
+  }
+  } catch (error) {
+    const { logger } = request.app.locals;
+    logger.error("Batch query error:", error);
+    response.status(500).json({ error: "An error occurred processing the batch query" });
   }
 }
 

@@ -3,22 +3,34 @@ const fs = require("fs");
 const path = require("path");
 const { parse } = require("csv-parse/sync");
 
-const ADMIN = process.env.ADMIN || "admin";
-const PASSWORD = process.env.PASSWORD || "SkyWalker2024!";
-const DOMAIN = process.env.DOMAIN || "localhost:9200";
+const ADMIN = process.env.ADMIN;
+const PASSWORD = process.env.PASSWORD;
+const DOMAIN = process.env.DOMAIN;
+
+if (!ADMIN || !PASSWORD || !DOMAIN) {
+  console.error("Required env vars: ADMIN, PASSWORD, DOMAIN");
+  console.error("Example: ADMIN=admin PASSWORD=... DOMAIN=localhost:9200 node scripts/generate-icdo4-mapping.js");
+  process.exit(1);
+}
+
 const host = `https://${ADMIN}:${PASSWORD}@${DOMAIN}`;
 
 const client = new Client({
   node: host,
-  ssl: { rejectUnauthorized: false },
+  ssl: { rejectUnauthorized: process.env.OPENSEARCH_INSECURE !== "true" ? true : false },
 });
 
 const inputPath = process.argv[2] || path.resolve(__dirname, "..", "data", "icdo4_morphology.csv");
 const outputPath = process.argv[3] || path.resolve(__dirname, "..", "data", "icd10cm_icdo4_mapping.csv");
 
+function escapeQueryString(str) {
+  return str.replace(/[+\-=&|><!(){}[\]^~?:\\/]/g, "\\$&");
+}
+
 async function queryTabular(codePattern) {
   const isWildcard = codePattern.includes("_");
-  const query = isWildcard ? codePattern.replace(/_/g, "*") : `"${codePattern}"`;
+  const escaped = escapeQueryString(codePattern.replace(/_/g, ""));
+  const query = isWildcard ? escaped + "*" : `"${escaped}"`;
 
   const body = {
     query: {

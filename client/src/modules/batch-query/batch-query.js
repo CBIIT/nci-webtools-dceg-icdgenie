@@ -17,6 +17,7 @@ export default function BatchQuery() {
   const mergeForm = (obj) => setForm({ ...form, ...obj });
   const mergeResults = (obj) => setResults({ ...results, ...obj });
   const [fileError, setFileError] = useState("")
+  const [submitError, setSubmitError] = useState("")
   const [uploaded, setUploaded] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const fileRef = useRef();
@@ -32,9 +33,8 @@ export default function BatchQuery() {
           return { title: e.title, width: { wpx: 120 } }
         }),
         data: results.output.map((e) => {
-          const values = Object.values(e);
-          return values.map((f) => {
-            return { value: f }
+          return results.columns.map((col) => {
+            return { value: e[col.name] }
           })
         })
       }
@@ -45,6 +45,8 @@ export default function BatchQuery() {
     let { type, name, value, files, dataset } = event.target;
 
     if (type === "file") {
+
+      if (!files || !files[0]) return;
 
       mergeForm({ input: "" })
 
@@ -92,6 +94,8 @@ export default function BatchQuery() {
     event.preventDefault();
     mergeResults({ loading: true });
 
+    setSubmitError("")
+    try {
     const response = await axios.post("api/batch", {
       input: form.input,
       inputType: form.inputType,
@@ -108,7 +112,6 @@ export default function BatchQuery() {
 
     var columns;
     var columnExtensions;
-    console.log(form)
 
     if (form.inputType === "icd10pcs") {
       // ICD-10-PCS: single code lookup
@@ -246,6 +249,12 @@ export default function BatchQuery() {
       columns: columns,
       columnExtensions: columnExtensions
     });
+    } catch (error) {
+      console.error("Batch query error:", error)
+      mergeResults({ loading: false })
+      setShowResults(false)
+      setSubmitError("An error occurred. Please try again.")
+    }
   }
 
   async function handleReset() {
@@ -799,6 +808,7 @@ export default function BatchQuery() {
           </Row>
         </Container>
       </Form>
+      {submitError && <div className="text-danger text-center my-2">{submitError}</div>}
       {
         showResults ? (
           <div className="bg-light">
