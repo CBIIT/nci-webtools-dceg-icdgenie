@@ -144,7 +144,130 @@ async function batchQuery(request, response) {
           })
       })))
     }
+    else if (inputType === "icdo4" && icdo4Site && icdo4Morph) {
+      // ICD-O-4 combined morph + site
+      results.push(await Promise.all(inputs[i].map(async (e) => {
+
+        var patientId;
+        var morphology;
+        var site;
+
+        if (id) {
+          patientId = e[0]
+          morphology = e[1]
+          site = e[2]
+        }
+        else {
+          morphology = e[0]
+          site = e[1]
+        }
+
+        var morphMsg = morphology === "NA" || morphology === "" ? "NA" : ""
+        var siteMsg = site === "NA" || site === "" ? "NA" : ""
+
+        var morphResults;
+        var siteResults;
+        var indicator = morphMsg === "NA" && siteMsg === "NA" ? "NA" : "";
+
+        if (morphMsg !== "NA") {
+          const body = {
+            "query": {
+              "bool": {
+                "must": [{ "match": { "code": "\"" + morphology + "\"" } }],
+                "filter": [{ "query_string": { "query": "\"" + morphology + "\"", "fields": ["code"], "lenient": true, "fuzziness": "0" } }]
+              }
+            },
+            "size": 5000
+          }
+
+          const query = await client.search({ index: "icdo4", body: body });
+          const hits = query.body.hits.hits
+          if (hits.length === 0) {
+            morphMsg = "Morphology not found"
+          }
+          else {
+            // Level priority: Preferred > Synonym > Related
+            var preferredHit = hits.find(h => h._source.level === "Preferred")
+            morphResults = preferredHit ? preferredHit._source.description : hits[0]._source.description
+            morphMsg = morphResults
+          }
+        }
+
+        if (siteMsg !== "NA") {
+          const body = {
+            "query": {
+              "bool": {
+                "must": [{ "match": { "code": "\"" + site + "\"" } }],
+                "filter": [{ "query_string": { "query": "\"" + site + "\"", "fields": ["code"], "lenient": true, "fuzziness": "0" } }]
+              }
+            },
+            "size": 5000
+          }
+
+          const query = await client.search({ index: "tabular", body: body });
+          const hits = query.body.hits.hits
+          if (hits.length === 0) {
+            siteMsg = "Site not found"
+          }
+          else {
+            siteResults = hits[0]._source.description
+            siteMsg = siteResults
+          }
+        }
+
+        if (morphResults && siteResults) {
+          const body = {
+            "query": {
+              "bool": {
+                "must": [
+                  { "match": { "icdo4": "\"" + morphology + "\"" } },
+                  { "match": { "icd10": "\"" + site + "\"" } }
+                ],
+                "filter": [{ "query_string": { "query": "\"" + morphology + "\"", "fields": ["icdo4"], "lenient": true, "fuzziness": "0" } }]
+              }
+            },
+            "size": 5000
+          }
+
+          const query = await client.search({ index: "translations_icdo4", body: body });
+          const hits = query.body.hits.hits
+
+          if (hits.length) {
+            indicator = morphResults + ", " + siteResults
+          }
+          else {
+            indicator = "Combination not found"
+          }
+        }
+        else if ((morphMsg !== "NA" && siteMsg !== "NA") && (morphMsg === "Morphology not found" || siteMsg === "Site not found"))
+          indicator = "Combination not found"
+        else if (indicator !== "NA") {
+          indicator = (morphMsg === "NA" ? "Morphology is NA" : morphMsg) + ", " + (siteMsg === "NA" ? "Site is NA" : siteMsg)
+        }
+
+        if (patientId) {
+          return ({
+            id: patientId,
+            morphCode: morphology,
+            siteCode: site,
+            morphology: morphResults ? morphResults : morphMsg,
+            site: siteResults ? siteResults : siteMsg,
+            indicator: indicator
+          })
+        }
+        else {
+          return ({
+            morphCode: morphology,
+            siteCode: site,
+            morphology: morphResults ? morphResults : morphMsg,
+            site: siteResults ? siteResults : siteMsg,
+            indicator: indicator
+          })
+        }
+      })))
+    }
     else {
+      // ICD-O-3 combined morph + site (existing logic)
       results.push(await Promise.all(inputs[i].map(async (e) => {
 
         var patientId;
