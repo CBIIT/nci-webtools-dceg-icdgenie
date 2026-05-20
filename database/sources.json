@@ -76,6 +76,6 @@
   {
     "filePath": "data/icdo4_morphology.csv",
     "table": "icdo4_morphology",
-    "headers": ["code", "level", "preferred", "description"]
+    "headers": ["code", "level", "preferred", "description", "codeReference"]
   }
 ]

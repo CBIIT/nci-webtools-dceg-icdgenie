@@ -61,7 +61,8 @@ create table "icdo4_morphology"
     "code" text,
     "level" text,
     "preferred" boolean,
-    "description" text
+    "description" text,
+    "codeReference" text
 );
 
 create table "icd10_neoplasm"
