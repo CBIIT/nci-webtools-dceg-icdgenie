@@ -126,22 +126,27 @@ export default function Search() {
     setValid(true)
     setInput(query)
     setSearchTerm(query)
-    const response = await axios.post("api/search", { search: query })
-    const results = {
-      tabular: processSearch(response.data.tabular.filter((e) => e._source.type === "entry")),
-      neoplasm: processSearch(response.data.neoplasm),
-      drug: processSearch(response.data.drug),
-      injury: processSearch(response.data.injury),
-      icdo3: response.data.icdo3,
-      icd11: response.data.icd11 ? processSearch(response.data.icd11) : new Map(),
-      icdo4: response.data.icdo4 || [],
-      icd10pcs: response.data.icd10pcs || []
+    try {
+      const response = await axios.post("api/search", { search: query })
+      const results = {
+        tabular: processSearch(response.data.tabular.filter((e) => e._source.type === "entry")),
+        neoplasm: processSearch(response.data.neoplasm),
+        drug: processSearch(response.data.drug),
+        injury: processSearch(response.data.injury),
+        icdo3: response.data.icdo3,
+        icd11: response.data.icd11 ? processSearch(response.data.icd11) : new Map(),
+        icdo4: response.data.icdo4 || [],
+        icd10pcs: response.data.icd10pcs || []
+      }
+      console.log(results)
+      setSuggestions(response.data.fuzzyTerms)
+      setSubmitted(true)
+      setMaps(results)
+    } catch (error) {
+      console.error("Search error:", error)
+    } finally {
+      setLoading(false)
     }
-    console.log(results)
-    setSuggestions(response.data.fuzzyTerms)
-    setSubmitted(true)
-    setLoading(false)
-    setMaps(results)
   }
 
   async function opensearch(e) {
