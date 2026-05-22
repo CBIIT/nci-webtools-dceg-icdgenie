@@ -435,6 +435,158 @@ async function parseTranslations() {
         })
 }
 
+async function parseICD10PCS() {
+    const filePath = "data/icd10pcs_2026.csv"
+    const headers = ["code", "description"]
+    var results = [];
+
+    console.log(`[${timestamp()}] Start icd10pcs import`);
+
+    await fs.createReadStream(filePath)
+        .pipe(parse({
+            columns: headers || true,
+            skip_empty_lines: true,
+            relax_column_count: true,
+            trim: true,
+            from_line: headers ? 2 : 1,
+            delimiter: ','
+        }))
+        .on('data', function (row) {
+            results = results.concat({
+                ...row
+            })
+        })
+        .on("end", function () {
+            var fd = fs.openSync(path.resolve('data', 'icd10pcs.json'), 'a')
+            results.map((e, index) => {
+                fs.appendFileSync(fd, JSON.stringify({
+                    "index": {
+                        "_index": "icd10pcs",
+                        "_id": index
+                    }
+                }) + '\n',
+                    'utf-8'
+                )
+
+                fs.appendFileSync(fd, JSON.stringify({
+                    ...e
+                }) + '\n',
+                    'utf-8'
+                )
+            })
+
+            console.log(`[${timestamp()}] Finish icd10pcs import`);
+        })
+}
+
+async function parseICD11() {
+    const filePath = "data/icd11.csv"
+    const headers = ["entityId", "code", "description", "classKind", "depthInKind", "chapterNo", "parentEntityId"]
+    var records = [];
+
+    console.log(`[${timestamp()}] Start icd11 import`);
+
+    await fs.createReadStream(filePath)
+        .pipe(parse({
+            columns: headers || true,
+            skip_empty_lines: true,
+            relax_column_count: true,
+            trim: true,
+            from_line: headers ? 2 : 1,
+            delimiter: ','
+        }))
+        .on('data', function (row) {
+            records.push(row)
+        })
+        .on("end", function () {
+            // Build lookup by entityId
+            var entityMap = {}
+            records.forEach((r, index) => {
+                entityMap[r.entityId] = { ...r, id: index }
+            })
+
+            // Build parent chain for each record
+            var fd = fs.openSync(path.resolve('data', 'icd11.json'), 'a')
+            records.forEach((record, index) => {
+                var parents = []
+                var current = record
+
+                while (current && current.parentEntityId && entityMap[current.parentEntityId]) {
+                    var parentRecord = entityMap[current.parentEntityId]
+                    parents.push({
+                        id: parentRecord.id,
+                        code: parentRecord.code,
+                        description: parentRecord.description,
+                        parents: []
+                    })
+                    current = parentRecord
+                }
+
+                fs.appendFileSync(fd, JSON.stringify({
+                    "index": {
+                        "_index": "icd11",
+                        "_id": index
+                    }
+                }) + '\n', 'utf-8')
+
+                fs.appendFileSync(fd, JSON.stringify({
+                    code: record.code,
+                    description: record.description,
+                    classKind: record.classKind,
+                    type: "entry",
+                    parent: parents,
+                    id: index
+                }) + '\n', 'utf-8')
+            })
+
+            console.log(`[${timestamp()}] Finish icd11 import`);
+        })
+}
+
+async function parseICDO4() {
+    const filePath = "data/icdo4_morphology.csv"
+    const headers = ["code", "level", "preferred", "description", "codeReference"]
+    var results = [];
+
+    console.log(`[${timestamp()}] Start icdo4 import`);
+
+    await fs.createReadStream(filePath)
+        .pipe(parse({
+            columns: headers || true,
+            skip_empty_lines: true,
+            relax_column_count: true,
+            trim: true,
+            from_line: headers ? 2 : 1,
+            delimiter: ','
+        }))
+        .on('data', function (row) {
+            results = results.concat({
+                ...row
+            })
+        })
+        .on("end", function () {
+            var fd = fs.openSync(path.resolve('data', 'icdo4.json'), 'a')
+            results.map((e, index) => {
+                fs.appendFileSync(fd, JSON.stringify({
+                    "index": {
+                        "_index": "icdo4",
+                        "_id": index
+                    }
+                }) + '\n',
+                    'utf-8'
+                )
+
+                fs.appendFileSync(fd, JSON.stringify({
+                    ...e
+                }) + '\n',
+                    'utf-8'
+                )
+            })
+
+            console.log(`[${timestamp()}] Finish icdo4 import`);
+        })
+}
+
 (async function main() {
 
     //parseICDO3();

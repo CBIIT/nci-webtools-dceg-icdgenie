@@ -1,38 +1,41 @@
 import { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
 import Accordion from "react-bootstrap/Accordion";
-import { TreeDataState, CustomTreeData, DataTypeProvider } from "@devexpress/dx-react-grid";
+import { TreeDataState, CustomTreeData } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
-import { useSetRecoilState } from "recoil";
-import { modalState } from "./search.state";
-import Loader from "../common/loader";
 
 export default function ICD10({ maps, search }) {
-  const setModal = useSetRecoilState(modalState);
-
   const [indexPanel, setIndexPanel] = useState(null)
   const [neoplasmPanel, setNeoplasmPanel] = useState(null)
   const [drugPanel, setDrugPanel] = useState(null)
   const [injuryPanel, setInjuryPanel] = useState(null)
-  const [loading, setLoading] = useState(false);
+  const [pcsPanel, setPcsPanel] = useState(null)
   const [tabularOpen, setTabularOpen] = useState([])
   const [neoplasmOpen, setNeoplasmOpen] = useState([])
   const [drugOpen, setDrugOpen] = useState([])
   const [injuryOpen, setInjuryOpen] = useState([])
 
   useEffect(() => {
+    function expandTreeData(map) {
+      const node = map.find(e => e[1].code === search)
+      if (node) {
+        const toReturn = Array.from(node[1].parents, id => map.findIndex((e) => e[0] === id))
+        return toReturn
+      }
+      return []
+    }
 
     setIndexPanel(maps.tabular.size ? "0" : null)
     setNeoplasmPanel(maps.neoplasm.size ? "0" : null)
     setDrugPanel(maps.drug.size ? "0" : null)
     setInjuryPanel(maps.injury.size ? "0" : null)
+    setPcsPanel(maps.icd10pcs && maps.icd10pcs.length ? "0" : null)
 
     setTabularOpen(expandTreeData(Array.from(maps.tabular)))
     setNeoplasmOpen(expandTreeData(Array.from(maps.neoplasm)))
     setDrugOpen(expandTreeData(Array.from(maps.drug)))
     setInjuryOpen(expandTreeData(Array.from(maps.injury)))
-  }, [maps])
+  }, [maps, search])
 
   const indexColumns = [
     { name: "description", title: "Description" },
@@ -82,23 +85,6 @@ export default function ICD10({ maps, search }) {
     { columnName: "adverseEffect", width: "6rem", wordWrapEnabled: true },
   ];
 
-  function expandTreeData(map) {
-    const node = map.find(e => e[1].code === search)
-    if (node) {
-      const toReturn = Array.from(node[1].parents, id => map.findIndex((e) => e[0] === id))
-      return toReturn
-    }
-
-    return []
-  }
-
-  function getChildRows(row, rootRows) {
-    console.log(row)
-    if (row)
-      console.log(row.children)
-    return row ? row.children : rootRows;
-  }
-
   function getTabularChildRows(row, rootRows) {
 
     if (row) {
@@ -106,7 +92,7 @@ export default function ICD10({ maps, search }) {
         return null
 
       var children = []
-      row.children.map((child) => {
+      row.children.forEach((child) => {
         children = children.concat(maps.tabular.get(child))
       })
 
@@ -122,7 +108,7 @@ export default function ICD10({ maps, search }) {
         return null
 
       var children = []
-      row.children.map((child) => {
+      row.children.forEach((child) => {
         children = children.concat(maps.neoplasm.get(child))
       })
 
@@ -139,7 +125,7 @@ export default function ICD10({ maps, search }) {
         return null
 
       var children = []
-      row.children.map((child) => {
+      row.children.forEach((child) => {
         children = children.concat(maps.drug.get(child))
       })
 
@@ -155,7 +141,7 @@ export default function ICD10({ maps, search }) {
         return null
 
       var children = []
-      row.children.map((child) => {
+      row.children.forEach((child) => {
         children = children.concat(maps.injury.get(child))
       })
 
@@ -175,11 +161,10 @@ export default function ICD10({ maps, search }) {
 
   return (
     <Container className="py-5 col-xl-10 col-sm-12">
-      <Loader show={loading} fullscreen />
       <Accordion onSelect={() => { maps.tabular.size ? handleAccordion(indexPanel, setIndexPanel) : setIndexPanel(null) }} activeKey={indexPanel} className={`mb-4 ${maps.tabular.size ? "index" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
-            <span className="accordion-font">INDEX TABLE</span>
+            <span className="accordion-font">TABULAR LIST</span>
           </Accordion.Header>
           <Accordion.Body>
             <Grid rows={maps.tabular ? Array.from(maps.tabular.values()).filter((node) => node.parents.length === 0) : []} columns={indexColumns}>
@@ -273,6 +258,21 @@ export default function ICD10({ maps, search }) {
               <Table columnExtensions={indexColumnExtension} />
               <TableHeaderRow />
               <TableTreeColumn for="description" />
+            </Grid>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+
+      <Accordion onSelect={() => { maps.icd10pcs && maps.icd10pcs.length ? handleAccordion(pcsPanel, setPcsPanel) : setPcsPanel(null) }} activeKey={pcsPanel} className={`mb-4 ${maps.icd10pcs && maps.icd10pcs.length ? "index" : "disabled"}`}>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>
+            <span className="accordion-font">ICD-10-PCS CODES</span>
+          </Accordion.Header>
+          <Accordion.Body>
+            <Grid rows={maps.icd10pcs ? maps.icd10pcs.map((e) => e._source) : []} columns={indexColumns}>
+              <IcdCodeTypeProvider for={["code"]} />
+              <Table columnExtensions={indexColumnExtension} />
+              <TableHeaderRow />
             </Grid>
           </Accordion.Body>
         </Accordion.Item>

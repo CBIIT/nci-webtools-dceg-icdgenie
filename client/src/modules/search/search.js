@@ -25,7 +25,10 @@ export default function Search() {
     neoplasm: new Map(),
     drug: new Map(),
     injury: new Map(),
-    icdo3: []
+    icdo3: [],
+    icd11: new Map(),
+    icdo4: [],
+    icd10pcs: []
   })
   const [input, setInput] = useState("")
   const [submitted, setSubmitted] = useState(false)
@@ -117,25 +120,76 @@ export default function Search() {
     return map
   }
 
+  function processIcd11Search(results) {
+    const map = new Map();
+    results.map((node) => {
+      const source = node._source;
+      const key = source.id;
+      var currentKey = key;
+
+      source.parent.forEach((parent, index) => {
+        const parentKey = parent.id;
+        // This parent's own parents are the remaining items after it in the array
+        const parentOfParent = source.parent.slice(index + 1).map(p => p.id);
+
+        if (!map.has(parentKey)) {
+          map.set(parentKey, {
+            description: parent.description,
+            code: parent.code,
+            parents: parentOfParent,
+            children: [currentKey],
+            key: parentKey,
+          })
+        } else {
+          var parentValue = map.get(parentKey)
+          if (!parentValue.children.includes(currentKey)) {
+            parentValue = { ...parentValue, children: parentValue.children.concat(currentKey) }
+            map.set(parentKey, parentValue)
+          }
+        }
+
+        currentKey = parentKey
+      })
+
+      // The leaf node's parents are all items in the parent array
+      map.set(key, {
+        description: source.description,
+        code: source.code,
+        key: key,
+        parents: source.parent.map(p => p.id),
+        children: [],
+      })
+    })
+    return map
+  }
+
   async function handleSubmit(query) {
 
     setLoading(true)
     setValid(true)
     setInput(query)
     setSearchTerm(query)
-    const response = await axios.post("api/search", { search: query })
-    const results = {
-      tabular: processSearch(response.data.tabular.filter((e) => e._source.type === "entry")),
-      neoplasm: processSearch(response.data.neoplasm),
-      drug: processSearch(response.data.drug),
-      injury: processSearch(response.data.injury),
-      icdo3: response.data.icdo3
+    try {
+      const response = await axios.post("api/search", { search: query })
+      const results = {
+        tabular: processSearch(response.data.tabular.filter((e) => e._source.type === "entry")),
+        neoplasm: processSearch(response.data.neoplasm),
+        drug: processSearch(response.data.drug),
+        injury: processSearch(response.data.injury),
+        icdo3: response.data.icdo3,
+        icd11: response.data.icd11 ? processIcd11Search(response.data.icd11) : new Map(),
+        icdo4: response.data.icdo4 || [],
+        icd10pcs: response.data.icd10pcs || []
+      }
+      console.log(results)
+      setSuggestions(response.data.fuzzyTerms)
+      setSubmitted(true)
+      setMaps(results)
+    } catch (error) {
+      console.error("Search error:", error)
+    } finally {
+      setLoading(false)
     }
-    console.log(results)
-    setSuggestions(response.data.fuzzyTerms)
-    setSubmitted(true)
-    setLoading(false)
-    setMaps(results)
   }
 
   async function opensearch(e) {
@@ -164,8 +218,8 @@ export default function Search() {
                 <InputGroup size={"lg"} className="search-box" style={{ borderColor: valid ? "" : "red" }}>
                   <Form.Control
                     className="border-0 shadow-none"
-                    placeholder={"Search by Keywords, ICD-10 code, or ICD-O-3 code"}
-                    aria-label={"Search by Keywords, ICD-10 code, or ICD-O-3 code"}
+                    placeholder={"Search by Keywords, ICD-10 code, ICD-O-3 code, ICD-11 code or ICD-O-4 code"}
+                    aria-label={"Search by Keywords, ICD-10 code, ICD-O-3 code, ICD-11 code or ICD-O-4 code"}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     onBlur={() => setValid(input.length >= 3)}
@@ -188,7 +242,7 @@ export default function Search() {
                     </>
                   ))}
                 </span> :
-                  submitted && maps.tabular.size === 0 && maps.neoplasm.size === 0 && maps.drug.size === 0 && maps.injury.size === 0 && maps.icdo3.length === 0?
+                  submitted && maps.tabular.size === 0 && maps.neoplasm.size === 0 && maps.drug.size === 0 && maps.injury.size === 0 && maps.icdo3.length === 0 && maps.icd11.size === 0 && maps.icdo4.length === 0 && maps.icd10pcs.length === 0?
                     <span style={{ color: "#AD0000" }} className="mx-1">No Results Found</span>
                     : <></>}
 
