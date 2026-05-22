@@ -92,13 +92,6 @@ export default function ICD10({ maps, search }) {
     return []
   }
 
-  function getChildRows(row, rootRows) {
-    console.log(row)
-    if (row)
-      console.log(row.children)
-    return row ? row.children : rootRows;
-  }
-
   function getTabularChildRows(row, rootRows) {
 
     if (row) {
