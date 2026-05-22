@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
-import { TreeDataState, CustomTreeData, DataTypeProvider } from "@devexpress/dx-react-grid";
+import { TreeDataState, CustomTreeData } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
 
