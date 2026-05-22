@@ -74,9 +74,6 @@
     "headers": ["icd10", "icd10Description", "icdo3", "icdo3Description"]
   },
   {
-    "filePath": "data/icd10pcs_2026.csv",
-    "table": "icd10_pcs",
-    "headers": ["code", "description"]
     "filePath": "data/icdo4_morphology.csv",
     "table": "icdo4_morphology",
     "headers": ["code", "level", "preferred", "description", "codeReference"]

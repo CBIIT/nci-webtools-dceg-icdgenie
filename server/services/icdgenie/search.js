@@ -115,16 +115,15 @@ async function opensearch(request, response) {
     "size": 500
   }
 
-  const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result, icd10pcsResult, icd11Result, icdo4Result] = await Promise.all([
+  const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result, icdo4Result] = await Promise.all([
     client.search({ index: "tabular", body }),
     client.search({ index: "neoplasm", body }),
     client.search({ index: "drug", body }),
     client.search({ index: "injury", body }),
     client.search({ index: "icdo3", body }),
-    client.search({ index: "icd10pcs", body }),
-    client.search({ index: "icd11", body }),
-    client.search({ index: "icdo4", body }),
+    client.search({ index: "icdo4", body })
   ])
+
 
   var results = {
     tabular: tabularResult.body.hits.hits,
@@ -132,8 +131,6 @@ async function opensearch(request, response) {
     drug: drugResult.body.hits.hits,
     injury: injuryResult.body.hits.hits,
     icdo3: icdo3Result.body.hits.hits,
-    icd10pcs: icd10pcsResult.body.hits.hits,
-    icd11: icd11Result.body.hits.hits,
     icdo4: icdo4Result.body.hits.hits,
     showSuggestions: true,
     fuzzyTerms: [],
@@ -143,21 +140,17 @@ async function opensearch(request, response) {
   const neoplasmOptions = neoplasmResult.body.suggest["spell-check"][0].options;
   const drugOptions = drugResult.body.suggest["spell-check"][0].options;
   const injuryOptions = injuryResult.body.suggest["spell-check"][0].options;
-  const icdo3Options = !search.includes("/") ? icdo3Result.body.suggest["spell-check"][0].options : [];
-  const icd10pcsOptions = icd10pcsResult.body.suggest["spell-check"][0].options;
-  const icd11Options = icd11Result.body.suggest["spell-check"][0].options;
-  const icdo4Options = !search.includes("/") ? icdo4Result.body.suggest["spell-check"][0].options : [];
+  const icdo3Options = !search.includes("/") ? icdo3Result.body.suggest["spell-check"][0].options : []
+  const icdo4Options = !search.includes("/") ? icdo4Result.body.suggest["spell-check"][0].options : []
 
-  if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length || results.icd10pcs.length || results.icd11.length || results.icdo4.length) {
-    const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy, icd10pcsFuzzy, icd11Fuzzy, icdo4Fuzzy] = await Promise.all([
+  if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length || results.icdo4.length) {
+    const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy, icdo4Fuzzy] = await Promise.all([
       fuzzySearch(tabularOptions, client, "tabular"),
       fuzzySearch(neoplasmOptions, client, "neoplasm"),
       fuzzySearch(drugOptions, client, "drug"),
       fuzzySearch(injuryOptions, client, "injury"),
       fuzzySearch(icdo3Options, client, "icdo3"),
-      fuzzySearch(icd10pcsOptions, client, "icd10pcs"),
-      fuzzySearch(icd11Options, client, "icd11"),
-      fuzzySearch(icdo4Options, client, "icdo4"),
+      fuzzySearch(icdo4Options, client, "icdo4")
     ])
 
     results.tabular = results.tabular.concat(tabularFuzzy)
@@ -165,8 +158,6 @@ async function opensearch(request, response) {
     results.drug = results.drug.concat(drugFuzzy)
     results.injury = results.injury.concat(injuryFuzzy)
     results.icdo3 = results.icdo3.concat(icdo3Fuzzy)
-    results.icd10pcs = results.icd10pcs.concat(icd10pcsFuzzy)
-    results.icd11 = results.icd11.concat(icd11Fuzzy)
     results.icdo4 = results.icdo4.concat(icdo4Fuzzy)
     results.showSuggestions = false
   }
@@ -178,9 +169,7 @@ async function opensearch(request, response) {
       ...drugOptions.filter(e => e.score >= minScore).map(e => e.text),
       ...injuryOptions.filter(e => e.score >= minScore).map(e => e.text),
       ...icdo3Options.filter(e => e.score >= minScore).map(e => e.text),
-      ...icd10pcsOptions.filter(e => e.score >= minScore).map(e => e.text),
-      ...icd11Options.filter(e => e.score >= minScore).map(e => e.text),
-      ...icdo4Options.filter(e => e.score >= minScore).map(e => e.text),
+      ...icdo4Options.filter(e => e.score >= minScore).map(e => e.text)
     ])]
   }
 
