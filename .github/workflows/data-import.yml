@@ -22,6 +22,8 @@ jobs:
       AWS_REGION: us-east-1
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       DATA_IMPORT_CONTAINER_PORT: 9000
+      ECS_DATA_IMPORT_CPU_UNITS: 1 vCPU
+      ECS_DATA_IMPORT_MEMORY_UNITS: 2 GB
     permissions:
       id-token: write
       contents: read
@@ -66,6 +68,7 @@ jobs:
           echo "SECURITY_GROUP_IDS=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/security_group_ids") | .Value')" >> $GITHUB_ENV
           echo "ECS_CLUSTER=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/ecs_cluster") | .Value')" >> $GITHUB_ENV
           echo "ECS_DATA_IMPORT_TASK=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/ecs_data_import_task") | .Value')" >> $GITHUB_ENV
+          echo "ROLE_ARN=$(echo $PARAMS | jq -r '.Parameters[] | select(.Name=="${{ env.PARAMETER_PATH }}/role_arn") | .Value')" >> $GITHUB_ENV
 
       - name: Login to Amazon ECR
         run: aws ecr get-login-password | docker login --username AWS --password-stdin ${{ env.DOCKER_REGISTRY }}
