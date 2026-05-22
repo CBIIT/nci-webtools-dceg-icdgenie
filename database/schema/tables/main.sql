@@ -60,6 +60,16 @@ create table "icd10_pcs"
     "id" integer primary key,
     "code" text,
     "description" text
+create table "icd11"
+(
+    "id" integer primary key,
+    "entityId" text,
+    "code" text,
+    "description" text,
+    "classKind" text,
+    "depthInKind" integer,
+    "chapterNo" text,
+    "parentEntityId" text
 create table "icdo4_morphology"
 (
     "id" integer primary key,
