@@ -142,7 +142,7 @@ async function batchQuery(request, response) {
           var preferred = 0;
 
           if (inputType === "icdo3" && icdo3Morph) {
-            preferred = hits.indexOf((e) => { e._source.preferred === "1" })
+            preferred = hits.findIndex((e) => e._source.preferred === "1")
             preferred = preferred === -1 ? 0 : preferred
           }
 
@@ -371,7 +371,7 @@ async function batchQuery(request, response) {
             morphMsg = "Morphology not found"
           }
           else {
-            var preferred = hits.indexOf((e) => { e._source.preferred === "1" })
+            var preferred = hits.findIndex((e) => e._source.preferred === "1")
             morphResults = hits[preferred === -1 ? 0 : preferred]._source.description
             morphMsg = morphResults
           }

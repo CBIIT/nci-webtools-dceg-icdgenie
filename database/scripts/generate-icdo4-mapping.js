@@ -2,6 +2,7 @@ const { Client } = require("@opensearch-project/opensearch");
 const fs = require("fs");
 const path = require("path");
 const { parse } = require("csv-parse/sync");
+const { stringify } = require("csv-stringify/sync");
 
 const ADMIN = process.env.ADMIN;
 const PASSWORD = process.env.PASSWORD;
@@ -64,6 +65,15 @@ async function queryTabular(codePattern) {
     });
 }
 
+const tabularCache = new Map();
+
+async function queryTabularCached(codePattern) {
+  if (tabularCache.has(codePattern)) return tabularCache.get(codePattern);
+  const results = await queryTabular(codePattern);
+  tabularCache.set(codePattern, results);
+  return results;
+}
+
 async function main() {
   console.log(`Reading ${inputPath}`);
   const csvContent = fs.readFileSync(inputPath, "utf-8");
@@ -82,33 +92,25 @@ async function main() {
     const refs = codeRef.split(",").map((r) => r.trim()).filter(Boolean);
 
     for (const ref of refs) {
-      const icd10Matches = await queryTabular(ref);
+      const icd10Matches = await queryTabularCached(ref);
 
       for (const match of icd10Matches) {
         const key = `${match.code}|${icdo4Code}`;
         if (seen.has(key)) continue;
         seen.add(key);
 
-        rows.push({
-          icd10Code: match.code,
-          icd10Desc: match.description,
-          icdo4Code: icdo4Code,
-          icdo4Desc: icdo4Desc,
-        });
+        rows.push([match.code, match.description, icdo4Code, icdo4Desc]);
       }
     }
   }
 
-  // Write CSV
-  const header = "icd10_code,icd10_desc,icdo4_code,icdo4_desc";
-  const csvRows = rows.map((r) => {
-    const desc10 = r.icd10Desc.includes(",") ? `"${r.icd10Desc}"` : r.icd10Desc;
-    const desc04 = r.icdo4Desc.includes(",") ? `"${r.icdo4Desc}"` : r.icdo4Desc;
-    return `${r.icd10Code},${desc10},${r.icdo4Code},${desc04}`;
+  const csvOutput = stringify(rows, {
+    header: true,
+    columns: ["icd10_code", "icd10_desc", "icdo4_code", "icdo4_desc"],
   });
-
-  fs.writeFileSync(outputPath, [header, ...csvRows].join("\n") + "\n");
+  fs.writeFileSync(outputPath, csvOutput);
   console.log(`Written ${rows.length} rows to ${outputPath}`);
+  console.log(`Cache hits: ${tabularCache.size} unique patterns cached`);
 }
 
 main().catch(console.error);
