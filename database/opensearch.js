@@ -435,21 +435,12 @@ async function parseTranslations() {
         })
 }
 
-<<<<<<< HEAD
 async function parseICD11() {
     const filePath = "data/icd11.csv"
     const headers = ["entityId", "code", "description", "classKind", "depthInKind", "chapterNo", "parentEntityId"]
     var records = [];
 
     console.log(`[${timestamp()}] Start icd11 import`);
-=======
-async function parseICDO4() {
-    const filePath = "data/icdo4_morphology.csv"
-    const headers = ["code", "level", "preferred", "description", "codeReference"]
-    var results = [];
-
-    console.log(`[${timestamp()}] Start icdo4 import`);
->>>>>>> dev_10145
 
     await fs.createReadStream(filePath)
         .pipe(parse({
@@ -461,7 +452,6 @@ async function parseICDO4() {
             delimiter: ','
         }))
         .on('data', function (row) {
-<<<<<<< HEAD
             records.push(row)
         })
         .on("end", function () {
@@ -506,7 +496,26 @@ async function parseICDO4() {
             })
 
             console.log(`[${timestamp()}] Finish icd11 import`);
-=======
+        })
+}
+
+async function parseICDO4() {
+    const filePath = "data/icdo4_morphology.csv"
+    const headers = ["code", "level", "preferred", "description", "codeReference"]
+    var results = [];
+
+    console.log(`[${timestamp()}] Start icdo4 import`);
+
+    await fs.createReadStream(filePath)
+        .pipe(parse({
+            columns: headers || true,
+            skip_empty_lines: true,
+            relax_column_count: true,
+            trim: true,
+            from_line: headers ? 2 : 1,
+            delimiter: ','
+        }))
+        .on('data', function (row) {
             results = results.concat({
                 ...row
             })
@@ -531,7 +540,6 @@ async function parseICDO4() {
             })
 
             console.log(`[${timestamp()}] Finish icdo4 import`);
->>>>>>> dev_10145
         })
 }
 
