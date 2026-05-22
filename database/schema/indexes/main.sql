@@ -35,6 +35,8 @@ create index index__icd11__entityId on icd11("entityId");
 create index index__icd11__code on icd11("code");
 create index index__icd11__description on icd11("description");
 create index index__icd11__parentEntityId on icd11("parentEntityId");
+create index index__icdo4_morphology__code on icdo4_morphology("code");
+create index index__icdo4_morphology__description on icdo4_morphology("description");
 
 create index index__icd10_neoplasm__path on icd10_neoplasm("path");
 create index index__icd10_neoplasm__neoplasm on icd10_neoplasm("neoplasm");

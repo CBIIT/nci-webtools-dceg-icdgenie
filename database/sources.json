@@ -77,5 +77,8 @@
     "filePath": "data/icd11.csv",
     "table": "icd11",
     "headers": ["entityId", "code", "description", "classKind", "depthInKind", "chapterNo", "parentEntityId"]
+    "filePath": "data/icdo4_morphology.csv",
+    "table": "icdo4_morphology",
+    "headers": ["code", "level", "preferred", "description", "codeReference"]
   }
 ]

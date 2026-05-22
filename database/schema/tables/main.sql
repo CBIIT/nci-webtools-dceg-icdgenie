@@ -65,6 +65,14 @@ create table "icd11"
     "depthInKind" integer,
     "chapterNo" text,
     "parentEntityId" text
+create table "icdo4_morphology"
+(
+    "id" integer primary key,
+    "code" text,
+    "level" text,
+    "preferred" boolean,
+    "description" text,
+    "codeReference" text
 );
 
 create table "icd10_neoplasm"
