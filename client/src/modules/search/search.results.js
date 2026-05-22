@@ -12,7 +12,7 @@ export default function SearchResults({ query, maps, search }) {
 
   const hasIcd10 = maps.tabular.size > 0 || maps.neoplasm.size > 0 || maps.drug.size > 0 || maps.injury.size > 0;
   const hasIcdo3 = maps.icdo3.length > 0;
-  const hasIcd11 = maps.icd11.length > 0;
+  const hasIcd11 = maps.icd11.size > 0;
   const hasIcdo4 = maps.icdo4.length > 0;
   const hasIcd10pcs = maps.icd10pcs.length > 0;
 
@@ -39,7 +39,7 @@ export default function SearchResults({ query, maps, search }) {
         <ICD10PCS maps={maps} />
       </Tab>
       <Tab eventKey="icd11Codes" title="ICD-11 Codes">
-        <ICD11 maps={maps} />
+        <ICD11 maps={maps} search={search} />
       </Tab>
       <Tab eventKey="icdo3Codes" title="ICD-O-3 Codes">
         <ICDO3 maps={maps} />
