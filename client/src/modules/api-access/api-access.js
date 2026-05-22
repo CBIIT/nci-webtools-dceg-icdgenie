@@ -15,8 +15,8 @@ export default function ApiAccess() {
 
       <Container className="py-5">
         <p>
-          The ICD Genie API provides programmatic access to endpoints which allow users to search and translate ICD-10
-          and ICD-O-3 codes. The following resources are available:
+          The ICD Genie API provides programmatic access to endpoints which allow users to search and translate ICD-10,
+          ICD-10-PCS, ICD-11, ICD-O-3, and ICD-O-4 codes. The following resources are available:
         </p>
         <SwaggerUI url={process.env.PUBLIC_URL + "/api"} />
         {/* Add SwaggerLabelInjector to observe and inject the label */}
