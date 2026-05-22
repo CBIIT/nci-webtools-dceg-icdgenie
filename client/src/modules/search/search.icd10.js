@@ -15,6 +15,7 @@ export default function ICD10({ maps, search }) {
   const [neoplasmPanel, setNeoplasmPanel] = useState(null)
   const [drugPanel, setDrugPanel] = useState(null)
   const [injuryPanel, setInjuryPanel] = useState(null)
+  const [pcsPanel, setPcsPanel] = useState(null)
   const [loading, setLoading] = useState(false);
   const [tabularOpen, setTabularOpen] = useState([])
   const [neoplasmOpen, setNeoplasmOpen] = useState([])
@@ -27,6 +28,7 @@ export default function ICD10({ maps, search }) {
     setNeoplasmPanel(maps.neoplasm.size ? "0" : null)
     setDrugPanel(maps.drug.size ? "0" : null)
     setInjuryPanel(maps.injury.size ? "0" : null)
+    setPcsPanel(maps.icd10pcs && maps.icd10pcs.length ? "0" : null)
 
     setTabularOpen(expandTreeData(Array.from(maps.tabular)))
     setNeoplasmOpen(expandTreeData(Array.from(maps.neoplasm)))
@@ -90,13 +92,6 @@ export default function ICD10({ maps, search }) {
     }
 
     return []
-  }
-
-  function getChildRows(row, rootRows) {
-    console.log(row)
-    if (row)
-      console.log(row.children)
-    return row ? row.children : rootRows;
   }
 
   function getTabularChildRows(row, rootRows) {
@@ -273,6 +268,21 @@ export default function ICD10({ maps, search }) {
               <Table columnExtensions={indexColumnExtension} />
               <TableHeaderRow />
               <TableTreeColumn for="description" />
+            </Grid>
+          </Accordion.Body>
+        </Accordion.Item>
+      </Accordion>
+
+      <Accordion onSelect={() => { maps.icd10pcs && maps.icd10pcs.length ? handleAccordion(pcsPanel, setPcsPanel) : setPcsPanel(null) }} activeKey={pcsPanel} className={`mb-4 ${maps.icd10pcs && maps.icd10pcs.length ? "index" : "disabled"}`}>
+        <Accordion.Item eventKey="0">
+          <Accordion.Header>
+            <span className="accordion-font">ICD-10-PCS CODES</span>
+          </Accordion.Header>
+          <Accordion.Body>
+            <Grid rows={maps.icd10pcs ? maps.icd10pcs.map((e) => e._source) : []} columns={indexColumns}>
+              <IcdCodeTypeProvider for={["code"]} />
+              <Table columnExtensions={indexColumnExtension} />
+              <TableHeaderRow />
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
