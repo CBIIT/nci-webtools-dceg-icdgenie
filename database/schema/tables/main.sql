@@ -60,6 +60,14 @@ create table "icd10_pcs"
     "id" integer primary key,
     "code" text,
     "description" text
+create table "icdo4_morphology"
+(
+    "id" integer primary key,
+    "code" text,
+    "level" text,
+    "preferred" boolean,
+    "description" text,
+    "codeReference" text
 );
 
 create table "icd10_neoplasm"

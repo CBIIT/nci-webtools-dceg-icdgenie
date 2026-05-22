@@ -435,12 +435,21 @@ async function parseTranslations() {
         })
 }
 
+<<<<<<< HEAD
 async function parseICD10PCS() {
     const filePath = "data/icd10pcs_2026.csv"
     const headers = ["code", "description"]
     var results = [];
 
     console.log(`[${timestamp()}] Start icd10pcs import`);
+=======
+async function parseICDO4() {
+    const filePath = "data/icdo4_morphology.csv"
+    const headers = ["code", "level", "preferred", "description", "codeReference"]
+    var results = [];
+
+    console.log(`[${timestamp()}] Start icdo4 import`);
+>>>>>>> dev_10146
 
     await fs.createReadStream(filePath)
         .pipe(parse({
@@ -457,11 +466,19 @@ async function parseICD10PCS() {
             })
         })
         .on("end", function () {
+<<<<<<< HEAD
             var fd = fs.openSync(path.resolve('data', 'icd10pcs.json'), 'a')
             results.map((e, index) => {
                 fs.appendFileSync(fd, JSON.stringify({
                     "index": {
                         "_index": "icd10pcs",
+=======
+            var fd = fs.openSync(path.resolve('data', 'icdo4.json'), 'a')
+            results.map((e, index) => {
+                fs.appendFileSync(fd, JSON.stringify({
+                    "index": {
+                        "_index": "icdo4",
+>>>>>>> dev_10146
                         "_id": index
                     }
                 }) + '\n',
@@ -475,7 +492,11 @@ async function parseICD10PCS() {
                 )
             })
 
+<<<<<<< HEAD
             console.log(`[${timestamp()}] Finish icd10pcs import`);
+=======
+            console.log(`[${timestamp()}] Finish icdo4 import`);
+>>>>>>> dev_10146
         })
 }
 

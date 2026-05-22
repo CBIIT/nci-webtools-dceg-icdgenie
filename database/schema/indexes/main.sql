@@ -33,6 +33,8 @@ create index index__icd10_injury__code on icd10_injury("code");
 
 create index index__icd10_pcs__code on icd10_pcs("code");
 create index index__icd10_pcs__description on icd10_pcs("description");
+create index index__icdo4_morphology__code on icdo4_morphology("code");
+create index index__icdo4_morphology__description on icdo4_morphology("description");
 
 create index index__icd10_neoplasm__path on icd10_neoplasm("path");
 create index index__icd10_neoplasm__neoplasm on icd10_neoplasm("neoplasm");
