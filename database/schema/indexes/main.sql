@@ -31,6 +31,8 @@ create index index__icd10_injury__path on icd10_injury("path");
 create index index__icd10_injury__description on icd10_injury("description");
 create index index__icd10_injury__code on icd10_injury("code");
 
+create index index__icd10_pcs__code on icd10_pcs("code");
+create index index__icd10_pcs__description on icd10_pcs("description");
 create index index__icd11__entityId on icd11("entityId");
 create index index__icd11__code on icd11("code");
 create index index__icd11__description on icd11("description");
