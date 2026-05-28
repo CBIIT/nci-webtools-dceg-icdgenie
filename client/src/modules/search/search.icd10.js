@@ -160,8 +160,20 @@ export default function ICD10({ maps, search }) {
   }
 
   return (
-    <Container className="py-5 col-xl-10 col-sm-12">
-      <Accordion onSelect={() => { maps.tabular.size ? handleAccordion(indexPanel, setIndexPanel) : setIndexPanel(null) }} activeKey={indexPanel} className={`mb-4 ${maps.tabular.size ? "index" : "disabled"}`}>
+    <Container className="py-5 h-100 col-xl-10 col-sm-12 index">
+      <Grid rows={maps.tabular ? Array.from(maps.tabular.values()).filter((node) => node.parents.length === 0) : []} columns={indexColumns}>
+        <IcdCodeTypeProvider for={["code"]} />
+        <TreeDataState
+          expandedRowIds={tabularOpen}
+          onExpandedRowIdsChange={setTabularOpen}
+        />
+        <CustomTreeData getChildRows={getTabularChildRows} />
+        <Table columnExtensions={indexColumnExtension} noDataCellComponent={() => <td />} />
+        <TableHeaderRow />
+        <TableTreeColumn for="description" />
+      </Grid>
+
+      {/* <Accordion onSelect={() => { maps.tabular.size ? handleAccordion(indexPanel, setIndexPanel) : setIndexPanel(null) }} activeKey={indexPanel} className={`mb-4 ${maps.tabular.size ? "index" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">TABULAR LIST</span>
@@ -180,9 +192,9 @@ export default function ICD10({ maps, search }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> */}
 
-      <Accordion onSelect={() => { maps.neoplasm.size ? handleAccordion(neoplasmPanel, setNeoplasmPanel) : setNeoplasmPanel(null) }} activeKey={neoplasmPanel} className={`mb-4 ${maps.neoplasm.size ? "neoplasm" : "disabled"}`}>
+      {/* <Accordion onSelect={() => { maps.neoplasm.size ? handleAccordion(neoplasmPanel, setNeoplasmPanel) : setNeoplasmPanel(null) }} activeKey={neoplasmPanel} className={`mb-4 ${maps.neoplasm.size ? "neoplasm" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">NEOPLASM TABLE</span>
@@ -210,9 +222,9 @@ export default function ICD10({ maps, search }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> */}
 
-      <Accordion onSelect={() => { maps.drug.size ? handleAccordion(drugPanel, setDrugPanel) : setDrugPanel(null) }} activeKey={drugPanel} className={`mb-4 ${maps.drug.size ? "drug" : "disabled"}`}>
+      {/* <Accordion onSelect={() => { maps.drug.size ? handleAccordion(drugPanel, setDrugPanel) : setDrugPanel(null) }} activeKey={drugPanel} className={`mb-4 ${maps.drug.size ? "drug" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">DRUG TABLE</span>
@@ -240,9 +252,9 @@ export default function ICD10({ maps, search }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> */}
 
-      <Accordion onSelect={() => { maps.injury.size ? handleAccordion(injuryPanel, setInjuryPanel) : setInjuryPanel(null) }} activeKey={injuryPanel} className={`mb-4 ${maps.injury.size ? "injury" : "disabled"}`}>
+      {/* <Accordion onSelect={() => { maps.injury.size ? handleAccordion(injuryPanel, setInjuryPanel) : setInjuryPanel(null) }} activeKey={injuryPanel} className={`mb-4 ${maps.injury.size ? "injury" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">INJURY TABLE</span>
@@ -261,9 +273,9 @@ export default function ICD10({ maps, search }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> */}
 
-      <Accordion onSelect={() => { maps.icd10pcs && maps.icd10pcs.length ? handleAccordion(pcsPanel, setPcsPanel) : setPcsPanel(null) }} activeKey={pcsPanel} className={`mb-4 ${maps.icd10pcs && maps.icd10pcs.length ? "index" : "disabled"}`}>
+      {/* <Accordion onSelect={() => { maps.icd10pcs && maps.icd10pcs.length ? handleAccordion(pcsPanel, setPcsPanel) : setPcsPanel(null) }} activeKey={pcsPanel} className={`mb-4 ${maps.icd10pcs && maps.icd10pcs.length ? "index" : "disabled"}`}>
         <Accordion.Item eventKey="0">
           <Accordion.Header>
             <span className="accordion-font">ICD-10-PCS CODES</span>
@@ -276,7 +288,7 @@ export default function ICD10({ maps, search }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> */}
     </Container>
   );
 }

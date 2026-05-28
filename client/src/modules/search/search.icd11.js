@@ -50,8 +50,24 @@ export default function ICD11({ maps, search }) {
   }
 
   return (
-    <Container className="py-5 col-xl-10 col-sm-12">
-      <Accordion
+    <Container className="py-5 h-100 col-xl-10 col-sm-12 index">
+      <Grid
+        rows={
+          maps.icd11
+            ? Array.from(maps.icd11.values()).filter((node) => node.parents.length === 0)
+            : []
+        }
+        columns={columns}
+      >
+        <IcdCodeTypeProvider for={["code"]} />
+        <TreeDataState expandedRowIds={expandedRows} onExpandedRowIdsChange={setExpandedRows} />
+        <CustomTreeData getChildRows={getChildRows} />
+        <Table columnExtensions={columnExtensions} noDataCellComponent={() => <td />} />
+        <TableHeaderRow />
+        <TableTreeColumn for="description" />
+      </Grid>
+
+      {/* <Accordion
         onSelect={() => {
           maps.icd11.size ? handleAccordion() : setPanel(null);
         }}
@@ -80,7 +96,7 @@ export default function ICD11({ maps, search }) {
             </Grid>
           </Accordion.Body>
         </Accordion.Item>
-      </Accordion>
+      </Accordion> */}
     </Container>
   );
 }

@@ -545,7 +545,7 @@ async function parseICD11() {
 
 async function parseICDO4() {
     const filePath = "data/icdo4_morphology.csv"
-    const headers = ["code", "level", "preferred", "description", "codeReference"]
+    const headers = ["code", "level", "preferred", "term", "codeReference", "obs", "seeAlso", "excludes", "other", "description"]
     var results = [];
 
     console.log(`[${timestamp()}] Start icdo4 import`);

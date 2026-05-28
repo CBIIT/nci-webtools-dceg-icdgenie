@@ -32,19 +32,19 @@ export default function SearchResults({ query, maps, search }) {
       className="d-flex justify-content-center bg-primary-light"
       onSelect={(e) => setTab(e)}
       >
-      <Tab eventKey="icd10Codes" title="ICD-10-CM Codes">
+      <Tab eventKey="icd10Codes" title="ICD-10-CM">
         <ICD10 maps={maps} search={search} />
       </Tab>
-      <Tab eventKey="icd10pcsCodes" title="ICD-10-PCS Codes">
+      <Tab eventKey="icd10pcsCodes" title="ICD-10-PCS">
         <ICD10PCS maps={maps} />
       </Tab>
-      <Tab eventKey="icd11Codes" title="ICD-11 Codes">
+      <Tab eventKey="icd11Codes" title="ICD-11">
         <ICD11 maps={maps} search={search} />
       </Tab>
-      <Tab eventKey="icdo3Codes" title="ICD-O-3 Codes">
+      <Tab eventKey="icdo3Codes" title="ICD-O-3">
         <ICDO3 maps={maps} />
       </Tab>
-      <Tab eventKey="icdo4Codes" title="ICD-O-4 Codes">
+      <Tab eventKey="icdo4Codes" title="ICD-O-4">
         <ICDO4 maps={maps} />
       </Tab>
     </Tabs>
