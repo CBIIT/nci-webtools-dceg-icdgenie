@@ -10,6 +10,17 @@ import_file() {
   local name=$(basename "$file" .json)
   local lines=$(wc -l < "$file" | tr -d ' ')
 
+  # Clean step: delete the target index before loading so stale documents from a
+  # previous import (e.g. codes/levels that no longer exist) do not linger. The index
+  # name is read from the file's first bulk action line. Toggle off with CLEAN_INDEXES=false.
+  if [ "${CLEAN_INDEXES:-true}" = "true" ]; then
+    local index=$(head -n 1 "$file" | sed -n 's/.*"_index":"\([^"]*\)".*/\1/p')
+    if [ -n "$index" ]; then
+      echo "[$name] Cleaning: deleting index '$index' before import"
+      curl -k -s -o /dev/null -XDELETE -u "$ADMIN:$PASSWORD" "https://$DOMAIN/$index"
+    fi
+  fi
+
   echo "[$name] Starting import ($lines lines)"
 
   if [ "$lines" -le "$CHUNK_SIZE" ]; then
