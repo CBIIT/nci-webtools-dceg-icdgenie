@@ -2,9 +2,9 @@ import { useRecoilState } from "recoil";
 import axios from "axios";
 import Loader from "../common/loader";
 import { Form, Container, Row, Col, Button, Popover, OverlayTrigger } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { formState, resultsState } from "./batch-query.state";
-import { readFileAsText, exportTsv, ExcelFile, ExcelSheet } from "./batch-query.utils";
+import { readFileAsText, ExcelFile, ExcelSheet } from "./batch-query.utils";
 import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
@@ -21,8 +21,6 @@ export default function BatchQuery() {
   const [uploaded, setUploaded] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const fileRef = useRef();
-
-  const navigate = useNavigate();
 
   const [sortColumn, setSorting] = useState([{ columnName: "id", direction: "asc" }])
 
@@ -302,13 +300,7 @@ export default function BatchQuery() {
             <Col md={8}>
               <Form.Group>
                 <Form.Label>Select searchable type</Form.Label>
-                <p>We highly recommend that users review the <a href="javascript:void(0)"
-                  onClick={() => {
-                    navigate("/getting-started");
-                  }}
-                >
-                  Getting Started
-                </a> page for information on proper data formatting for optimal use of ICD Genie.</p>
+                <p>We highly recommend that users review the <Link to="/getting-started">Getting Started</Link> page for information on proper data formatting for optimal use of ICD Genie.</p>
 
               </Form.Group>
             </Col>
@@ -334,14 +326,15 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
+                      label={<span>Participant ID <i className="text-muted">(Optional)</i></span>}
                       name="icd10Id"
                       type="checkbox"
                       id="icd10Id"
                       value="icd10Id"
                       checked={form.icd10Id}
                       disabled={form.inputType !== "icd10"}
-                      onClick={() => mergeForm({ ["icd10Id"]: !form.icd10Id })}
+                      aria-disabled={form.inputType !== "icd10"}
+                      onClick={() => mergeForm({ "icd10Id": !form.icd10Id })}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd10Id_tip">
@@ -365,6 +358,7 @@ export default function BatchQuery() {
                       id="icd10CCode"
                       value="icd10Code"
                       disabled={true}
+                      aria-disabled={true}
                       checked={form.inputType === "icd10"}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
@@ -407,14 +401,15 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
+                      label={<span>Participant ID <i className="text-muted">(Optional)</i></span>}
                       name="icd10pcsId"
                       type="checkbox"
                       id="icd10pcsId"
                       value="icd10pcsId"
                       checked={form.icd10pcsId}
                       disabled={form.inputType !== "icd10pcs"}
-                      onClick={() => mergeForm({ ["icd10pcsId"]: !form.icd10pcsId })}
+                      aria-disabled={form.inputType !== "icd10pcs"}
+                      onClick={() => mergeForm({ "icd10pcsId": !form.icd10pcsId })}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd10pcsId_tip">
@@ -438,6 +433,7 @@ export default function BatchQuery() {
                       id="icd10pcsCode"
                       value="icd10pcsCode"
                       disabled={true}
+                      aria-disabled={true}
                       checked={form.inputType === "icd10pcs"}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
@@ -477,14 +473,15 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={<label>Participant ID <i className="text-muted">(Optional)</i></label>}
+                      label={<span>Participant ID <i className="text-muted">(Optional)</i></span>}
                       name="icd11Id"
                       type="checkbox"
                       id="icd11Id"
                       value="icd11Id"
                       checked={form.icd11Id}
                       disabled={form.inputType !== "icd11"}
-                      onClick={() => mergeForm({ ["icd11Id"]: !form.icd11Id })}
+                      aria-disabled={form.inputType !== "icd11"}
+                      onClick={() => mergeForm({ "icd11Id": !form.icd11Id })}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd11Id_tip">
@@ -508,6 +505,7 @@ export default function BatchQuery() {
                       id="icd11Code"
                       value="icd11Code"
                       disabled={true}
+                      aria-disabled={true}
                       checked={form.inputType === "icd11"}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
@@ -563,7 +561,8 @@ export default function BatchQuery() {
                       value="icdo3Id"
                       checked={form.icdo3Id}
                       disabled={form.inputType !== "icdo3"}
-                      onClick={() => mergeForm({ ["icdo3Id"]: !form.icdo3Id })}
+                      aria-disabled={form.inputType !== "icdo3"}
+                      onClick={() => mergeForm({ "icdo3Id": !form.icdo3Id })}
                     />
                     <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo3ID_tip">
@@ -589,7 +588,8 @@ export default function BatchQuery() {
                       value="icdo3Morph"
                       checked={form.icdo3Morph}
                       disabled={form.inputType !== "icdo3"}
-                      onClick={() => mergeForm({ ["icdo3Morph"]: !form.icdo3Morph })}
+                      aria-disabled={form.inputType !== "icdo3"}
+                      onClick={() => mergeForm({ "icdo3Morph": !form.icdo3Morph })}
                     />
                     <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo3Morph_tip">
@@ -620,7 +620,8 @@ export default function BatchQuery() {
                       value="icdo3Site"
                       checked={form.icdo3Site}
                       disabled={form.inputType !== "icdo3"}
-                      onClick={() => mergeForm({ ["icdo3Site"]: !form.icdo3Site })}
+                      aria-disabled={form.inputType !== "icdo3"}
+                      onClick={() => mergeForm({ "icdo3Site": !form.icdo3Site })}
                     />
                     <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo3Site_tip">
@@ -671,7 +672,8 @@ export default function BatchQuery() {
                       value="icdo4Id"
                       checked={form.icdo4Id}
                       disabled={form.inputType !== "icdo4"}
-                      onClick={() => mergeForm({ ["icdo4Id"]: !form.icdo4Id })}
+                      aria-disabled={form.inputType !== "icdo4"}
+                      onClick={() => mergeForm({ "icdo4Id": !form.icdo4Id })}
                     />
                     <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo4Id_tip">
@@ -697,7 +699,8 @@ export default function BatchQuery() {
                       value="icdo4Morph"
                       checked={form.icdo4Morph}
                       disabled={form.inputType !== "icdo4"}
-                      onClick={() => mergeForm({ ["icdo4Morph"]: !form.icdo4Morph })}
+                      aria-disabled={form.inputType !== "icdo4"}
+                      onClick={() => mergeForm({ "icdo4Morph": !form.icdo4Morph })}
                     />
                     <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo4Morph_tip">
@@ -728,7 +731,8 @@ export default function BatchQuery() {
                       value="icdo4Site"
                       checked={form.icdo4Site}
                       disabled={form.inputType !== "icdo4"}
-                      onClick={() => mergeForm({ ["icdo4Site"]: !form.icdo4Site })}
+                      aria-disabled={form.inputType !== "icdo4"}
+                      onClick={() => mergeForm({ "icdo4Site": !form.icdo4Site })}
                     />
                     <OverlayTrigger trigger="click" placement="left" rootClose
                       overlay={<Popover id="icdo4Site_tip">
