@@ -52,17 +52,37 @@ async function queryTabular(codePattern) {
   };
 
   const result = await client.search({ index: "tabular", body });
-  return result.body.hits.hits
+  const matches = result.body.hits.hits
     .map((h) => ({ code: h._source.code, description: h._source.description }))
     .filter((h) => {
-      // For wildcards like C51._, only return codes that match the pattern (e.g., C51.0, C51.1)
-      // Exclude range headers (C51-C58), parent codes without dot (C51), and deeper codes
+      // For wildcards like C51._, return codes that match the pattern (e.g., C51.0, C51.1)
+      // Exclude range headers (C51-C58) and deeper codes
       if (isWildcard) {
         const prefix = codePattern.replace(/_/g, "");
         return h.code.startsWith(prefix) && h.code.length > prefix.length && !h.code.includes("-");
       }
       return h.code === codePattern;
     });
+
+  // O3 parity (NCIATWP-10153 AC #7): the client-provided O3 mapping contains BOTH the
+  // parent/category row (e.g. C51) and its children (C51.0...), so a parent code entered
+  // in Batch Query resolves the combination. Emit the parent row for underscore groups too.
+  if (isWildcard) {
+    const parentCode = codePattern.replace(/_/g, "").replace(/\.$/, "");
+    const parentResult = await client.search({
+      index: "tabular",
+      body: {
+        query: { bool: { filter: [{ query_string: { query: `"${escapeQueryString(parentCode)}"`, fields: ["code"] } }] } },
+        size: 10,
+      },
+    });
+    const parent = parentResult.body.hits.hits
+      .map((h) => ({ code: h._source.code, description: h._source.description }))
+      .find((h) => h.code === parentCode);
+    if (parent) matches.unshift(parent);
+  }
+
+  return matches;
 }
 
 const tabularCache = new Map();
@@ -110,6 +130,16 @@ async function main() {
   });
   fs.writeFileSync(outputPath, csvOutput);
   console.log(`Written ${rows.length} rows to ${outputPath}`);
+
+  // Also emit the OpenSearch bulk file that import.sh loads into translations_icdo4,
+  // so the index stays in sync with the regenerated mapping.
+  const bulkPath = path.resolve(path.dirname(outputPath), "translations_icdo4.json");
+  const bulkLines = rows.flatMap((r, i) => [
+    JSON.stringify({ index: { _index: "translations_icdo4", _id: i } }),
+    JSON.stringify({ icd10: r[0], icd10Description: r[1], icdo4: r[2], icdo4Description: r[3] }),
+  ]);
+  fs.writeFileSync(bulkPath, bulkLines.join("\n") + "\n");
+  console.log(`Written bulk file to ${bulkPath}`);
   console.log(`Cache hits: ${tabularCache.size} unique patterns cached`);
 }
 
