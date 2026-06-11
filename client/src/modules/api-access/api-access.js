@@ -3,6 +3,7 @@ import SwaggerUI from "swagger-ui-react";
 import SwaggerLabelInjector from "../../components/swagger-ui/swagger-injecttion";
 import SwaggerColorCustomizer from "../../components/swagger-ui/swagger-color-customizer";
 import SwaggerScrollablePreEnhancer from "../../components/swagger-ui/swagger-scrollable";
+import SwaggerLargeResponseHighlightFix from "../../components/swagger-ui/swagger-large-response-fix";
 
 export default function ApiAccess() {
   return (
@@ -18,7 +19,7 @@ export default function ApiAccess() {
           The ICD Genie API provides programmatic access to endpoints which allow users to search and translate ICD-10,
           ICD-10-PCS, ICD-11, ICD-O-3, and ICD-O-4 codes. The following resources are available:
         </p>
-        <SwaggerUI url={process.env.PUBLIC_URL + "/api"} />
+        <SwaggerUI url={process.env.PUBLIC_URL + "/api"} plugins={[SwaggerLargeResponseHighlightFix]} />
         {/* Add SwaggerLabelInjector to observe and inject the label */}
         <SwaggerLabelInjector />
         {/* Custom integer color styling */}
