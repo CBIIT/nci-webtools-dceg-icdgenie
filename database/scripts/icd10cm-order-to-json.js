@@ -35,12 +35,16 @@ const INPUT = process.argv[2] ||
 const OUTPUT = process.argv[3] || path.resolve(__dirname, "../data/icd10tabular.json");
 
 // Same numeric code id the legacy importer used (opensearch.js convertCode), on the DOTTED code.
+// Letters past the first char must be stripped before parseFloat: 2026 introduced codes like
+// G43.E19 ("43.E19" parses as the exponent 43e19, overflowing the index's long mapping) and
+// QA0 ("A0" parses as NaN, emitted as null).
 function convertCode(code) {
+  const numeric = code.substring(1).replace(/[^0-9.]/g, "") || "0";
   let decimals = 0;
-  if (code.substring(1).includes("."))
-    decimals = code.substring(1).split(".")[1].length;
+  if (numeric.includes("."))
+    decimals = numeric.split(".")[1].length;
   return ((code.charCodeAt(0) - 64) * 1000) +
-    parseFloat(parseFloat(code.substring(1)).toFixed(decimals));
+    parseFloat(parseFloat(numeric).toFixed(decimals));
 }
 
 // Re-insert the decimal: first 3 chars are the category, the rest follow a dot (A000 -> A00.0).
