@@ -119,7 +119,9 @@ export default function Starter() {
                   <ul>
                     <li>Participant identifiers</li>
                     <li>ICD-10 codes</li>
-                    <li>ICD-O-3 morphology and/or site codes</li>
+                    <li>ICD-11 codes</li>
+                    <li>ICD-O-3 morphology and/or topography codes</li>
+                    <li>ICD-O-4 morphology and/or topography codes</li>
                     <li>Text diagnoses [available for <a href="javascript:void(0);" onClick={() => { navigate("/search") }}>"Search"</a> (single query) only]</li>
                   </ul>
                 </li>
@@ -141,7 +143,7 @@ export default function Starter() {
                 </h2>
                 <h3 style={{ fontWeight: "bold" }}>Single Query</h3>
                 <p>
-                  Single query accepts text, numeric (ICD-O-3 morphology or site codes), and alphanumeric (ICD-10 codes) queries. You can explore disease descriptions and the coding hierarchy (i.e., parent nodes and child nodes). Only one search term can be entered at a time. Ensure text diagnoses are in American English and not British English.{" "}
+                  Single query accepts individual text, numeric (ICD-O-3 and ICD-O-4 morphology or topography codes), or alphanumeric (ICD-10 or ICD-11 codes) queries. You can explore disease descriptions and the coding hierarchy (i.e., parent nodes and child nodes). Only one search term can be entered at a time. Ensure text diagnoses are in American English and not British English (e.g., tumor as opposed to tumour).{" "}
                 </p>
                 <h3 style={{ fontWeight: "bold" }}>Batch Query</h3>
                 <p>
@@ -192,7 +194,7 @@ export default function Starter() {
               <h2 id="formatting" className="my-4 text-uppercase blue-subheader">
                 Formatting ICD Codes
               </h2>
-              <h3 style={{ fontWeight: "bold" }}>ICD-10 Codes</h3>
+              <h3 style={{ fontWeight: "bold" }}>ICD-10-CM Codes</h3>
               <div>
                 <strong>Example Code:</strong> W56.29 (translation: other contact with an orca)
               </div>
@@ -202,6 +204,27 @@ export default function Starter() {
                 <li>First character is always a letter (except "U")</li>
                 <li>Second and third characters are always a number</li>
                 <li>Characters 4 through 6: either a number or letter</li>
+              </ul>
+              <h3 style={{ fontWeight: "bold" }}>ICD-10-PCS Codes</h3>
+              <div>
+                <strong>Example Code:</strong> 0DTJ0ZZ (translation: Resection of appendix, open approach)
+              </div>
+              <ul>
+                <li>Alphanumeric</li>
+                <li>Always 7 characters without a decimal point</li>
+                <li>Each character can be a number or a letter</li>
+                <li>The letters "O" and "I" are omitted to prevent confusion with the numbers "0" and "1"</li>
+                <li>Each character represents a specific component of the procedure (e.g., Character 1: Section, Character 2: Body system)</li>
+              </ul>
+              <h3 style={{ fontWeight: "bold" }}>ICD-11 Codes</h3>
+              <div>
+                <strong>Example Code:</strong> 2F80.0 (translation: Kaposi sarcoma of skin)
+              </div>
+              <ul>
+                <li>Alphanumeric</li>
+                <li>First character may be a letter or a number</li>
+                <li>Second character is always a letter, which differentiates ICD-11 from ICD-10</li>
+                <li>The letters "O" and "I" are omitted to prevent confusion with the numbers "0" and "1"</li>
               </ul>
               <h3 style={{ fontWeight: "bold" }}>ICD-O-3 Codes</h3>
               <div>
@@ -214,6 +237,20 @@ export default function Starter() {
               </ul>
               <div>
                 <strong>Example Site Code:</strong> C71.9
+              </div>
+              <ul>
+                <li>Alphanumeric; begins with “C” followed by 2 numbers, a period, and at least one more number</li>
+              </ul>
+              <h3 style={{ fontWeight: "bold" }}>ICD-O-4 Codes</h3>
+              <div>
+                <strong>Example Morphology Code:</strong> 80700/3
+              </div>
+              <ul>
+                <li>Alphanumeric</li>
+                <li>Must have a forward slash after the fifth number (i.e., "/")</li>
+              </ul>
+              <div>
+                <strong>Example Topography Code:</strong> C72.3 (translation: optic nerve)
               </div>
               <ul>
                 <li>Alphanumeric; begins with “C” followed by 2 numbers, a period, and at least one more number</li>
@@ -313,7 +350,7 @@ export default function Starter() {
                 How Do I Use ICDGenie
               </h2>
               <h3 style={{ fontWeight: "bold" }}>Single Query</h3>
-              <p>Submit a single text, ICD-O-3, or ICD-10 query, click “submit,” and check both the ICD-O-3 and ICD-10 tabs on the screen for query results.</p>
+              <p>Submit a single text or ICD code, click “submit,” and select the relevant tab (e.g., ICD-10 vs. ICD-11, ICD-O-3 vs. ICD-O-4) for query results.</p>
               <h3 style={{ fontWeight: "bold" }}>Batch Query</h3>
               <ul>
                 <li>Upload a tab-delimited file, suffixed “.tsv,” of {"<"}5,000 rows (of the medical codes) by </li>
