@@ -15,16 +15,31 @@ export default function Resources() {
                 ICD Genie utilizes data from the following publicly available resources:
               </h5>
 
-              <p>ICD-10 diagnosis codes:</p>
+              <p className="mb-1"><strong>ICD-10:</strong></p>
               <ul>
                 <li>
-                  <a href="https://www.cms.gov/files/zip/2022-code-tables-tabular-and-index.zip" target="_blank">
-                    ICD-10-CM codes maintained by Centers for Medicare & Medicaid Services (CMS)
-                  </a>
+                  ICD-10-CM and ICD-10-PCS codes (2026 versions) maintained by Centers for Medicare &amp; Medicaid Services (CMS)
                 </li>
               </ul>
 
-              <p>ICD-O-3 morphology codes and description sources:</p>
+              <p className="mb-1"><strong>ICD-11:</strong></p>
+              <ul>
+                <li>World Health Organization (2022 release)</li>
+              </ul>
+
+              <p className="mb-1"><strong>ICD-O-4:</strong></p>
+              <ul>
+                <li>
+                  Published by Znaor et al. (2026) in Cancer Epidemiology (DOI:{" "}
+                  <a href="https://doi.org/10.1016/j.canep.2026.102989" target="_blank">
+                    10.1016/j.canep.2026.102989
+                  </a>
+                  )
+                </li>
+                <li>Data used in tool sourced from Supplementary Table 1.</li>
+              </ul>
+
+              <p className="mb-1"><strong>ICD-O-3 morphology codes and description sources:</strong></p>
               <ul>
                 <li>
                   <a href="https://www.naaccr.org/icdo3/" target="_blank">
@@ -45,6 +60,7 @@ export default function Resources() {
                   </a>
                 </li>
               </ul>
+              <div className="my-2">To learn more about the differences between ICD-10 and ICD-O-3, visit the <a href="https://training.seer.cancer.gov/index.html" target="_blank">SEER Training site</a></div>
             </Container>
           </Col>
           {/*<Col md={7} className="px-0">

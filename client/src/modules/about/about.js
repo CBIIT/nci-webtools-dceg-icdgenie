@@ -75,14 +75,14 @@ export default function About() {
             <Container className=" ps-5">
               <h3 id="background" className="mb-4 blue-subheader">1. Background</h3>
               <p>
-                Accurate histological classification is important for facilitating studies of cancer epidemiology and etiologic heterogeneity. ICD Genie is a web-based tool that can assist epidemiologists, pathologists, research assistants, and data scientists to access and validate codes and text descriptions from the International Classification of Diseases (10th Edition) (ICD-10) and International Classification of Diseases for Oncology, 3rd Edition (ICD-O-3) more easily.
+                Accurate histological classification is critical for facilitating studies of cancer epidemiology and etiologic heterogeneity. ICD Genie is a web-based tool that can assist epidemiologists, pathologists, research assistants, and data scientists in accessing and validating codes and text descriptions from the International Classification of Diseases, 10th and 11th Editions (ICD-10 and ICD-11) and International Classification of Diseases for Oncology, 3rd and 4th Editions (ICD-O-3 and ICD-O-4).
               </p>
 
               <p>
-                Although many of the early classification and coding conventions have remained unchanged in successive versions of ICD and ICD-O, substantial revisions have been made in more recent versions i.e., ICD-10 and ICD-O-3. Tumor-related information may be available only in pathology reports, in text formats, or as ICD codes, which can be difficult to translate and record for non-specialists. The lack of a web-based tool for the batch translation of ICD codes to textual diagnoses is particularly challenging for large-scale epidemiological and public health projects that are often based on ICD codes derived from medical records for hundreds to thousands of individuals.
+                Although many of the early classification and coding conventions have remained unchanged in successive versions of ICD and ICD-O, substantial revisions have been made in more recent versions i.e., ICD-11 and ICD-O-4. Tumor-related information may be available only in pathology reports, in text formats, or as ICD codes, which can be difficult to translate and record for non-specialists. The lack of a web-based tool for the batch translation of ICD codes to textual diagnoses is particularly challenging for large-scale epidemiological and public health projects that are often based on ICD codes derived from medical records for hundreds to thousands of individuals.
               </p>
               <p>
-                To address these challenges, we developed ICD Genie as a publicly available web tool to facilitate the translation of ICD-10 and ICD-O-3 codes to human-readable text. By improving accessibility and by making existing cancer classification and coding schemes more readily understandable and searchable, ICD Genie will help accelerate descriptive and molecular epidemiological studies of cancer. The incorporation of ICD-10 in ICD Genie renders the tool useful for studies of other non-neoplastic diseases.
+                To address these challenges, we developed ICD Genie as a publicly available web tool to facilitate the translation of ICD codes to human-readable text. By improving accessibility and making existing cancer classification and coding schemes more readily understandable and searchable, ICD Genie will accelerate descriptive and molecular epidemiological studies of cancer. The incorporation of ICD-10 and ICD-11 in ICD Genie renders the tool useful for studies of other non-neoplastic diseases.
               </p>
               <p>ICD Genie is not intended to be used by cancer registrars or for cancer surveillance purposes. Cancer registrars should visit the Surveillance, Epidemiology, and End Results Program website (<a href="https://seer.cancer.gov/" target="_blank">https://seer.cancer.gov/</a>) for more information about coding guidelines and resources.
               </p>
@@ -100,16 +100,31 @@ export default function About() {
                   2. Resources
                 </h3>
                 <div className="my-2">ICD Genie utilizes data from the following publicly available resources:</div>
-                <p>ICD-10 diagnosis codes:</p>
+                <p className="mb-1"><strong>ICD-10:</strong></p>
                 <ul>
                   <li>
-                    <a href="https://www.cms.gov/files/zip/2022-code-tables-tabular-and-index.zip" target="_blank">
-                      ICD-10-CM codes maintained by Centers for Medicare & Medicaid Services (CMS)
-                    </a>
+                    ICD-10-CM and ICD-10-PCS codes (2026 versions) maintained by Centers for Medicare &amp; Medicaid Services (CMS)
                   </li>
                 </ul>
 
-                <p>ICD-O-3 morphology codes and description sources:</p>
+                <p className="mb-1"><strong>ICD-11:</strong></p>
+                <ul>
+                  <li>World Health Organization (2022 release)</li>
+                </ul>
+
+                <p className="mb-1"><strong>ICD-O-4:</strong></p>
+                <ul>
+                  <li>
+                    Published by Znaor et al. (2026) in Cancer Epidemiology (DOI:{" "}
+                    <a href="https://doi.org/10.1016/j.canep.2026.102989" target="_blank">
+                      10.1016/j.canep.2026.102989
+                    </a>
+                    )
+                  </li>
+                  <li>Data used in tool sourced from Supplementary Table 1.</li>
+                </ul>
+
+                <p className="mb-1"><strong>ICD-O-3 morphology codes and description sources:</strong></p>
                 <ul>
                   <li>
                     <a href="https://www.naaccr.org/icdo3/" target="_blank">
