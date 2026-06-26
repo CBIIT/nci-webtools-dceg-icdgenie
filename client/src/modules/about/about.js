@@ -103,7 +103,9 @@ export default function About() {
                 <p className="mb-1"><strong>ICD-10:</strong></p>
                 <ul>
                   <li>
-                    ICD-10-CM and ICD-10-PCS codes (2026 versions) maintained by Centers for Medicare &amp; Medicaid Services (CMS)
+                    <a href="https://www.cms.gov/files/zip/2022-code-tables-tabular-and-index.zip" target="_blank">
+                      ICD-10-CM and ICD-10-PCS codes (2026 versions) maintained by Centers for Medicare &amp; Medicaid Services (CMS)
+                    </a>
                   </li>
                 </ul>
 
@@ -115,11 +117,7 @@ export default function About() {
                 <p className="mb-1"><strong>ICD-O-4:</strong></p>
                 <ul>
                   <li>
-                    Published by Znaor et al. (2026) in Cancer Epidemiology (DOI:{" "}
-                    <a href="https://doi.org/10.1016/j.canep.2026.102989" target="_blank">
-                      10.1016/j.canep.2026.102989
-                    </a>
-                    )
+                    Published by Znaor et al. (2026) in Cancer Epidemiology (DOI: 10.1016/j.canep.2026.102989)
                   </li>
                   <li>Data used in tool sourced from Supplementary Table 1.</li>
                 </ul>
