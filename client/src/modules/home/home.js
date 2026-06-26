@@ -39,48 +39,49 @@ export default function Home() {
           <Row className="justify-content-center">
             <Col className="mb-4" xl={8}>
               <p className="fw-normal">
-                ICD Genie is a translator for textual diagnoses, ICD-10, and ICD-O-3 codes sourced from the{" "}
+                ICD Genie is a translator between textual descriptions and ICD-10, ICD-11, ICD-O-3, and ICD-O-4 codes.
+                The tool was built using files sourced from the{" "}
                 <a href="https://www.cms.gov/files/zip/2022-code-tables-tabular-and-index.zip" target="_blank">
                   Centers for Medicare & Medicaid Services (CMS)
+                </a>
+                ,{" "}
+                <a href="https://apps.who.int/iris/bitstream/handle/10665/96612/9789241548496_eng.pdf" target="_blank">
+                  World Health Organization (WHO)
                 </a>
                 , the{" "}
                 <a href="https://www.naaccr.org/icdo3/" target="_blank">
                   North American Association of Central Cancer Registries (NAACCR)
                 </a>
-                , the{" "}
+                , and the{" "}
                 <a href="https://seer.cancer.gov/icd-o-3/" target="_blank">
                   Surveillance, Epidemiology, and End Results (SEER) program validation list
-                </a>
-                , and the{" "}
-                <a href="https://apps.who.int/iris/bitstream/handle/10665/96612/9789241548496_eng.pdf" target="_blank">
-                  World Health Organization (WHO) ICD-O-3 publication
                 </a>
                 .
               </p>
 
               <p className="fw-normal">
-                ICD Genie was created by Sairah Khan M.P.H., Shu-Hong Lin Ph.D., BVSc,{" "}
+                ICD Genie was created by{" "}
                 <a href="https://dceg.cancer.gov/about/staff-directory/abubakar-Mustapha" target="_blank">
-                  Mustapha Abubakar M.D., Ph.D.
-                </a>{" "}
-                and{" "}
+                  Mustapha Abubakar, M.D., Ph.D.
+                </a>
+                , Kara Barnao, M.S., Shu-Hong Lin, Ph.D., B.V.Sc., Sairah Khan, M.P.H., and{" "}
                 <a href="https://dceg.cancer.gov/about/staff-directory/machiela-mitchell" target="_blank">
-                  {" "}
-                  Mitchell J. Machiela Sc.D., MPH
+                  Mitchell J. Machiela, Sc.D., M.P.H.
                 </a>{" "}
-                of the NCI{" "}
-                <a href="https://dceg.cancer.gov/" target="_blank">
-                  Division of Cancer Epidemiology and Genetics (DCEG)
-                </a>{" "}
+                of the{" "}
                 <a href="https://dceg.cancer.gov/about/organization/tdrp/iteb" target="_blank">
                   Integrative Tumor Epidemiology Branch
                 </a>{" "}
-                with assistance developing the tool from Brian Park B.S., Ben Chen B.S., Madhu Kanigicherla M.S., Pramiti Ganguli B.S., Hannah Stogsdill B.A., Kai-Ling
-                Chen M.S. and Ye Wu Ph.D. of NCI’s{" "}
+                of the National Cancer Institute’s (NCI){" "}
+                <a href="https://dceg.cancer.gov/" target="_blank">
+                  Division of Cancer Epidemiology and Genetics (DCEG)
+                </a>
+                . The tool was developed with assistance from Brian Park, B.S., Ben Chen, B.S., Madhu Kanigicherla,
+                M.S., Pramiti Ganguli, B.S., Hannah Stogsdill, B.A., Kai-Ling Chen, M.S., and Ye Wu, Ph.D. of NCI’s{" "}
                 <a href="https://datascience.cancer.gov/" target="_blank">
-                  Center for Biomedical Informatics and Information Technology.
-                </a>{" "}
-                Many thanks to our colleagues who provided critical input during the design and development of ICD
+                  Center for Biomedical Informatics and Information Technology
+                </a>
+                . Many thanks to our colleagues who provided critical input during the design and development of ICD
                 Genie!
               </p>
 
