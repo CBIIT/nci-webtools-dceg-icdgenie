@@ -459,7 +459,7 @@ export default function Starter() {
                   <li>Formatting data in excel or a text editor</li>
                 </ul>
                 <VideoTutorial
-                  src="https://cbiit.github.io/nci-webtools-dceg-icdgenie/22-1202-Checking_ICD_O_3_ICD_10_Codes.mp4"
+                  src={`${process.env.PUBLIC_URL}/videos/22-1202-Checking_ICD_O_3_ICD_10_Codes.mp4`}
                   label="Formatting your data video tutorial"
                 />
                 <h3 style={{ fontWeight: "bold" }}>Using the Tool</h3>
@@ -467,7 +467,7 @@ export default function Starter() {
                   <li>Step by step guide for using batch query</li>
                 </ul>
                 <VideoTutorial
-                  src="https://cbiit.github.io/nci-webtools-dceg-icdgenie/22-1201-How_to_Use_ICDgenie_s_Batch_Query_Tool.mp4"
+                  src={`${process.env.PUBLIC_URL}/videos/22-1201-How_to_Use_ICDgenie_s_Batch_Query_Tool.mp4`}
                   label="How to use Batch Query video tutorial"
                 />
               </Container>
