@@ -309,10 +309,10 @@ export default function BatchQuery() {
 
             <Col md={4}>
               <Form.Group className="mb-3">
-                {/* ICD-10 Codes */}
+                {/* ICD-10-CM Codes */}
                 <div className="d-flex align-items-center gap-2">
                   <Form.Check
-                    label="ICD-10 Codes"
+                    label="ICD-10-CM Codes"
                     name="inputType"
                     type="radio"
                     id="icd10Input"
@@ -363,7 +363,7 @@ export default function BatchQuery() {
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd10_tip">
-                        <Popover.Header>ICD-10 Codes</Popover.Header>
+                        <Popover.Header>ICD-10-CM Codes</Popover.Header>
                         <Popover.Body>
                           <p><i>The International Classification of Diseases, Tenth Revision (ICD-10) is a system created by the World Health Organization to categorize all diagnoses, symptoms, and procedures. </i></p>
                           <div><b>Example Code:</b> W56.29 <i>(Translation: Accidental Contact with an Orca)</i></div>
@@ -787,7 +787,7 @@ export default function BatchQuery() {
                   rows={2}
                   value={form.input}
                   disabled={uploaded}
-                  placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2), ICD-10-PCS Codes (Ex. 4A0Z76Z), ICD-11 Codes (Ex. 1B70.0Y), ICD-O-4 Codes (Ex. 80000/3)"
+                  placeholder="ICD-10-CM Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2), ICD-10-PCS Codes (Ex. 4A0Z76Z), ICD-11 Codes (Ex. 1B70.0Y), ICD-O-4 Codes (Ex. 80000/3)"
                   onChange={handleChange}
                 />
                 <div className="d-flex justify-content-end gap-2">
