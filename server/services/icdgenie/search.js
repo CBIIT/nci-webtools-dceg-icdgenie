@@ -2,6 +2,10 @@ const { Client } = require("@opensearch-project/opensearch")
 const { APP_BASE_URL, ADMIN, PASSWORD, DOMAIN } = process.env;
 const host = `https://${ADMIN}:${PASSWORD}@${DOMAIN}`;
 
+//Max results returned per code set. Broad terms can match many thousands of rows; we cap the
+//returned set and surface the true total so the UI can tell the user results were truncated.
+const RESULT_LIMIT = 2000;
+
 async function fuzzySearch(options, client, index) {
   var results = []
   await Promise.all(options.map(async (e) => {
@@ -121,7 +125,9 @@ async function opensearch(request, response) {
         }
       }
     ],
-    "size": 500
+    "size": RESULT_LIMIT,
+    //Count all matches (not just the default 10k window) so the "showing N of M" signal is accurate.
+    "track_total_hits": true
   }
 
   const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result, icd10pcsResult, icd11Result, icdo4Result] = await Promise.all([
@@ -146,6 +152,18 @@ async function opensearch(request, response) {
     icdo4: icdo4Result.body.hits.hits,
     showSuggestions: true,
     fuzzyTerms: [],
+    //Per-index true match count (before the RESULT_LIMIT cap) so the UI can show a truncation notice.
+    resultLimit: RESULT_LIMIT,
+    totals: {
+      tabular: tabularResult.body.hits.total.value,
+      neoplasm: neoplasmResult.body.hits.total.value,
+      drug: drugResult.body.hits.total.value,
+      injury: injuryResult.body.hits.total.value,
+      icdo3: icdo3Result.body.hits.total.value,
+      icd10pcs: icd10pcsResult.body.hits.total.value,
+      icd11: icd11Result.body.hits.total.value,
+      icdo4: icdo4Result.body.hits.total.value,
+    },
   }
 
   const tabularOptions = isCodeSearch ? [] : tabularResult.body.suggest["spell-check"][0].options;

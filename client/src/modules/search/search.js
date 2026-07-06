@@ -36,6 +36,8 @@ export default function Search() {
   const [valid, setValid] = useState(true)
   const [suggestions, setSuggestions] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
+  const [totals, setTotals] = useState({})
+  const [resultLimit, setResultLimit] = useState(0)
 
   useEffect(() => {
 
@@ -185,6 +187,8 @@ export default function Search() {
       setSuggestions(response.data.fuzzyTerms)
       setSubmitted(true)
       setMaps(results)
+      setTotals(response.data.totals || {})
+      setResultLimit(response.data.resultLimit || 0)
     } catch (error) {
       console.error("Search error:", error)
     } finally {
@@ -252,7 +256,7 @@ export default function Search() {
 
         <ErrorBoundary fallback="">
           <Suspense fallback={<Loader show fullscreen />}>
-            <SearchResults query={query} maps={maps} search={searchTerm} />
+            <SearchResults query={query} maps={maps} search={searchTerm} totals={totals} resultLimit={resultLimit} />
           </Suspense>
         </ErrorBoundary>
       </div>
