@@ -27,7 +27,7 @@
     "stream-browserify": "^3.0.0",
     "swagger-ui-react": "^4.19.0",
     "web-vitals": "^3.3.2",
-    "xlsx": "^0.18.5"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.3",
@@ -64,5 +64,12 @@
     ]
   },
   "homepage": "/",
-  "proxy": "http://localhost:9000"
+  "proxy": "http://localhost:9000",
+  "overrides": {
+    "dompurify": "^3.4.11",
+    "serialize-javascript": "^7.0.5",
+    "tmp": "0.2.6",
+    "prismjs": "^1.30.0",
+    "js-yaml@^4.0.0": "^4.2.0"
+  }
 }
