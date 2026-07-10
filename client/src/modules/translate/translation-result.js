@@ -15,7 +15,7 @@ export function TranslateResult({ data, idLabel }) {
       )}
 
       {/* Source — left */}
-      <Col md={idLabel != null ? 4 : 4} className="border-end pe-md-3 mb-3 mb-md-0">
+      <Col md={4} className="border-end pe-md-3 mb-3 mb-md-0">
         <div className="small text-muted text-uppercase mb-1">Source ({source?.system})</div>
         <div className="fw-bold">{source?.code ?? data.input}</div>
         {source?.title ? <div>{source.title}</div> : null}

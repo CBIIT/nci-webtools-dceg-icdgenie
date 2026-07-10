@@ -83,6 +83,10 @@ export default function BatchTranslate() {
       if (!files || !files[0]) return;
       if (!files[0].name.endsWith(".tsv")) {
         setFileError("Please upload a .tsv file");
+        // Reset the picker and the uploaded flag so a bad pick after a valid upload doesn't leave
+        // the textarea disabled and the form stuck.
+        if (fileRef.current) fileRef.current.value = "";
+        setUploaded(false);
         return;
       }
       setFileError("");
