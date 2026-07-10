@@ -1,9 +1,11 @@
 import { useRecoilState } from "recoil";
 import axios from "axios";
-import { Form, Container, Row, Col, Button, ButtonGroup, Card, Badge } from "react-bootstrap";
+import { Form, Container, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Loader from "../common/loader";
 import { formState, resultsState } from "./translate.state";
+import DirectionToggle from "./direction-toggle";
+import { TranslateResult } from "./translation-result";
 import { useState } from "react";
 
 export default function Translate() {
@@ -64,7 +66,8 @@ export default function Translate() {
                 <Form.Label>Translate a single code between ICD-10-CM and ICD-11.</Form.Label>
                 <p>
                   ICD-11 → ICD-10-CM is a one-to-one match. ICD-10-CM → ICD-11 can map to a
-                  combination of codes, shown below with <b>AND</b> / <b>OR</b> logic. For code
+                  combination of codes, shown below with <b>AND</b> / <b>OR</b> logic. To translate a
+                  whole list at once, use <Link to="/batch-translate">Batch Translate</Link>. For code
                   formatting help, see the <Link to="/getting-started">Getting Started</Link> page.
                 </p>
               </Form.Group>
@@ -73,27 +76,7 @@ export default function Translate() {
 
           <Row className="justify-content-center">
             <Col md={8}>
-              <Form.Group className="mb-3">
-                <Form.Label className="fw-bold d-block">Direction</Form.Label>
-                <ButtonGroup className="w-100" size="lg">
-                  <Button
-                    type="button"
-                    variant={form.from === "icd10" ? "primary" : "outline-primary"}
-                    active={form.from === "icd10"}
-                    onClick={() => selectDirection("icd10")}
-                  >
-                    ICD-10-CM → ICD-11
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={form.from === "icd11" ? "primary" : "outline-primary"}
-                    active={form.from === "icd11"}
-                    onClick={() => selectDirection("icd11")}
-                  >
-                    ICD-11 → ICD-10-CM
-                  </Button>
-                </ButtonGroup>
-              </Form.Group>
+              <DirectionToggle value={form.from} onChange={selectDirection} />
             </Col>
           </Row>
 
@@ -158,68 +141,4 @@ export default function Translate() {
       )}
     </div>
   );
-}
-
-// One translation entry laid out left-to-right: source on the left, translation on the right.
-// Structured as a single row so a future Batch Translation view can stack one row per input code.
-function TranslateResult({ data }) {
-  const { source, targetSystem, groups } = data;
-  return (
-    <Row className="border rounded bg-white mx-0 py-3">
-      {/* Source — left */}
-      <Col md={4} className="border-end pe-md-3 mb-3 mb-md-0">
-        <div className="small text-muted text-uppercase mb-1">Source ({source.system})</div>
-        <div className="fw-bold">{source.code}</div>
-        {source.title ? <div>{source.title}</div> : null}
-      </Col>
-
-      {/* Translation — right */}
-      <Col md={8} className="ps-md-3">
-        <div className="small text-muted text-uppercase mb-2">Translation ({targetSystem})</div>
-        <TranslationGroups groups={groups} targetSystem={targetSystem} />
-      </Col>
-    </Row>
-  );
-}
-
-// The OR/AND combination stack for one source code's translation. OR alternatives are separated by
-// an OR badge; AND codes within a group are joined by an AND badge; a blank-code target renders as a
-// "block" chip.
-function TranslationGroups({ groups, targetSystem }) {
-  if (groups.length === 0) {
-    return <div className="alert alert-warning mb-0">No mapped codes.</div>;
-  }
-  return groups.map((group, i) => (
-    <div key={i}>
-      {i > 0 && (
-        <div className="text-center my-2">
-          <Badge bg="primary" className="text-white">OR</Badge>
-        </div>
-      )}
-      <Card>
-        <Card.Body className="py-2">
-          {group.block || group.codes.length === 0 ? (
-            <div>
-              <Badge bg="info" className="me-2 text-dark">
-                block
-              </Badge>
-              Maps to {targetSystem} block: <span className="fw-bold">{group.title}</span>
-            </div>
-          ) : (
-            <>
-              <div className="d-flex flex-wrap align-items-center gap-2 mb-1">
-                {group.codes.map((code, j) => (
-                  <span key={j} className="d-inline-flex align-items-center gap-2">
-                    {j > 0 && <Badge bg="dark" className="text-white">AND</Badge>}
-                    <span className="fw-bold">{code}</span>
-                  </span>
-                ))}
-              </div>
-              <div>{group.title}</div>
-            </>
-          )}
-        </Card.Body>
-      </Card>
-    </div>
-  ));
 }

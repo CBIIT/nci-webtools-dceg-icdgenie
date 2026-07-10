@@ -4,6 +4,7 @@ const icdgenie = require("./icdgenie");
 const search = require("./icdgenie/search");
 const batch = require("./icdgenie/batch");
 const translate = require("./icdgenie/translate");
+const batchTranslate = require("./icdgenie/batch-translate");
 const spec = require("./icdgenie/spec");
 const { APP_BASE_URL } = process.env;
 const api = Router();
@@ -33,6 +34,10 @@ api.post("/search", async (request, response) => {
 
 api.post("/translate", async (request, response) => {
   translate.translate(request, response)
+})
+
+api.post("/batch-translate", async (request, response) => {
+  batchTranslate.batchTranslate(request, response)
 })
 
 module.exports = { api };
