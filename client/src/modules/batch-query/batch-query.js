@@ -309,10 +309,10 @@ export default function BatchQuery() {
 
             <Col md={4}>
               <Form.Group className="mb-3">
-                {/* ICD-10 Codes */}
+                {/* ICD-10-CM Codes */}
                 <div className="d-flex align-items-center gap-2">
                   <Form.Check
-                    label="ICD-10 Codes"
+                    label="ICD-10-CM Codes"
                     name="inputType"
                     type="radio"
                     id="icd10Input"
@@ -363,7 +363,7 @@ export default function BatchQuery() {
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd10_tip">
-                        <Popover.Header>ICD-10 Codes</Popover.Header>
+                        <Popover.Header>ICD-10-CM Codes</Popover.Header>
                         <Popover.Body>
                           <p><i>The International Classification of Diseases, Tenth Revision (ICD-10) is a system created by the World Health Organization to categorize all diagnoses, symptoms, and procedures. </i></p>
                           <div><b>Example Code:</b> W56.29 <i>(Translation: Accidental Contact with an Orca)</i></div>
@@ -440,11 +440,12 @@ export default function BatchQuery() {
                       overlay={<Popover id="icd10pcs_tip">
                         <Popover.Header>ICD-10-PCS Codes</Popover.Header>
                         <Popover.Body>
-                          <p><i>ICD-10-PCS (Procedure Coding System) is a seven-character alphanumeric code set used for inpatient hospital procedures.</i></p>
-                          <div><b>Example Code:</b> 4A0Z76Z</div>
+                          <p><i>The International Classification of Diseases, Tenth Revision, Procedure Coding System (ICD-10-PCS) is a system created by the Centers for Medicare &amp; Medicaid Services (CMS) to categorize inpatient hospital procedures.</i></p>
+                          <div><b>Example Code:</b> 0DBJ0ZZ <i>(Translation: Excision of Appendix, Open Approach)</i></div>
                           <ul>
-                            <li>Always 7 characters</li>
                             <li>Alphanumeric, no decimals</li>
+                            <li>Always exactly 7 characters</li>
+                            <li>Uses digits 0–9 and letters, but never the letters "O" or "I" (to avoid confusion with 0 and 1)</li>
                           </ul>
                         </Popover.Body>
                       </Popover>
@@ -512,11 +513,13 @@ export default function BatchQuery() {
                       overlay={<Popover id="icd11_tip">
                         <Popover.Header>ICD-11 Codes</Popover.Header>
                         <Popover.Body>
-                          <p><i>The International Classification of Diseases, 11th Revision (ICD-11) is the latest WHO classification for diagnoses.</i></p>
-                          <div><b>Example Code:</b> 1B70.0Y</div>
+                          <p><i>The International Classification of Diseases, 11th Revision (ICD-11) is the latest system created by the World Health Organization to categorize all diagnoses, symptoms, and procedures.</i></p>
+                          <div><b>Example Code:</b> 1B70.0Y <i>(Translation: Erysipelas of other specified site)</i></div>
                           <ul>
-                            <li>Alphanumeric with optional dots</li>
-                            <li>May end in Y (other specified) or Z (unspecified)</li>
+                            <li>Alphanumeric, may contain a period (".")</li>
+                            <li>The first character (the chapter) is a number or a letter</li>
+                            <li>The second character is always a letter (this distinguishes ICD-11 from ICD-10)</li>
+                            <li>May end in "Y" (other specified) or "Z" (unspecified)</li>
                           </ul>
                         </Popover.Body>
                       </Popover>
@@ -545,7 +548,6 @@ export default function BatchQuery() {
                   />
                   <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`} className="small">(download sample)</a>
                 </div>
-                <i>At a minimum : ICD-O-3 site code or ICD-O-3 morphology code must be selected</i>
 
                 <div className="ms-5">
                   <div className="d-flex">
@@ -579,6 +581,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
+                  <div className="fw-bold">Select at least one:</div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"
@@ -656,8 +659,6 @@ export default function BatchQuery() {
                   />
                   <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo4.tsv`} className="small">(download sample)</a>
                 </div>
-                <i>At a minimum : ICD-O-4 site code or ICD-O-4 morphology code must be selected</i>
-
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
@@ -690,6 +691,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
+                  <div className="fw-bold">Select at least one:</div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"
@@ -706,13 +708,14 @@ export default function BatchQuery() {
                       overlay={<Popover id="icdo4Morph_tip">
                         <Popover.Header>ICD-O-4 Morphology Code</Popover.Header>
                         <Popover.Body>
-                          <p><i>The International Classification of Diseases for Oncology, Fourth Edition (ICD-O-4) is the latest WHO system to categorize cancer diagnoses.</i></p>
-                          <p><i>The morphology code captures the type of cell the tumor is composed of and the characteristic of the tumor itself.</i></p>
-                          <div><b>Example Morphology Code:</b> 80000/3</div>
+                          <p><i>The International Classification of Diseases for Oncology, Fourth Edition (ICD-O-4) is the latest system created by the World Health Organization to categorize cancer diagnoses.</i></p>
+                          <p><i>The morphology code captures the type of cell the tumor is composed of and the characteristic of the tumor itself. This may be referred to as "histology" or "histological term" in your data.</i></p>
+                          <div><b>Example Morphology Code:</b> 80000/3 <i>(Translation: Neoplasm, malignant, NOS)</i></div>
                           <ul>
                             <li>Entirely Numeric</li>
-                            <li>5 digits before the forward slash (vs 4 digits in ICD-O-3)</li>
-                            <li>Number after the slash is the behavior code</li>
+                            <li>5 digits before the forward slash (vs. 4 digits in ICD-O-3)</li>
+                            <li>Must have a forward slash after the fifth number (i.e., "/")</li>
+                            <li>Number after the slash is the behavior code: 0 (benign), 1 (uncertain), 2 (in situ), 3 (malignant), 6 (metastatic), or 9 (malignant, uncertain)</li>
                           </ul>
                         </Popover.Body>
                       </Popover>
@@ -738,11 +741,12 @@ export default function BatchQuery() {
                       overlay={<Popover id="icdo4Site_tip">
                         <Popover.Header>ICD-O-4 Site Code</Popover.Header>
                         <Popover.Body>
-                          <p><i>The site code indicates where a neoplasm was found (topography).</i></p>
+                          <p><i>The International Classification of Diseases for Oncology, Fourth Edition (ICD-O-4) is the latest system created by the World Health Organization to categorize cancer diagnoses.</i></p>
+                          <p><i>The site code indicates where a neoplasm was found. "Site code" in your data may be "topography" or "topographical information".</i></p>
                           <div><b>Example Site Code: </b>C71.9</div>
                           <ul>
                             <li>Alphanumeric; begins with "C" followed by 2 numbers, a period, and at least one more number</li>
-                            <li>Uses the same C00-C80 range as ICD-O-3</li>
+                            <li>Uses the same C00–C80 range as ICD-O-3</li>
                           </ul>
                         </Popover.Body>
                       </Popover>
@@ -753,6 +757,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
                 </div>
+
               </Form.Group>
             </Col>
           </Row>
@@ -787,7 +792,7 @@ export default function BatchQuery() {
                   rows={2}
                   value={form.input}
                   disabled={uploaded}
-                  placeholder="ICD-10 Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2), ICD-10-PCS Codes (Ex. 4A0Z76Z), ICD-11 Codes (Ex. 1B70.0Y), ICD-O-4 Codes (Ex. 80000/3)"
+                  placeholder="ICD-10-CM Codes (Ex. C16.1), ICD-O-3 Codes (Ex. 8144/2), ICD-10-PCS Codes (Ex. 4A0Z76Z), ICD-11 Codes (Ex. 1B70.0Y), ICD-O-4 Codes (Ex. 80000/3)"
                   onChange={handleChange}
                 />
                 <div className="d-flex justify-content-end gap-2">

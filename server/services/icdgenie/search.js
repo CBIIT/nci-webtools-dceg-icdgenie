@@ -2,6 +2,10 @@ const { Client } = require("@opensearch-project/opensearch")
 const { APP_BASE_URL, ADMIN, PASSWORD, DOMAIN } = process.env;
 const host = `https://${ADMIN}:${PASSWORD}@${DOMAIN}`;
 
+//Max results returned per code set. Broad terms can match many thousands of rows; we cap the
+//returned set and surface the true total so the UI can tell the user results were truncated.
+const RESULT_LIMIT = 2000;
+
 async function fuzzySearch(options, client, index) {
   var results = []
   await Promise.all(options.map(async (e) => {
@@ -57,6 +61,9 @@ async function opensearch(request, response) {
     }
   })
   var { search } = request.body
+  //Trim leading/trailing whitespace so a stray space (e.g. "C73.9 ") doesn't turn a
+  //single-token code lookup into a multi-token phrase (which skips wildcard + code handling).
+  search = (search ?? "").trim()
   const splitSearch = search.split(" ")
 
   //Handle [organ] cancer search
@@ -67,6 +74,12 @@ async function opensearch(request, response) {
 
   //Prefix and suffix search for single words, exact match for icdo-3 and multi word queries
   const query = search.split(" ").length === 1 && !search.includes("/") ? "*" + search + "*" : "\"" + search + "\""
+
+  //A single-token query containing a digit is a code lookup (e.g. 8100, 8700/0, C44.0).
+  //Codes never need spell-correction, so skip the fuzzy spell-check fallback for them.
+  //Otherwise the term suggester maps codes to unrelated word tokens (8100 -> "800")
+  //and the follow-up fuzzy search returns unrelated results across other code sets.
+  const isCodeSearch = splitSearch.length === 1 && /\d/.test(search)
 
   logger.info(query)
 
@@ -112,7 +125,9 @@ async function opensearch(request, response) {
         }
       }
     ],
-    "size": 500
+    "size": RESULT_LIMIT,
+    //Count all matches (not just the default 10k window) so the "showing N of M" signal is accurate.
+    "track_total_hits": true
   }
 
   const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result, icd10pcsResult, icd11Result, icdo4Result] = await Promise.all([
@@ -137,16 +152,28 @@ async function opensearch(request, response) {
     icdo4: icdo4Result.body.hits.hits,
     showSuggestions: true,
     fuzzyTerms: [],
+    //Per-index true match count (before the RESULT_LIMIT cap) so the UI can show a truncation notice.
+    resultLimit: RESULT_LIMIT,
+    totals: {
+      tabular: tabularResult.body.hits.total.value,
+      neoplasm: neoplasmResult.body.hits.total.value,
+      drug: drugResult.body.hits.total.value,
+      injury: injuryResult.body.hits.total.value,
+      icdo3: icdo3Result.body.hits.total.value,
+      icd10pcs: icd10pcsResult.body.hits.total.value,
+      icd11: icd11Result.body.hits.total.value,
+      icdo4: icdo4Result.body.hits.total.value,
+    },
   }
 
-  const tabularOptions = tabularResult.body.suggest["spell-check"][0].options;
-  const neoplasmOptions = neoplasmResult.body.suggest["spell-check"][0].options;
-  const drugOptions = drugResult.body.suggest["spell-check"][0].options;
-  const injuryOptions = injuryResult.body.suggest["spell-check"][0].options;
-  const icdo3Options = !search.includes("/") ? icdo3Result.body.suggest["spell-check"][0].options : [];
-  const icd10pcsOptions = icd10pcsResult.body.suggest["spell-check"][0].options;
-  const icd11Options = icd11Result.body.suggest["spell-check"][0].options;
-  const icdo4Options = !search.includes("/") ? icdo4Result.body.suggest["spell-check"][0].options : [];
+  const tabularOptions = isCodeSearch ? [] : tabularResult.body.suggest["spell-check"][0].options;
+  const neoplasmOptions = isCodeSearch ? [] : neoplasmResult.body.suggest["spell-check"][0].options;
+  const drugOptions = isCodeSearch ? [] : drugResult.body.suggest["spell-check"][0].options;
+  const injuryOptions = isCodeSearch ? [] : injuryResult.body.suggest["spell-check"][0].options;
+  const icdo3Options = isCodeSearch ? [] : icdo3Result.body.suggest["spell-check"][0].options;
+  const icd10pcsOptions = isCodeSearch ? [] : icd10pcsResult.body.suggest["spell-check"][0].options;
+  const icd11Options = isCodeSearch ? [] : icd11Result.body.suggest["spell-check"][0].options;
+  const icdo4Options = isCodeSearch ? [] : icdo4Result.body.suggest["spell-check"][0].options;
 
   if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length || results.icd10pcs.length || results.icd11.length || results.icdo4.length) {
     const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy, icd10pcsFuzzy, icd11Fuzzy, icdo4Fuzzy] = await Promise.all([

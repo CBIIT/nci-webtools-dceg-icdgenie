@@ -7,7 +7,7 @@ import ICDO4 from "./search.icdo4";
 import ICD10PCS from "./search.icd10pcs";
 import { useEffect, useState } from "react";
 
-export default function SearchResults({ query, maps, search }) {
+export default function SearchResults({ query, maps, search, totals = {}, resultLimit = 0 }) {
   const [tab, setTab] = useState("icd10Codes")
 
   const hasIcd10 = maps.tabular.size > 0 || maps.neoplasm.size > 0 || maps.drug.size > 0 || maps.injury.size > 0;
@@ -15,6 +15,17 @@ export default function SearchResults({ query, maps, search }) {
   const hasIcd11 = maps.icd11.size > 0;
   const hasIcdo4 = maps.icdo4.length > 0;
   const hasIcd10pcs = maps.icd10pcs.length > 0;
+
+  //True match count backing each tab (ICD-10-CM shows the tabular list).
+  const tabTotals = {
+    icd10Codes: totals.tabular || 0,
+    icd10pcsCodes: totals.icd10pcs || 0,
+    icd11Codes: totals.icd11 || 0,
+    icdo3Codes: totals.icdo3 || 0,
+    icdo4Codes: totals.icdo4 || 0,
+  };
+  const activeTotal = tabTotals[tab] || 0;
+  const truncated = resultLimit > 0 && activeTotal > resultLimit;
 
   useEffect(() => {
     if (hasIcd10) setTab("icd10Codes")
@@ -26,6 +37,12 @@ export default function SearchResults({ query, maps, search }) {
   }, [maps])
 
   return (
+    <>
+    {truncated &&
+      <div className="text-center py-2 px-3" style={{ backgroundColor: "#fff3cd", color: "#664d03" }} role="status">
+        Showing the first {resultLimit.toLocaleString()} of {activeTotal.toLocaleString()} matches. Refine your search to narrow the results.
+      </div>
+    }
     <Tabs
       id="results-tabs"
       activeKey={tab}
@@ -48,5 +65,6 @@ export default function SearchResults({ query, maps, search }) {
         <ICDO4 maps={maps} />
       </Tab>
     </Tabs>
+    </>
   );
 }
