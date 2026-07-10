@@ -3,7 +3,7 @@
 # updates) keeps the build toolchain deterministic; the drift previously broke the build with
 # "ReferenceError: crypto is not defined" with no code change. The build output is static files, so
 # this stage's architecture doesn't matter.
-FROM node:20-bookworm AS build
+FROM node:20-bookworm-slim AS build
 
 WORKDIR /app/client
 
