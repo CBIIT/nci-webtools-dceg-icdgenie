@@ -44,32 +44,10 @@ function writeBulk(fileName, index, docs) {
   console.log(`Wrote ${docs.length} docs -> data/${fileName}`);
 }
 
-// Split one row's icd11Code / icd11Title cell into OR groups of AND codes.
-function splitGroups(icd11Code, icd11Title, icd11Chapter, icd11ClassKind) {
-  const codeParts = String(icd11Code ?? "").split("/");
-  const titleParts = String(icd11Title ?? "").split("/");
-  return codeParts.map((part, i) => {
-    const codes = part
-      .split("&")
-      .map((c) => c.trim())
-      .filter((c) => c.length > 0);
-    // Align the title part with the code group; fall back to the whole title if the title has a
-    // different number of '/' segments than the code (rare — a title that itself contains '/').
-    const title = (titleParts.length === codeParts.length ? titleParts[i] : icd11Title).trim();
-    return {
-      codes,
-      title,
-      chapter: icd11Chapter || "",
-      classKind: icd11ClassKind || "",
-      block: codes.length === 0, // blank icd11Code -> maps to an ICD-11 block/chapter (title only)
-    };
-  });
-}
-
-function groupKey(group) {
-  return group.codes.join("&") + "|" + group.title;
-}
-
+// Per the client (questions.md A1), the ICD-11 translation is displayed EXACTLY as it appears in the
+// mapping file — the `&`/`/` combination string is NOT parsed. We store the verbatim icd11Code and
+// icd11Title cells. An ICD-10 code spanning multiple rows (A2) is OR across rows, so its rows' verbatim
+// strings are joined with " / " (multi-row assumption).
 function build10to11() {
   const rows = readCsv("icd10_to_icd11_mapping.csv", [
     "icd10Code", "icd10ClassKind", "icd10Chapter", "icd10Title",
@@ -85,20 +63,29 @@ function build10to11() {
         icd10Title: row.icd10Title || "",
         icd10Chapter: row.icd10Chapter || "",
         icd10ClassKind: row.icd10ClassKind || "",
-        groups: [],
+        _codes: [],
+        _titles: [],
         _seen: new Set(),
       };
       byCode.set(row.icd10Code, entry);
     }
-    for (const group of splitGroups(row.icd11Code, row.icd11Title, row.icd11Chapter, row.icd11ClassKind)) {
-      const key = groupKey(group);
-      if (entry._seen.has(key)) continue;
-      entry._seen.add(key);
-      entry.groups.push(group);
-    }
+    // Dedupe identical rows; preserve the raw cells verbatim (no split/trim of internal spacing).
+    // Only rows that carry an ICD-11 code contribute — blank-code rows map to an ICD-11 block (A4,
+    // deferred) and have no code string to display. Push code+title together to keep them aligned.
+    if (!row.icd11Code) continue;
+    const key = row.icd11Code + "|" + (row.icd11Title || "");
+    if (entry._seen.has(key)) continue;
+    entry._seen.add(key);
+    entry._codes.push(row.icd11Code);
+    entry._titles.push(row.icd11Title || "");
   }
 
-  const docs = [...byCode.values()].map(({ _seen, ...doc }) => doc);
+  const docs = [...byCode.values()].map(({ _codes, _titles, _seen, ...doc }) => ({
+    ...doc,
+    // Verbatim ICD-11 mapping string(s); multiple rows joined by " / " (OR across rows).
+    icd11Code: _codes.join(" / "),
+    icd11Title: _titles.join(" / "),
+  }));
   writeBulk("icd10_to_icd11.json", "icd10_to_icd11", docs);
   return docs;
 }
