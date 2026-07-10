@@ -16,7 +16,9 @@ export default function Translate() {
 
   function selectDirection(dir) {
     if (dir === form.from) return;
-    setForm({ ...form, from: dir });
+    // Clear the typed code too: a code entered for one system shouldn't be submitted against the
+    // other index after the direction flips (which yields a confusing wrong-system "not found").
+    setForm({ ...form, from: dir, code: "" });
     setResults({ loading: false, data: null });
     setSubmitError("");
   }

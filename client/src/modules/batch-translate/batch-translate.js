@@ -60,7 +60,12 @@ export default function BatchTranslate() {
 
   function selectDirection(dir) {
     if (dir === form.from) return;
-    mergeForm({ from: dir });
+    // Clear the input (and any uploaded file) too: a list entered for one system shouldn't be
+    // submitted against the other index after the direction flips.
+    mergeForm({ from: dir, input: "" });
+    if (fileRef.current) fileRef.current.value = "";
+    setUploaded(false);
+    setFileError("");
     setShowResults(false);
     setSubmitError("");
   }

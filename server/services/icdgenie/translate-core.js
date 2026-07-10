@@ -1,17 +1,12 @@
 const { client } = require("./opensearch-client");
 
-// Exact code match on a keyword field. The mapping codes are stored as text with a .keyword
-// sub-field; match on the keyword (exact) and fall back to a phrase match on the analyzed field.
+// Exact code match. Codes are stored as text with a .keyword sub-field; match only on the exact
+// .keyword value. We intentionally do NOT add a match_phrase clause on the analyzed field: the
+// analyzer splits codes on punctuation (e.g. "1A03.Z" -> ["1a03","z"]), so a phrase match would let
+// a partial stem like "1A03" bleed onto its children and return the wrong code's mapping. This
+// mirrors regular search, which also dropped fuzzy matching for code lookups and uses exact only.
 function exactCode(field, value) {
-  return {
-    bool: {
-      should: [
-        { term: { [`${field}.keyword`]: value } },
-        { match_phrase: { [field]: value } },
-      ],
-      minimum_should_match: 1,
-    },
-  };
+  return { term: { [`${field}.keyword`]: value } };
 }
 
 // Direction config so the two lookups share one code path (no copy-paste branches).
