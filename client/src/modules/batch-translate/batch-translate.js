@@ -57,14 +57,20 @@ export default function BatchTranslate() {
   const [reading, setReading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const fileRef = useRef();
+  // Increments on every action that should invalidate an in-flight file read (new read, direction
+  // switch, reset), so a read that resolves late can't repopulate stale input.
+  const readTokenRef = useRef(0);
 
   function selectDirection(dir) {
     if (dir === form.from) return;
     // Clear the input (and any uploaded file) too: a list entered for one system shouldn't be
-    // submitted against the other index after the direction flips.
+    // submitted against the other index after the direction flips. Also invalidate any in-flight
+    // file read so it doesn't repopulate the old codes after the flip.
+    readTokenRef.current++;
     mergeForm({ from: dir, input: "" });
     if (fileRef.current) fileRef.current.value = "";
     setUploaded(false);
+    setReading(false);
     setFileError("");
     setShowResults(false);
     setSubmitError("");
@@ -83,20 +89,24 @@ export default function BatchTranslate() {
       setShowResults(false);
       // Clear the previous input immediately so the stale list can't be submitted while the new
       // file is still being read, then show the reading indicator.
+      const token = ++readTokenRef.current;
       setForm((prev) => ({ ...prev, input: "" }));
       setUploaded(false);
       setReading(true);
       try {
         let fileText = await readFileAsText(files);
+        // A newer read/direction-switch/reset happened while this read was in flight — discard it.
+        if (token !== readTokenRef.current) return;
         fileText = fileText.split("\n");
         fileText.splice(0, 1); // drop header row
         setForm((prev) => ({ ...prev, input: fileText.join("\n") }));
         setUploaded(true);
       } catch (err) {
+        if (token !== readTokenRef.current) return;
         console.error("File read error:", err);
         setFileError("Could not read the file. Please try again.");
       } finally {
-        setReading(false);
+        if (token === readTokenRef.current) setReading(false);
       }
       return;
     }
@@ -130,6 +140,7 @@ export default function BatchTranslate() {
   }
 
   function handleReset() {
+    readTokenRef.current++;
     if (fileRef.current) fileRef.current.value = "";
     setUploaded(false);
     setReading(false);
@@ -173,7 +184,7 @@ export default function BatchTranslate() {
 
           <Row className="justify-content-center">
             <Col md={8}>
-              <DirectionToggle value={form.from} onChange={selectDirection} />
+              <DirectionToggle value={form.from} onChange={selectDirection} disabled={reading} />
             </Col>
           </Row>
 
