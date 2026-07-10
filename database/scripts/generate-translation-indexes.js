@@ -46,8 +46,8 @@ function writeBulk(fileName, index, docs) {
 
 // Split one row's icd11Code / icd11Title cell into OR groups of AND codes.
 function splitGroups(icd11Code, icd11Title, icd11Chapter, icd11ClassKind) {
-  const codeParts = String(icd11Code).split("/");
-  const titleParts = String(icd11Title).split("/");
+  const codeParts = String(icd11Code ?? "").split("/");
+  const titleParts = String(icd11Title ?? "").split("/");
   return codeParts.map((part, i) => {
     const codes = part
       .split("&")

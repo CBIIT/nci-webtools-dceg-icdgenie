@@ -14,7 +14,7 @@ async function translate(request, response) {
     return response.json(result);
   } catch (error) {
     logger.error(error);
-    return response.status(500).json({ from, code, found: false, message: "Translation lookup failed." });
+    return response.status(500).json({ found: false, message: "Translation lookup failed." });
   }
 }
 
