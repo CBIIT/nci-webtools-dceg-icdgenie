@@ -17,7 +17,20 @@ const sources = [
   { path: "data/icd10drug.json", index: "drug" },
   { path: "data/icd10eindex.json", index: "injury" },
   { path: "data/icd10neoplasm.json", index: "neoplasm" },
-  { path: "data/icd10tabular.json", index: "tabular" },
+  {
+    path: "data/icd10tabular.json",
+    index: "tabular",
+    // codeID / parent.codeID hold mixed integer and fractional values (e.g. 8033 and
+    // 8033.3, encoding hierarchy depth). Without an explicit mapping, concurrent bulk
+    // batches race to infer the numeric type (long vs float) and the losing batch's docs
+    // are dropped. Pin both to double so every document loads deterministically.
+    mappings: {
+      properties: {
+        codeID: { type: "double" },
+        parent: { properties: { codeID: { type: "double" } } },
+      },
+    },
+  },
   { path: "data/icdo3.json", index: "icdo3" },
   { path: "data/translations.json", index: "translations" },
   { path: "data/icd10pcs.json", index: "icd10pcs" },
@@ -49,8 +62,12 @@ async function runImport(client, sources, logger = console) {
     await client.indices.delete({ index: source.index }, { ignore: [404] });
 
     // Create the index up front — concurrent bulk batches racing to auto-create it get
-    // their documents rejected.
-    await client.indices.create({ index: source.index });
+    // their documents rejected. Apply an explicit mapping when the source provides one so
+    // fields with mixed numeric types don't hit a dynamic-mapping type race.
+    await client.indices.create({
+      index: source.index,
+      ...(source.mappings ? { body: { mappings: source.mappings } } : {}),
+    });
 
     const datasource = [];
     const reader = readline.createInterface({

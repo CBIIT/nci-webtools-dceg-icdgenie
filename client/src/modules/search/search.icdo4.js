@@ -6,6 +6,7 @@ export default function ICDO4({ maps }) {
     { name: "code", title: "ICD-O-4 Code" },
     { name: "description", title: "Description" },
     { name: "level", title: "Level" },
+    { name: "type", title: "Type" },
   ];
 
   const columnExtensions = [{ columnName: "description", width: 700, wordWrapEnabled: true }];
