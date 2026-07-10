@@ -7,14 +7,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import Loader from "../common/loader";
 import DirectionToggle from "../translate/direction-toggle";
-import { TranslateResult } from "../translate/translation-result";
+import { TranslateResult, TranslationDisclaimer } from "../translate/translation-result";
 import { readFileAsText, ExcelFile, ExcelSheet } from "../batch-query/batch-query.utils";
 import { formState, resultsState } from "./batch-translate.state";
 
 const SYSTEM_LABEL = { icd10: "ICD-10-CM", icd11: "ICD-11" };
 
-// Build the exploded export rows: one row per OR alternative, source repeated, AND codes joined by
-// " & " in the target-code cell (the representation chosen for this feature).
+// Build the export rows: one row per input code, with the ICD-11 mapping string shown VERBATIM (the
+// `&`/`/` string exactly as in the mapping file — see questions.md A1).
 function buildExport(results) {
   const from = results.from;
   const withId = results.id;
@@ -25,25 +25,19 @@ function buildExport(results) {
     withId && { title: "Participant ID", width: { wpx: 110 } },
     { title: `${sourceSystem} Code`, width: { wpx: 120 } },
     { title: `${sourceSystem} Description`, width: { wpx: 260 } },
-    { title: `${targetSystem} Code`, width: { wpx: 150 } },
-    { title: `${targetSystem} Description`, width: { wpx: 300 } },
+    { title: `${targetSystem} Code`, width: { wpx: 180 } },
+    { title: `${targetSystem} Description`, width: { wpx: 320 } },
   ].filter(Boolean);
 
-  const data = [];
-  for (const r of results.output) {
+  const data = results.output.map((r) => {
+    const idCell = withId ? [{ value: r.id ?? "" }] : [];
     const srcCode = r.source?.code ?? r.input ?? "";
     const srcTitle = r.source?.title ?? "";
-    const idCell = withId ? [{ value: r.id ?? "" }] : [];
+    const tgtCode = r.found && r.target?.code ? r.target.code : "(no translation found)";
+    const tgtTitle = r.found && r.target?.title ? r.target.title : "";
+    return [...idCell, { value: srcCode }, { value: srcTitle }, { value: tgtCode }, { value: tgtTitle }];
+  });
 
-    if (!r.found || !r.groups || r.groups.length === 0) {
-      data.push([...idCell, { value: srcCode }, { value: srcTitle }, { value: "(no translation found)" }, { value: "" }]);
-      continue;
-    }
-    for (const g of r.groups) {
-      const tgtCode = g.block || !g.codes.length ? "[block]" : g.codes.join(" & ");
-      data.push([...idCell, { value: srcCode }, { value: srcTitle }, { value: tgtCode }, { value: g.title ?? "" }]);
-    }
-  }
   return [{ columns, data }];
 }
 
@@ -296,6 +290,8 @@ export default function BatchTranslate() {
                 <ExcelSheet dataSet={buildExport(results)} name="Batch Translate Results" />
               </ExcelFile>
             </div>
+
+            <TranslationDisclaimer />
 
             {results.output.map((r, i) => (
               <div key={i} className="mb-2">

@@ -17,11 +17,12 @@ const DIRECTIONS = {
     sourceSystem: "ICD-10-CM",
     targetSystem: "ICD-11",
     notFound: "No ICD-11 translation found for this ICD-10-CM code.",
+    // The ICD-11 code/title are stored verbatim from the mapping file (A1); the client displays them
+    // as-is (the `&`/`/` string is not parsed).
     toResult: (hit) => ({
       source: { code: hit.icd10Code, title: hit.icd10Title, chapter: hit.icd10Chapter, system: "ICD-10-CM" },
       targetSystem: "ICD-11",
-      // groups joined by OR; codes within a group joined by AND
-      groups: hit.groups || [],
+      target: { code: hit.icd11Code || "", title: hit.icd11Title || "" },
     }),
   },
   icd11: {
@@ -33,13 +34,7 @@ const DIRECTIONS = {
     toResult: (hit) => ({
       source: { code: hit.icd11Code, title: hit.icd11Title, chapter: hit.icd11Chapter, system: "ICD-11" },
       targetSystem: "ICD-10-CM",
-      // Modeled as a single OR group with one AND code so the client renders both directions uniformly.
-      groups: [{
-        codes: hit.icd10Code ? [hit.icd10Code] : [],
-        title: hit.icd10Title,
-        chapter: hit.icd10Chapter,
-        block: !hit.icd10Code,
-      }],
+      target: { code: hit.icd10Code || "", title: hit.icd10Title || "" },
     }),
   },
 };

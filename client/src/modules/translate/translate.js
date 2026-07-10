@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Loader from "../common/loader";
 import { formState, resultsState } from "./translate.state";
 import DirectionToggle from "./direction-toggle";
-import { TranslateResult } from "./translation-result";
+import { TranslateResult, TranslationDisclaimer } from "./translation-result";
 import { useState } from "react";
 
 export default function Translate() {
@@ -126,6 +126,7 @@ export default function Translate() {
             {data.found ? (
               <Row className="justify-content-center">
                 <Col md={10}>
+                  <TranslationDisclaimer />
                   <TranslateResult data={data} />
                 </Col>
               </Row>

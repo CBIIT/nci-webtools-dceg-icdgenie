@@ -1,10 +1,11 @@
-import { Row, Col, Card, Badge } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 
-// One translation entry laid out left-to-right: source on the left, translation on the right.
-// Reused for the single Translate result and for each row of the Batch Translate results.
-// `idLabel` optionally prepends a Participant ID cell on the far left (batch with IDs).
+// One translation entry, laid out left-to-right: source on the left, the ICD-11/ICD-10 mapping on the
+// right. Per the client (questions.md A1), the mapping is shown EXACTLY as it appears in the WHO
+// mapping file — the `&`/`/` combination string is not parsed. <TranslationDisclaimer/> explains the
+// symbols. Reused for the single Translate result and each row of Batch Translate.
 export function TranslateResult({ data, idLabel }) {
-  const { source, targetSystem, groups, found, message } = data;
+  const { source, targetSystem, target, found, message } = data;
   return (
     <Row className="border rounded bg-white mx-0 py-3">
       {idLabel != null && (
@@ -21,61 +22,37 @@ export function TranslateResult({ data, idLabel }) {
         {source?.title ? <div>{source.title}</div> : null}
       </Col>
 
-      {/* Translation — right */}
+      {/* Translation — right (verbatim mapping string) */}
       <Col className="ps-md-3">
-        <div className="small text-muted text-uppercase mb-2">
+        <div className="small text-muted text-uppercase mb-1">
           Translation{targetSystem ? ` (${targetSystem})` : ""}
         </div>
-        {found ? (
-          <TranslationGroups groups={groups} targetSystem={targetSystem} />
+        {found && target?.code ? (
+          <>
+            <div className="fw-bold font-monospace" style={{ fontSize: "1.05rem", wordBreak: "break-word" }}>
+              {target.code}
+            </div>
+            {target.title ? <div className="text-muted">{target.title}</div> : null}
+          </>
         ) : (
-          <div className="alert alert-warning mb-0 py-2">
-            {message || "No translation found."}
-          </div>
+          <div className="alert alert-warning mb-0 py-2">{message || "No translation found."}</div>
         )}
       </Col>
     </Row>
   );
 }
 
-// The OR/AND combination stack for one source code's translation. OR alternatives are separated by
-// an OR badge; AND codes within a group are joined by an AND badge; a blank-code target renders as a
-// "block" chip.
-export function TranslationGroups({ groups, targetSystem }) {
-  if (!groups || groups.length === 0) {
-    return <div className="alert alert-warning mb-0 py-2">No mapped codes.</div>;
-  }
-  return groups.map((group, i) => (
-    <div key={i}>
-      {i > 0 && (
-        <div className="text-center my-2">
-          <Badge bg="primary" className="text-white">OR</Badge>
-        </div>
-      )}
-      <Card>
-        <Card.Body className="py-2">
-          {group.block || group.codes.length === 0 ? (
-            <div>
-              <Badge bg="info" className="me-2 text-dark">
-                block
-              </Badge>
-              Maps to {targetSystem} block: <span className="fw-bold">{group.title}</span>
-            </div>
-          ) : (
-            <>
-              <div className="d-flex flex-wrap align-items-center gap-2 mb-1">
-                {group.codes.map((code, j) => (
-                  <span key={j} className="d-inline-flex align-items-center gap-2">
-                    {j > 0 && <Badge bg="dark" className="text-white">AND</Badge>}
-                    <span className="fw-bold">{code}</span>
-                  </span>
-                ))}
-              </div>
-              <div>{group.title}</div>
-            </>
-          )}
-        </Card.Body>
-      </Card>
+// Explains the `&` / `/` symbols in the verbatim ICD-11 mapping string. Shown alongside results.
+export function TranslationDisclaimer() {
+  return (
+    <div className="alert alert-secondary small mb-3">
+      <b>How to read the translation:</b> the ICD-11 mapping is shown exactly as provided in the WHO
+      mapping file. <b>&amp;</b> means <b>AND</b> — all listed codes are required to fully capture the
+      ICD-10-CM code. <b>/</b> means <b>OR</b> — the ICD-10-CM code maps to one option or another
+      depending on clinical context.{" "}
+      <span className="text-muted">
+        Example: <code>1B12.3&amp;XA0NE9/5A74.0</code> means (1B12.3 AND XA0NE9) OR 5A74.0.
+      </span>
     </div>
-  ));
+  );
 }
