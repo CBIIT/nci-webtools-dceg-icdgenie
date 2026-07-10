@@ -548,7 +548,6 @@ export default function BatchQuery() {
                   />
                   <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo3_morphology_site.tsv`} className="small">(download sample)</a>
                 </div>
-                <i>At a minimum : ICD-O-3 site code or ICD-O-3 morphology code must be selected</i>
 
                 <div className="ms-5">
                   <div className="d-flex">
@@ -582,6 +581,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
+                  <div className="fw-bold">Select at least one:</div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"
@@ -659,8 +659,6 @@ export default function BatchQuery() {
                   />
                   <a href={`${process.env.PUBLIC_URL}/files/icdgenie_example_icdo4.tsv`} className="small">(download sample)</a>
                 </div>
-                <i>At a minimum : ICD-O-4 site code or ICD-O-4 morphology code must be selected</i>
-
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
@@ -693,6 +691,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
+                  <div className="fw-bold">Select at least one:</div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"
@@ -758,6 +757,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
                 </div>
+
               </Form.Group>
             </Col>
           </Row>
