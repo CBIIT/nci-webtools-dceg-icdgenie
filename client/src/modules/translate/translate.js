@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import axios from "axios";
-import { Form, Container, Row, Col, Button, Card, Badge } from "react-bootstrap";
+import { Form, Container, Row, Col, Button, ButtonGroup, Card, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Loader from "../common/loader";
 import { formState, resultsState } from "./translate.state";
@@ -11,6 +11,13 @@ export default function Translate() {
   const [results, setResults] = useRecoilState(resultsState);
   const mergeForm = (obj) => setForm({ ...form, ...obj });
   const [submitError, setSubmitError] = useState("");
+
+  function selectDirection(dir) {
+    if (dir === form.from) return;
+    setForm({ ...form, from: dir });
+    setResults({ loading: false, data: null });
+    setSubmitError("");
+  }
 
   const directionLabel =
     form.from === "icd10" ? "ICD-10-CM → ICD-11" : "ICD-11 → ICD-10-CM";
@@ -55,7 +62,7 @@ export default function Translate() {
             <Col md={8}>
               <Form.Group className="mb-3">
                 <Form.Label>Translate a single code between ICD-10-CM and ICD-11.</Form.Label>
-                <p className="text-muted small mb-2">
+                <p>
                   ICD-11 → ICD-10-CM is a one-to-one match. ICD-10-CM → ICD-11 can map to a
                   combination of codes, shown below with <b>AND</b> / <b>OR</b> logic. For code
                   formatting help, see the <Link to="/getting-started">Getting Started</Link> page.
@@ -67,27 +74,25 @@ export default function Translate() {
           <Row className="justify-content-center">
             <Col md={8}>
               <Form.Group className="mb-3">
-                <Form.Label className="fw-bold">Direction</Form.Label>
-                <div className="d-flex gap-4">
-                  <Form.Check
-                    label="ICD-10-CM → ICD-11"
-                    name="from"
-                    type="radio"
-                    id="fromIcd10"
-                    value="icd10"
-                    checked={form.from === "icd10"}
-                    onChange={() => mergeForm({ from: "icd10" })}
-                  />
-                  <Form.Check
-                    label="ICD-11 → ICD-10-CM"
-                    name="from"
-                    type="radio"
-                    id="fromIcd11"
-                    value="icd11"
-                    checked={form.from === "icd11"}
-                    onChange={() => mergeForm({ from: "icd11" })}
-                  />
-                </div>
+                <Form.Label className="fw-bold d-block">Direction</Form.Label>
+                <ButtonGroup className="w-100" size="lg">
+                  <Button
+                    type="button"
+                    variant={form.from === "icd10" ? "primary" : "outline-primary"}
+                    active={form.from === "icd10"}
+                    onClick={() => selectDirection("icd10")}
+                  >
+                    ICD-10-CM → ICD-11
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={form.from === "icd11" ? "primary" : "outline-primary"}
+                    active={form.from === "icd11"}
+                    onClick={() => selectDirection("icd11")}
+                  >
+                    ICD-11 → ICD-10-CM
+                  </Button>
+                </ButtonGroup>
               </Form.Group>
             </Col>
           </Row>
@@ -126,12 +131,12 @@ export default function Translate() {
         <div className="bg-light">
           <hr />
           <Container className="py-3">
-            <div
-              className="text-uppercase mb-3"
-              style={{ fontSize: "14px", letterSpacing: "1.5px" }}
+            <h3
+              className="text-uppercase fw-bold text-center mb-3"
+              style={{ letterSpacing: "1.5px" }}
             >
               {directionLabel}
-            </div>
+            </h3>
 
             {data.found ? (
               <Row className="justify-content-center">
@@ -155,61 +160,66 @@ export default function Translate() {
   );
 }
 
+// One translation entry laid out left-to-right: source on the left, translation on the right.
+// Structured as a single row so a future Batch Translation view can stack one row per input code.
 function TranslateResult({ data }) {
   const { source, targetSystem, groups } = data;
   return (
-    <>
-      <Card className="mb-3 border-primary">
+    <Row className="border rounded bg-white mx-0 py-3">
+      {/* Source — left */}
+      <Col md={4} className="border-end pe-md-3 mb-3 mb-md-0">
+        <div className="small text-muted text-uppercase mb-1">Source ({source.system})</div>
+        <div className="fw-bold">{source.code}</div>
+        {source.title ? <div>{source.title}</div> : null}
+      </Col>
+
+      {/* Translation — right */}
+      <Col md={8} className="ps-md-3">
+        <div className="small text-muted text-uppercase mb-2">Translation ({targetSystem})</div>
+        <TranslationGroups groups={groups} targetSystem={targetSystem} />
+      </Col>
+    </Row>
+  );
+}
+
+// The OR/AND combination stack for one source code's translation. OR alternatives are separated by
+// an OR badge; AND codes within a group are joined by an AND badge; a blank-code target renders as a
+// "block" chip.
+function TranslationGroups({ groups, targetSystem }) {
+  if (groups.length === 0) {
+    return <div className="alert alert-warning mb-0">No mapped codes.</div>;
+  }
+  return groups.map((group, i) => (
+    <div key={i}>
+      {i > 0 && (
+        <div className="text-center my-2">
+          <Badge bg="primary" className="text-white">OR</Badge>
+        </div>
+      )}
+      <Card>
         <Card.Body className="py-2">
-          <div className="small text-muted text-uppercase">Source ({source.system})</div>
-          <div>
-            <span className="fw-bold">{source.code}</span>
-            {source.title ? <span> — {source.title}</span> : null}
-          </div>
+          {group.block || group.codes.length === 0 ? (
+            <div>
+              <Badge bg="info" className="me-2 text-dark">
+                block
+              </Badge>
+              Maps to {targetSystem} block: <span className="fw-bold">{group.title}</span>
+            </div>
+          ) : (
+            <>
+              <div className="d-flex flex-wrap align-items-center gap-2 mb-1">
+                {group.codes.map((code, j) => (
+                  <span key={j} className="d-inline-flex align-items-center gap-2">
+                    {j > 0 && <Badge bg="dark" className="text-white">AND</Badge>}
+                    <span className="fw-bold">{code}</span>
+                  </span>
+                ))}
+              </div>
+              <div>{group.title}</div>
+            </>
+          )}
         </Card.Body>
       </Card>
-
-      <div className="small text-muted text-uppercase mb-2">
-        Translation ({targetSystem})
-      </div>
-
-      {groups.length === 0 ? (
-        <div className="alert alert-warning mb-0">No mapped codes.</div>
-      ) : (
-        groups.map((group, i) => (
-          <div key={i}>
-            {i > 0 && (
-              <div className="text-center my-2">
-                <Badge bg="secondary">OR</Badge>
-              </div>
-            )}
-            <Card>
-              <Card.Body className="py-2">
-                {group.block || group.codes.length === 0 ? (
-                  <div>
-                    <Badge bg="info" className="me-2">
-                      block
-                    </Badge>
-                    Maps to {targetSystem} block: <span className="fw-bold">{group.title}</span>
-                  </div>
-                ) : (
-                  <>
-                    <div className="d-flex flex-wrap align-items-center gap-2 mb-1">
-                      {group.codes.map((code, j) => (
-                        <span key={j} className="d-inline-flex align-items-center gap-2">
-                          {j > 0 && <Badge bg="dark">AND</Badge>}
-                          <span className="fw-bold">{code}</span>
-                        </span>
-                      ))}
-                    </div>
-                    <div>{group.title}</div>
-                  </>
-                )}
-              </Card.Body>
-            </Card>
-          </div>
-        ))
-      )}
-    </>
-  );
+    </div>
+  ));
 }
