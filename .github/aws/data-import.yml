@@ -21,7 +21,8 @@ containerDefinitions:
 
   - name: data_import
     image: "${DATA_IMPORT_IMAGE_LATEST}"
-    command: ["npm", "run", "import"]
+    # The data-import image is Node-less (import runs via curl in import.sh); do not invoke npm/node.
+    command: ["sh", "import.sh"]
     environment:
       - name: API_PORT
         value: "${BACKEND_CONTAINER_PORT}"
@@ -45,7 +46,7 @@ containerDefinitions:
         tls: "on"
         tls.verify: "off"
         dd_service: "${TIER}-${APP}-data_import"
-        dd_source: "nodejs"
+        dd_source: "shell"
         dd_tags: "project:${APP} tier:${TIER}"
         provider: ecs
       secretOptions:

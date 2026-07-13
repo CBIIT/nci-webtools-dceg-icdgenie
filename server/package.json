@@ -12,16 +12,21 @@
   "dependencies": {
     "@opensearch-project/opensearch": "^2.0.0",
     "aws-opensearch-connector": "^1.1.0",
-    "better-sqlite3": "^7.6.0",
+    "better-sqlite3": "^12.11.1",
     "cors": "^2.8.5",
     "csv": "^6.0.5",
+    "csv-stringify": "^6.0.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
+    "lodash": "^4.17.21",
     "winston": "^3.6.0"
   },
   "devDependencies": {
     "jest": "^27.5.1",
     "supertest": "^6.2.2"
+  },
+  "overrides": {
+    "body-parser": "^1.20.6"
   },
   "jest": {
     "clearMocks": true,
