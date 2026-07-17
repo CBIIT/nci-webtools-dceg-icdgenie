@@ -299,8 +299,8 @@ export default function BatchQuery() {
           <Row className="justify-content-center">
             <Col md={8}>
               <Form.Group>
-                <Form.Label>Select searchable type</Form.Label>
                 <p>We highly recommend that users review the <Link to="/getting-started">Getting Started</Link> page for information on proper data formatting for optimal use of ICD Genie.</p>
+                <Form.Label>Select searchable type</Form.Label>
 
               </Form.Group>
             </Col>
@@ -357,8 +357,9 @@ export default function BatchQuery() {
                       type="checkbox"
                       id="icd10CCode"
                       value="icd10Code"
-                      disabled={true}
-                      aria-disabled={true}
+                      disabled={form.inputType !== "icd10"}
+                      aria-disabled={form.inputType !== "icd10"}
+                      onChange={() => {}}
                       checked={form.inputType === "icd10"}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
@@ -432,8 +433,9 @@ export default function BatchQuery() {
                       type="checkbox"
                       id="icd10pcsCode"
                       value="icd10pcsCode"
-                      disabled={true}
-                      aria-disabled={true}
+                      disabled={form.inputType !== "icd10pcs"}
+                      aria-disabled={form.inputType !== "icd10pcs"}
+                      onChange={() => {}}
                       checked={form.inputType === "icd10pcs"}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
@@ -505,8 +507,9 @@ export default function BatchQuery() {
                       type="checkbox"
                       id="icd11Code"
                       value="icd11Code"
-                      disabled={true}
-                      aria-disabled={true}
+                      disabled={form.inputType !== "icd11"}
+                      aria-disabled={form.inputType !== "icd11"}
+                      onChange={() => {}}
                       checked={form.inputType === "icd11"}
                     />
                     <OverlayTrigger trigger="click" placement="right" rootClose
@@ -552,11 +555,7 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={
-                        <span style={{ color: '#4A4A4A', fontWeight: 'normal' }}>
-                          Participant ID <i style={{ color: '#4A4A4A', fontWeight: 'normal' }}>(Optional)</i>
-                        </span>
-                      }
+                      label={<span>Participant ID <i className="text-muted">(Optional)</i></span>}
                       name="icdo3Id"
                       type="checkbox"
                       id="icdo3Id"
@@ -581,7 +580,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
-                  <div className="fw-bold">Select at least one:</div>
+                  <div style={{ opacity: form.inputType === "icdo3" ? 1 : 0.5 }}>Select at least one:</div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"
@@ -662,11 +661,7 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={
-                        <span style={{ color: '#4A4A4A', fontWeight: 'normal' }}>
-                          Participant ID <i style={{ color: '#4A4A4A', fontWeight: 'normal' }}>(Optional)</i>
-                        </span>
-                      }
+                      label={<span>Participant ID <i className="text-muted">(Optional)</i></span>}
                       name="icdo4Id"
                       type="checkbox"
                       id="icdo4Id"
@@ -691,7 +686,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
-                  <div className="fw-bold">Select at least one:</div>
+                  <div style={{ opacity: form.inputType === "icdo4" ? 1 : 0.5 }}>Select at least one:</div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"

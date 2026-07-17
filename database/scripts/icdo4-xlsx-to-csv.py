@@ -57,9 +57,13 @@ def process_sheet(ws, cols, type_label, allow_preferred, writer):
         code = cell(row, cols['code'])
         level = cell(row, cols['level'])
 
-        # Skip hierarchy header rows (numeric levels) and rows without a code/level
-        if code is None or level is None:
+        # Skip rows without a code
+        if code is None:
             continue
+        # Assign "Bullet" to rows with empty Level (same as Topography Optional behavior)
+        if level is None:
+            level = 'Bullet'
+        # Skip hierarchy header rows (numeric levels)
         if isinstance(level, (int, float)):
             continue
         # Include ALL text level types (Preferred, Synonym, Related, Related list, Bullet, ...)

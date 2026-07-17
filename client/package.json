@@ -61,7 +61,7 @@
     ]
   },
   "homepage": "/",
-  "proxy": "http://localhost:9000",
+  "proxy": "http://localhost:9001",
   "overrides": {
     "dompurify": "^3.4.11",
     "serialize-javascript": "^7.0.5",
