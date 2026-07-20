@@ -300,7 +300,7 @@ export default function BatchQuery() {
             <Col md={8}>
               <Form.Group>
                 <p>We highly recommend that users review the <Link to="/getting-started">Getting Started</Link> page for information on proper data formatting for optimal use of ICD Genie.</p>
-                <Form.Label>Select searchable type</Form.Label>
+                <Form.Label>Select searchable code type and click its checkboxes to specify which columns are present in your file.</Form.Label>
 
               </Form.Group>
             </Col>
