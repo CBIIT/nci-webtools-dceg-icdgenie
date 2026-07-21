@@ -358,7 +358,7 @@ export default function BatchQuery() {
                       id="icd10CCode"
                       value="icd10Code"
                       disabled={form.inputType !== "icd10"}
-                      aria-disabled={form.inputType !== "icd10"}
+                      readOnly={form.inputType === "icd10"}
                       onChange={() => {}}
                       checked={form.inputType === "icd10"}
                     />
@@ -434,7 +434,7 @@ export default function BatchQuery() {
                       id="icd10pcsCode"
                       value="icd10pcsCode"
                       disabled={form.inputType !== "icd10pcs"}
-                      aria-disabled={form.inputType !== "icd10pcs"}
+                      readOnly={form.inputType === "icd10pcs"}
                       onChange={() => {}}
                       checked={form.inputType === "icd10pcs"}
                     />
@@ -508,7 +508,7 @@ export default function BatchQuery() {
                       id="icd11Code"
                       value="icd11Code"
                       disabled={form.inputType !== "icd11"}
-                      aria-disabled={form.inputType !== "icd11"}
+                      readOnly={form.inputType === "icd11"}
                       onChange={() => {}}
                       checked={form.inputType === "icd11"}
                     />
@@ -580,7 +580,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
-                  <div style={{ opacity: form.inputType === "icdo3" ? 1 : 0.5 }}>Select at least one:</div>
+                  <div className={form.inputType === "icdo3" ? "fw-bold" : ""} style={form.inputType !== "icdo3" ? { color: "#767676" } : {}}>Select at least one:</div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"
@@ -686,7 +686,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
-                  <div style={{ opacity: form.inputType === "icdo4" ? 1 : 0.5 }}>Select at least one:</div>
+                  <div className={form.inputType === "icdo4" ? "fw-bold" : ""} style={form.inputType !== "icdo4" ? { color: "#767676" } : {}}>Select at least one:</div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"
