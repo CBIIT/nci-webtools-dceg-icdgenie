@@ -5225,6 +5225,13 @@ C44.2,Synonym,0,"Skin of ear, NOS",,,,,,"Skin of ear, NOS",Topography
 C44.2,Related,0,Tragus,,,,,,Tragus,Topography
 C44.3,Preferred,1,Skin of other and unspecified parts of face,,,,,,Skin of other and unspecified parts of face,Topography
 C44.3,Related list,0,Skin of:,,,,,,Skin of:,Topography
+C44.3,Bullet,0,cheek,,,,,,cheek,Topography
+C44.3,Bullet,0,chin,,,,,,chin,Topography
+C44.3,Bullet,0,face,,,,,,face,Topography
+C44.3,Bullet,0,forehead,,,,,,forehead,Topography
+C44.3,Bullet,0,jaw,,,,,,jaw,Topography
+C44.3,Bullet,0,nose,,,,,,nose,Topography
+C44.3,Bullet,0,temple,,,,,,temple,Topography
 C44.3,Related,0,Ala nasi,,,,,,Ala nasi,Topography
 C44.3,Related,0,"Chin, NOS",,,,,,"Chin, NOS",Topography
 C44.3,Related,0,Columnella,,,,,,Columnella,Topography
@@ -5243,13 +5250,55 @@ C44.4,Related,0,Skin of cervical region,,,,,,Skin of cervical region,Topography
 C44.4,Related,0,Skin of supraclavicular region,,,,,,Skin of supraclavicular region,Topography
 C44.5,Preferred,1,Skin of trunk,,,,excludes skin of anus/perianal skin C21.3,,Skin of trunk excludes skin of anus/perianal skin C21.3,Topography
 C44.5,Related list,0,Skin of:,,,,,,Skin of:,Topography
+C44.5,Bullet,0,abdomen,,,,,,abdomen,Topography
+C44.5,Bullet,0,abdominal wall,,,,,,abdominal wall,Topography
+C44.5,Bullet,0,axilla,,,,,,axilla,Topography
+C44.5,Bullet,0,back,,,,,,back,Topography
+C44.5,Bullet,0,breast,,,,,,breast,Topography
+C44.5,Bullet,0,buttock,,,,,,buttock,Topography
+C44.5,Bullet,0,chest,,,,,,chest,Topography
+C44.5,Bullet,0,chest wall,,,,,,chest wall,Topography
+C44.5,Bullet,0,flank,,,,,,flank,Topography
+C44.5,Bullet,0,groin,,,,,,groin,Topography
+C44.5,Bullet,0,perineum,,,,,,perineum,Topography
+C44.5,Bullet,0,thoracic wall,,,,,,thoracic wall,Topography
+C44.5,Bullet,0,thorax,,,,,,thorax,Topography
+C44.5,Bullet,0,trunk,,,,,,trunk,Topography
+C44.5,Bullet,0,umbilicus,,,,,,umbilicus,Topography
+C44.5,Bullet,0,gluteal region,,,,,,gluteal region,Topography
+C44.5,Bullet,0,infraclavicular region,,,,,,infraclavicular region,Topography
+C44.5,Bullet,0,inguinal region,,,,,,inguinal region,Topography
+C44.5,Bullet,0,sacrococcygeal region,,,,,,sacrococcygeal region,Topography
+C44.5,Bullet,0,scapular region,,,,,,scapular region,Topography
 C44.5,Related,0,"Umbilicus, NOS",,,,,,"Umbilicus, NOS",Topography
 C44.6,Preferred,1,Skin of upper limb and shoulder,,,,,,Skin of upper limb and shoulder,Topography
 C44.6,Related list,0,Skin of:,,,,,,Skin of:,Topography
+C44.6,Bullet,0,antecubital space,,,,,,antecubital space,Topography
+C44.6,Bullet,0,arm,,,,,,arm,Topography
+C44.6,Bullet,0,elbow,,,,,,elbow,Topography
+C44.6,Bullet,0,finger,,,,,,finger,Topography
+C44.6,Bullet,0,forearm,,,,,,forearm,Topography
+C44.6,Bullet,0,hand,,,,,,hand,Topography
+C44.6,Bullet,0,palm,,,,,,palm,Topography
+C44.6,Bullet,0,shoulder,,,,,,shoulder,Topography
+C44.6,Bullet,0,thumb,,,,,,thumb,Topography
+C44.6,Bullet,0,upper limb,,,,,,upper limb,Topography
+C44.6,Bullet,0,wrist,,,,,,wrist,Topography
 C44.6,Related,0,Finger nail,,,,,,Finger nail,Topography
 C44.6,Related,0,Palmar skin,,,,,,Palmar skin,Topography
 C44.7,Preferred,1,Skin of lower limb and hip,,,,,,Skin of lower limb and hip,Topography
 C44.7,Related list,0,Skin of:,,,,,,Skin of:,Topography
+C44.7,Bullet,0,ankle,,,,,,ankle,Topography
+C44.7,Bullet,0,calf,,,,,,calf,Topography
+C44.7,Bullet,0,foot,,,,,,foot,Topography
+C44.7,Bullet,0,heel,,,,,,heel,Topography
+C44.7,Bullet,0,hip,,,,,,hip,Topography
+C44.7,Bullet,0,knee,,,,,,knee,Topography
+C44.7,Bullet,0,leg,,,,,,leg,Topography
+C44.7,Bullet,0,lower limb,,,,,,lower limb,Topography
+C44.7,Bullet,0,popliteal space,,,,,,popliteal space,Topography
+C44.7,Bullet,0,thigh,,,,,,thigh,Topography
+C44.7,Bullet,0,toe,,,,,,toe,Topography
 C44.7,Related,0,Plantar skin,,,,,,Plantar skin,Topography
 C44.7,Related,0,Sole of foot,,,,,,Sole of foot,Topography
 C44.7,Related,0,Toe nail,,,,,,Toe nail,Topography
@@ -5257,9 +5306,29 @@ C44.8,Preferred,1,Overlapping lesion of skin,,,,,,Overlapping lesion of skin,Top
 C44.9,Preferred,1,"Skin, NOS",,,,"excludes skin of labia majora C51.0, skin of vulva C51.9, skin of penis C60.9, skin of scrotum C63.2 and skin of anus/perianal skin C21.3",,"Skin, NOS excludes skin of labia majora C51.0, skin of vulva C51.9, skin of penis C60.9, skin of scrotum C63.2 and skin of anus/perianal skin C21.3",Topography
 C47.0,Preferred,1,"Peripheral nerves and autonomic nervous system of head, face, and neck",,,,excludes peripheral nerves and autonomic nervous system of orbit C69.6,,"Peripheral nerves and autonomic nervous system of head, face, and neck excludes peripheral nerves and autonomic nervous system of orbit C69.6",Topography
 C47.0,Related list,0,Peripheral nerves and autonomic nervous system of:,,,,,,Peripheral nerves and autonomic nervous system of:,Topography
+C47.0,Bullet,0,cheek,,,,,,cheek,Topography
+C47.0,Bullet,0,chin,,,,,,chin,Topography
+C47.0,Bullet,0,face,,,,,,face,Topography
+C47.0,Bullet,0,forehead,,,,,,forehead,Topography
+C47.0,Bullet,0,head,,,,,,head,Topography
+C47.0,Bullet,0,neck,,,,,,neck,Topography
+C47.0,Bullet,0,scalp,,,,,,scalp,Topography
+C47.0,Bullet,0,temple,,,,,,temple,Topography
+C47.0,Bullet,0,cervical region,,,,,,cervical region,Topography
+C47.0,Bullet,0,pterygoid fossa,,,,,,pterygoid fossa,Topography
+C47.0,Bullet,0,supraclavicular region,,,,,,supraclavicular region,Topography
 C47.0,Related,0,Cervical plexus,,,,,,Cervical plexus,Topography
 C47.1,Preferred,1,Peripheral nerves and autonomic nervous system of upper limb and shoulder,,,,,,Peripheral nerves and autonomic nervous system of upper limb and shoulder,Topography
 C47.1,Related list,0,Peripheral nerves and autonomic nervous system of:,,,,,,Peripheral nerves and autonomic nervous system of:,Topography
+C47.1,Bullet,0,antecubital space,,,,,,antecubital space,Topography
+C47.1,Bullet,0,arm,,,,,,arm,Topography
+C47.1,Bullet,0,elbow,,,,,,elbow,Topography
+C47.1,Bullet,0,finger,,,,,,finger,Topography
+C47.1,Bullet,0,forearm,,,,,,forearm,Topography
+C47.1,Bullet,0,hand,,,,,,hand,Topography
+C47.1,Bullet,0,shoulder,,,,,,shoulder,Topography
+C47.1,Bullet,0,thumb,,,,,,thumb,Topography
+C47.1,Bullet,0,wrist,,,,,,wrist,Topography
 C47.1,Related,0,Brachial nerve,,,,,,Brachial nerve,Topography
 C47.1,Related,0,Brachial plexus,,,,,,Brachial plexus,Topography
 C47.1,Related,0,Median nerve,,,,,,Median nerve,Topography
@@ -5267,21 +5336,48 @@ C47.1,Related,0,Radial nerve,,,,,,Radial nerve,Topography
 C47.1,Related,0,Ulnar nerve,,,,,,Ulnar nerve,Topography
 C47.2,Preferred,1,Peripheral nerves and autonomic nervous system of lower limb and hip,,,,,,Peripheral nerves and autonomic nervous system of lower limb and hip,Topography
 C47.2,Related list,0,Peripheral nerves and autonomic nervous system of:,,,,,,Peripheral nerves and autonomic nervous system of:,Topography
+C47.2,Bullet,0,ankle,,,,,,ankle,Topography
+C47.2,Bullet,0,calf,,,,,,calf,Topography
+C47.2,Bullet,0,foot,,,,,,foot,Topography
+C47.2,Bullet,0,heel,,,,,,heel,Topography
+C47.2,Bullet,0,hip,,,,,,hip,Topography
+C47.2,Bullet,0,knee,,,,,,knee,Topography
+C47.2,Bullet,0,leg,,,,,,leg,Topography
+C47.2,Bullet,0,popliteal space,,,,,,popliteal space,Topography
+C47.2,Bullet,0,thigh,,,,,,thigh,Topography
+C47.2,Bullet,0,toe,,,,,,toe,Topography
 C47.2,Related,0,Femoral nerve,,,,,,Femoral nerve,Topography
 C47.2,Related,0,Obturator nerve,,,,,,Obturator nerve,Topography
 C47.2,Related,0,Sciatic nerve,,,,,,Sciatic nerve,Topography
 C47.3,Preferred,1,Peripheral nerves and autonomic nervous system of thorax,,,,,,Peripheral nerves and autonomic nervous system of thorax,Topography
 C47.3,Related list,0,Peripheral nerves and autonomic nervous system of:,,,,,,Peripheral nerves and autonomic nervous system of:,Topography
+C47.3,Bullet,0,axilla,,,,,,axilla,Topography
+C47.3,Bullet,0,chest,,,,,,chest,Topography
+C47.3,Bullet,0,chest wall,,,,,,chest wall,Topography
+C47.3,Bullet,0,thoracic wall,,,,,,thoracic wall,Topography
+C47.3,Bullet,0,infraclavicular region,,,,,,infraclavicular region,Topography
+C47.3,Bullet,0,scapular region,,,,,,scapular region,Topography
 C47.3,Related,0,Intercostal nerve,,,,,,Intercostal nerve,Topography
 C47.4,Preferred,1,Peripheral nerves and autonomic nervous system of abdomen,,,,,,Peripheral nerves and autonomic nervous system of abdomen,Topography
 C47.4,Related list,0,Peripheral nerves and autonomic nervous system of:,,,,,,Peripheral nerves and autonomic nervous system of:,Topography
+C47.4,Bullet,0,abdominal wall,,,,,,abdominal wall,Topography
+C47.4,Bullet,0,umbilicus,,,,,,umbilicus,Topography
 C47.5,Preferred,1,Peripheral nerves and autonomic nervous system of pelvis,,,,,,Peripheral nerves and autonomic nervous system of pelvis,Topography
 C47.5,Related list,0,Peripheral nerves and autonomic nervous system of:,,,,,,Peripheral nerves and autonomic nervous system of:,Topography
+C47.5,Bullet,0,buttock,,,,,,buttock,Topography
+C47.5,Bullet,0,groin,,,,,,groin,Topography
+C47.5,Bullet,0,perineum,,,,,,perineum,Topography
+C47.5,Bullet,0,gluteal region,,,,,,gluteal region,Topography
+C47.5,Bullet,0,inguinal region,,,,,,inguinal region,Topography
+C47.5,Bullet,0,sacrococcygeal region,,,,,,sacrococcygeal region,Topography
 C47.5,Related,0,Lumbosacral plexus,,,,,,Lumbosacral plexus,Topography
 C47.5,Related,0,Sacral nerve,,,,,,Sacral nerve,Topography
 C47.5,Related,0,Sacral plexus,,,,,,Sacral plexus,Topography
 C47.6,Preferred,1,"Peripheral nerves and autonomic nervous system of trunk, NOS",,,,,,"Peripheral nerves and autonomic nervous system of trunk, NOS",Topography
 C47.6,Related list,0,Peripheral nerves and autonomic nervous system of:,,,,,,Peripheral nerves and autonomic nervous system of:,Topography
+C47.6,Bullet,0,back,,,,,,back,Topography
+C47.6,Bullet,0,flank,,,,,,flank,Topography
+C47.6,Bullet,0,trunk,,,,,,trunk,Topography
 C47.6,Related,0,Lumbar nerve,,,,,,Lumbar nerve,Topography
 C47.8,Preferred,1,Overlapping lesion of peripheral nerves and autonomic nervous system,,,,,,Overlapping lesion of peripheral nerves and autonomic nervous system,Topography
 C47.9,Preferred,1,"Autonomic nervous system, NOS",,,,,,"Autonomic nervous system, NOS",Topography
@@ -5312,6 +5408,17 @@ C48.2,Related,0,Peritoneal cavity,,,,,,Peritoneal cavity,Topography
 C48.8,Preferred,1,Overlapping lesion of retroperitoneum and peritoneum,,,,,,Overlapping lesion of retroperitoneum and peritoneum,Topography
 C49.0,Preferred,1,"Connective, subcutaneous and other soft tissues of head, face, and neck",,,,excludes connective tissue of orbit C69.6 and nasal cartilage C30.0,,"Connective, subcutaneous and other soft tissues of head, face, and neck excludes connective tissue of orbit C69.6 and nasal cartilage C30.0",Topography
 C49.0,Related list,0,"Connective, subcutaneous and other soft tissues of:",,,,,,"Connective, subcutaneous and other soft tissues of:",Topography
+C49.0,Bullet,0,cheek,,,,,,cheek,Topography
+C49.0,Bullet,0,chin,,,,,,chin,Topography
+C49.0,Bullet,0,face,,,,,,face,Topography
+C49.0,Bullet,0,forehead,,,,,,forehead,Topography
+C49.0,Bullet,0,head,,,,,,head,Topography
+C49.0,Bullet,0,neck,,,,,,neck,Topography
+C49.0,Bullet,0,scalp,,,,,,scalp,Topography
+C49.0,Bullet,0,temple,,,,,,temple,Topography
+C49.0,Bullet,0,cervical region,,,,,,cervical region,Topography
+C49.0,Bullet,0,pterygoid fossa,,,,,,pterygoid fossa,Topography
+C49.0,Bullet,0,supraclavicular region,,,,,,supraclavicular region,Topography
 C49.0,Related,0,Auricular cartilage,,,,,,Auricular cartilage,Topography
 C49.0,Synonym,0,Cartilage of ear,,,,,,Cartilage of ear,Topography
 C49.0,Related,0,Carotid artery,,,,,,Carotid artery,Topography
@@ -5319,6 +5426,15 @@ C49.0,Related,0,Masseter muscle,,,,,,Masseter muscle,Topography
 C49.0,Related,0,Sternocleidomastoid muscle,,,,,,Sternocleidomastoid muscle,Topography
 C49.1,Preferred,1,"Connective, subcutaneous and other soft tissues of upper limb and shoulder",,,,,,"Connective, subcutaneous and other soft tissues of upper limb and shoulder",Topography
 C49.1,Related list,0,"Connective, subcutaneous and other soft tissues of:",,,,,,"Connective, subcutaneous and other soft tissues of:",Topography
+C49.1,Bullet,0,antecubital space,,,,,,antecubital space,Topography
+C49.1,Bullet,0,arm,,,,,,arm,Topography
+C49.1,Bullet,0,elbow,,,,,,elbow,Topography
+C49.1,Bullet,0,finger,,,,,,finger,Topography
+C49.1,Bullet,0,forearm,,,,,,forearm,Topography
+C49.1,Bullet,0,hand,,,,,,hand,Topography
+C49.1,Bullet,0,shoulder,,,,,,shoulder,Topography
+C49.1,Bullet,0,thumb,,,,,,thumb,Topography
+C49.1,Bullet,0,wrist,,,,,,wrist,Topography
 C49.1,Related,0,Biceps brachii muscle,,,,,,Biceps brachii muscle,Topography
 C49.1,Related,0,Brachialis muscle,,,,,,Brachialis muscle,Topography
 C49.1,Related,0,Coracobrachialis muscle,,,,,,Coracobrachialis muscle,Topography
@@ -5330,6 +5446,16 @@ C49.1,Related,0,Triceps brachii muscle,,,,,,Triceps brachii muscle,Topography
 C49.1,Related,0,Ulnar artery,,,,,,Ulnar artery,Topography
 C49.2,Preferred,1,"Connective, subcutaneous and other soft tissues of lower limb and hip",,,,,,"Connective, subcutaneous and other soft tissues of lower limb and hip",Topography
 C49.2,Related list,0,"Connective, subcutaneous and other soft tissues of:",,,,,,"Connective, subcutaneous and other soft tissues of:",Topography
+C49.2,Bullet,0,ankle,,,,,,ankle,Topography
+C49.2,Bullet,0,calf,,,,,,calf,Topography
+C49.2,Bullet,0,foot,,,,,,foot,Topography
+C49.2,Bullet,0,heel,,,,,,heel,Topography
+C49.2,Bullet,0,hip,,,,,,hip,Topography
+C49.2,Bullet,0,knee,,,,,,knee,Topography
+C49.2,Bullet,0,leg,,,,,,leg,Topography
+C49.2,Bullet,0,popliteal space,,,,,,popliteal space,Topography
+C49.2,Bullet,0,thigh,,,,,,thigh,Topography
+C49.2,Bullet,0,toe,,,,,,toe,Topography
 C49.2,Related,0,Biceps femoris muscle,,,,,,Biceps femoris muscle,Topography
 C49.2,Related,0,Femoral artery,,,,,,Femoral artery,Topography
 C49.2,Related,0,Gastrocnemius muscle,,,,,,Gastrocnemius muscle,Topography
@@ -5338,6 +5464,13 @@ C49.2,Related,0,Plantar fascia,,,,,,Plantar fascia,Topography
 C49.2,Related,0,Quadriceps femoris muscle,,,,,,Quadriceps femoris muscle,Topography
 C49.3,Preferred,1,"Connective, subcutaneous and other soft tissues of thorax",,,,"excludes thymus C37.9, heart and mediastinum C38._",,"Connective, subcutaneous and other soft tissues of thorax excludes thymus C37.9, heart and mediastinum C38._",Topography
 C49.3,Related list,0,"Connective, subcutaneous and other soft tissues of:",,,,,,"Connective, subcutaneous and other soft tissues of:",Topography
+C49.3,Bullet,0,axilla,,,,,,axilla,Topography
+C49.3,Bullet,0,chest,,,,,,chest,Topography
+C49.3,Bullet,0,chest wall,,,,,,chest wall,Topography
+C49.3,Bullet,0,thorax,,,,,,thorax,Topography
+C49.3,Bullet,0,thoracic wall,,,,,,thoracic wall,Topography
+C49.3,Bullet,0,infraclavicular region,,,,,,infraclavicular region,Topography
+C49.3,Bullet,0,scapular region,,,,,,scapular region,Topography
 C49.3,Related,0,"Aorta, NOS",,,,,,"Aorta, NOS",Topography
 C49.3,Related,0,Axillary artery,,,,,,Axillary artery,Topography
 C49.3,Related,0,Diaphragm,,,,,,Diaphragm,Topography
@@ -5351,6 +5484,9 @@ C49.3,Related,0,Thoracic duct,,,,,,Thoracic duct,Topography
 C49.3,Related,0,Trapezius muscle,,,,,,Trapezius muscle,Topography
 C49.4,Preferred,1,"Connective, subcutaneous and other soft tissues of abdomen",,,,,,"Connective, subcutaneous and other soft tissues of abdomen",Topography
 C49.4,Related list,0,"Connective, subcutaneous and other soft tissues of:",,,,,,"Connective, subcutaneous and other soft tissues of:",Topography
+C49.4,Bullet,0,abdomen,,,,,,abdomen,Topography
+C49.4,Bullet,0,abdominal wall,,,,,,abdominal wall,Topography
+C49.4,Bullet,0,umbilicus,,,,,,umbilicus,Topography
 C49.4,Related,0,Abdominal aorta,,,,,,Abdominal aorta,Topography
 C49.4,Related,0,Abdominal vena cava,,,,,,Abdominal vena cava,Topography
 C49.4,Related,0,Abdominal wall muscle,,,,,,Abdominal wall muscle,Topography
@@ -5364,11 +5500,20 @@ C49.4,Related,0,Renal artery,,,,,,Renal artery,Topography
 C49.4,Related,0,"Vena cava, NOS",,,,,,"Vena cava, NOS",Topography
 C49.5,Preferred,1,"Connective, subcutaneous and other soft tissues of pelvis",,,,,,"Connective, subcutaneous and other soft tissues of pelvis",Topography
 C49.5,Related list,0,"Connective, subcutaneous and other soft tissues of:",,,,,,"Connective, subcutaneous and other soft tissues of:",Topography
+C49.5,Bullet,0,buttock,,,,,,buttock,Topography
+C49.5,Bullet,0,groin,,,,,,groin,Topography
+C49.5,Bullet,0,perineum,,,,,,perineum,Topography
+C49.5,Bullet,0,gluteal region,,,,,,gluteal region,Topography
+C49.5,Bullet,0,inguinal region,,,,,,inguinal region,Topography
+C49.5,Bullet,0,sacrococcygeal region,,,,,,sacrococcygeal region,Topography
 C49.5,Related,0,Gluteus maximus muscle,,,,,,Gluteus maximus muscle,Topography
 C49.5,Related,0,Iliac artery,,,,,,Iliac artery,Topography
 C49.5,Related,0,Iliac vein,,,,,,Iliac vein,Topography
 C49.6,Preferred,1,"Connective, subcutaneous and other soft tissues of trunk NOS",,,,,,"Connective, subcutaneous and other soft tissues of trunk NOS",Topography
 C49.6,Related list,0,"Connective, subcutaneous and other soft tissues of:",,,,,,"Connective, subcutaneous and other soft tissues of:",Topography
+C49.6,Bullet,0,back,,,,,,back,Topography
+C49.6,Bullet,0,flank,,,,,,flank,Topography
+C49.6,Bullet,0,trunk,,,,,,trunk,Topography
 C49.8,Preferred,1,"Overlapping lesion of connective, subcutaneous and other soft tissues",,,,,,"Overlapping lesion of connective, subcutaneous and other soft tissues",Topography
 C49.9,Preferred,1,"Connective, subcutaneous and other soft tissues, NOS",,,,,,"Connective, subcutaneous and other soft tissues, NOS",Topography
 C49.9,Related,0,"Adipose tissue, NOS",,,,,,"Adipose tissue, NOS",Topography
