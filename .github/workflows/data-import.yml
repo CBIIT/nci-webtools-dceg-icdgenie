@@ -82,6 +82,8 @@ jobs:
           context: .
           file: docker/data-import.dockerfile
           push: true
+          build-args: |
+            CACHEBUST=${{ env.DATETIME }}
           tags: |
             ${{ env.DATA_IMPORT_IMAGE }}
             ${{ env.DATA_IMPORT_IMAGE_LATEST }}

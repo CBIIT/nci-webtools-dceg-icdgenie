@@ -93,8 +93,6 @@ FILES=(
   data/icd11.json
   data/icdo4.json
   data/translations_icdo4.json
-  data/icd10_to_icd11.json
-  data/icd11_to_icd10.json
 )
 
 for file in "${FILES[@]}"; do

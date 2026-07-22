@@ -37,8 +37,6 @@ const sources = [
   { path: "data/icd11.json", index: "icd11" },
   { path: "data/icdo4.json", index: "icdo4" },
   { path: "data/translations_icdo4.json", index: "translations_icdo4" },
-  { path: "data/icd10_to_icd11.json", index: "icd10_to_icd11" },
-  { path: "data/icd11_to_icd10.json", index: "icd11_to_icd10" },
 ];
 
 runImport(client, sources)

@@ -21,9 +21,6 @@ export default function BatchQuery() {
   const [uploaded, setUploaded] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const fileRef = useRef();
-  // Bumped whenever an in-flight file read should be invalidated (reset, or a newer upload), so a
-  // read that resolves late can't repopulate input that was already cleared.
-  const readTokenRef = useRef(0);
 
   const [sortColumn, setSorting] = useState([{ columnName: "id", direction: "asc" }])
 
@@ -49,7 +46,6 @@ export default function BatchQuery() {
 
       if (!files || !files[0]) return;
 
-      const token = ++readTokenRef.current;
       mergeForm({ input: "" })
 
       if (files[0].name.endsWith(".tsv")) {
@@ -58,9 +54,6 @@ export default function BatchQuery() {
         setShowResults(false)
 
         var fileText = await readFileAsText(files);
-        // A reset or a newer upload happened while this read was in flight — discard the result so
-        // it doesn't repopulate the cleared input.
-        if (token !== readTokenRef.current) return;
         fileText = fileText.split("\n")
         fileText.splice(0, 1)
         value = fileText.join("\n")
@@ -263,8 +256,6 @@ export default function BatchQuery() {
   }
 
   async function handleReset() {
-
-    readTokenRef.current++;
 
     if (fileRef.current)
       fileRef.current.files = null;
