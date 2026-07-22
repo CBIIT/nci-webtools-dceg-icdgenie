@@ -308,8 +308,8 @@ export default function BatchQuery() {
           <Row className="justify-content-center">
             <Col md={8}>
               <Form.Group>
-                <Form.Label>Select searchable type</Form.Label>
                 <p>We highly recommend that users review the <Link to="/getting-started">Getting Started</Link> page for information on proper data formatting for optimal use of ICD Genie.</p>
+                <Form.Label>Select searchable code type and click its checkboxes to specify which columns are present in your file.</Form.Label>
 
               </Form.Group>
             </Col>
@@ -367,9 +367,10 @@ export default function BatchQuery() {
                       id="icd10CCode"
                       value="icd10Code"
                       disabled={true}
-                      aria-disabled={true}
+                      onChange={() => {}}
                       checked={form.inputType === "icd10"}
                     />
+                    <span className="text-danger ms-1">*</span>
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd10_tip">
                         <Popover.Header>ICD-10-CM Codes</Popover.Header>
@@ -442,9 +443,10 @@ export default function BatchQuery() {
                       id="icd10pcsCode"
                       value="icd10pcsCode"
                       disabled={true}
-                      aria-disabled={true}
+                      onChange={() => {}}
                       checked={form.inputType === "icd10pcs"}
                     />
+                    <span className="text-danger ms-1">*</span>
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd10pcs_tip">
                         <Popover.Header>ICD-10-PCS Codes</Popover.Header>
@@ -515,9 +517,10 @@ export default function BatchQuery() {
                       id="icd11Code"
                       value="icd11Code"
                       disabled={true}
-                      aria-disabled={true}
+                      onChange={() => {}}
                       checked={form.inputType === "icd11"}
                     />
+                    <span className="text-danger ms-1">*</span>
                     <OverlayTrigger trigger="click" placement="right" rootClose
                       overlay={<Popover id="icd11_tip">
                         <Popover.Header>ICD-11 Codes</Popover.Header>
@@ -561,11 +564,7 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={
-                        <span style={{ color: '#4A4A4A', fontWeight: 'normal' }}>
-                          Participant ID <i style={{ color: '#4A4A4A', fontWeight: 'normal' }}>(Optional)</i>
-                        </span>
-                      }
+                      label={<span>Participant ID <i className="text-muted">(Optional)</i></span>}
                       name="icdo3Id"
                       type="checkbox"
                       id="icdo3Id"
@@ -590,7 +589,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
-                  <div className="fw-bold">Select at least one:</div>
+                  <div className={form.inputType === "icdo3" ? "fw-bold" : ""} style={form.inputType !== "icdo3" ? { color: "#767676" } : {}}>Select at least one: <span className="text-danger">*</span></div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"
@@ -671,11 +670,7 @@ export default function BatchQuery() {
                 <div className="ms-5">
                   <div className="d-flex">
                     <Form.Check
-                      label={
-                        <span style={{ color: '#4A4A4A', fontWeight: 'normal' }}>
-                          Participant ID <i style={{ color: '#4A4A4A', fontWeight: 'normal' }}>(Optional)</i>
-                        </span>
-                      }
+                      label={<span>Participant ID <i className="text-muted">(Optional)</i></span>}
                       name="icdo4Id"
                       type="checkbox"
                       id="icdo4Id"
@@ -700,7 +695,7 @@ export default function BatchQuery() {
                     </OverlayTrigger>
                   </div>
 
-                  <div className="fw-bold">Select at least one:</div>
+                  <div className={form.inputType === "icdo4" ? "fw-bold" : ""} style={form.inputType !== "icdo4" ? { color: "#767676" } : {}}>Select at least one: <span className="text-danger">*</span></div>
                   <div className="d-flex">
                     <Form.Check
                       label="Morphology"
