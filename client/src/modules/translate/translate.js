@@ -1,14 +1,16 @@
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import { Form, Container, Row, Col, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import Loader from "../common/loader";
 import { formState, resultsState } from "./translate.state";
 import DirectionToggle from "./direction-toggle";
 import { TranslateResult, TranslationDisclaimer } from "./translation-result";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Translate() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [form, setForm] = useRecoilState(formState);
   const [results, setResults] = useRecoilState(resultsState);
   const mergeForm = (obj) => setForm({ ...form, ...obj });
@@ -25,6 +27,29 @@ export default function Translate() {
 
   const directionLabel =
     form.from === "icd10" ? "ICD-10-CM → ICD-11" : "ICD-11 → ICD-10-CM";
+
+  useEffect(() => {
+    const state = location.state;
+    if (!state?.code || !state?.from) return;
+
+    const nextForm = { code: state.code, from: state.from };
+    setForm((prev) => ({ ...prev, ...nextForm }));
+    setResults({ loading: true, data: null });
+    setSubmitError("");
+
+    (async () => {
+      try {
+        const response = await axios.post("api/translate", nextForm);
+        setResults({ loading: false, data: response.data });
+      } catch (error) {
+        console.error("Translate error:", error);
+        setResults({ loading: false, data: null });
+        setSubmitError("An error occurred. Please try again.");
+      } finally {
+        navigate(location.pathname, { replace: true, state: null });
+      }
+    })();
+  }, [location.state, location.pathname, navigate, setForm, setResults]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -65,14 +90,15 @@ export default function Translate() {
           <Row className="justify-content-center">
             <Col md={8}>
               <Form.Group className="mb-3">
-                <Form.Label>Translate a single code between ICD-10-CM and ICD-11.</Form.Label>
+                <Form.Label>
+                  Use this feature to translate a single code from ICD-10-CM to ICD-11 or from ICD-11 to ICD-10-CM.
+                </Form.Label>
                 <p>
-                  ICD-11 → ICD-10-CM is a one-to-one match. ICD-10-CM → ICD-11 can map to a
-                  combination of codes, shown below with <b>AND</b> / <b>OR</b> logic. To translate a
-                  whole list at once, use <Link to="/batch-translate">Batch Translate</Link>. For code
-                  formatting help, see the <Link to="/getting-started">Getting Started</Link> page.
+                    ICD-11 → ICD-10-CM is a one-to-one match. ICD-10-CM → ICD-11 can map to a
+                    combination of codes, shown below with <b>AND</b> / <b>OR</b> logic. For code
+                    formatting help, see the <Link to="/getting-started">Getting Started</Link> page.
                 </p>
-              </Form.Group>
+                </Form.Group>
             </Col>
           </Row>
 
