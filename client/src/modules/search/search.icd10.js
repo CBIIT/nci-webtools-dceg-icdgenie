@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
+import { DataTypeProvider } from "@devexpress/dx-react-grid";
 import { TreeDataState, CustomTreeData } from "@devexpress/dx-react-grid";
 import { Grid, Table, TableHeaderRow, TableTreeColumn } from "@devexpress/dx-react-grid-bootstrap4";
 import Container from "react-bootstrap/Container";
+import { useNavigate } from "react-router-dom";
 
 export default function ICD10({ maps, search }) {
+  const navigate = useNavigate();
   const [tabularOpen, setTabularOpen] = useState([])
 
   useEffect(() => {
@@ -42,8 +45,21 @@ export default function ICD10({ maps, search }) {
     return rootRows;
   }
 
-  function IcdCodeTypeProvider({ value }) {
-    return value
+  function IcdCodeTypeProvider(props) {
+    function CodeLink({ value: code }) {
+      if (!code) return code;
+      return (
+        <button
+          type="button"
+          className="btn btn-link p-0 align-baseline"
+          onClick={() => navigate("/translate", { state: { code, from: "icd10" } })}
+        >
+          {code}
+        </button>
+      );
+    }
+
+    return <DataTypeProvider formatterComponent={CodeLink} {...props} />;
   }
 
   return (

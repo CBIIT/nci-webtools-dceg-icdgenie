@@ -1,11 +1,25 @@
 import { Row, Col } from "react-bootstrap";
 
 // One translation entry, laid out left-to-right: source on the left, the ICD-11/ICD-10 mapping on the
-// right. Per the client (questions.md A1), the mapping is shown EXACTLY as it appears in the WHO
-// mapping file — the `&`/`/` combination string is not parsed. <TranslationDisclaimer/> explains the
-// symbols. Reused for the single Translate result and each row of Batch Translate.
+// right. The WHO mapping file encodes alternate rows as ` / ` separators while keeping compound
+// codes like `1B11.Y/1D02.0` intact. We render each alternate row separately so the UI matches the
+// ticket mockup. <TranslationDisclaimer/> explains the symbols. Reused for the single Translate
+// result and each row of Batch Translate.
+function splitRows(value) {
+  return String(value ?? "")
+    .split(/\s+\/\s+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
 export function TranslateResult({ data, idLabel }) {
   const { source, targetSystem, target, found, message } = data;
+  const codeRows = found && target?.code ? splitRows(target.code) : [];
+  const titleRows = found && target?.title ? splitRows(target.title) : [];
+  const mappedRows = codeRows.map((code, index) => ({
+    code,
+    title: titleRows[index] ?? "",
+  }));
   return (
     <Row className="border rounded bg-white mx-0 py-3">
       {idLabel != null && (
@@ -28,12 +42,25 @@ export function TranslateResult({ data, idLabel }) {
           Translation{targetSystem ? ` (${targetSystem})` : ""}
         </div>
         {found && target?.code ? (
-          <>
-            <div className="fw-bold font-monospace" style={{ fontSize: "1.05rem", wordBreak: "break-word" }}>
-              {target.code}
-            </div>
-            {target.title ? <div className="text-muted">{target.title}</div> : null}
-          </>
+          <div className="d-flex flex-column gap-2">
+            {mappedRows.length > 0 ? (
+              mappedRows.map(({ code, title }, index) => (
+                <div key={`${code}-${index}`}>
+                  <div className="fw-bold font-monospace" style={{ fontSize: "1.05rem", wordBreak: "break-word" }}>
+                    {code}
+                  </div>
+                  {title ? <div className="text-muted">{title}</div> : null}
+                </div>
+              ))
+            ) : (
+              <>
+                <div className="fw-bold font-monospace" style={{ fontSize: "1.05rem", wordBreak: "break-word" }}>
+                  {target.code}
+                </div>
+                {target.title ? <div className="text-muted">{target.title}</div> : null}
+              </>
+            )}
+          </div>
         ) : (
           <div className="alert alert-warning mb-0 py-2">{message || "No translation found."}</div>
         )}
