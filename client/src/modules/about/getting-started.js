@@ -4,6 +4,67 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DataDictionary from "./images/data-dictionary.png";
 
+function VideoTutorial({ src, label }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    const linkStyle = { color: "#005ea2", textDecoration: "none" };
+    const pStyle = { color: "#595959", margin: "20px 0", lineHeight: 1.6 };
+    return (
+      <div
+        role="alert"
+        style={{
+          width: "80%",
+          backgroundColor: "#f1f1f1",
+          fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif',
+          textAlign: "center",
+          padding: "50px 0 40px 0",
+        }}
+      >
+        <div style={{ width: "600px", maxWidth: "100%", margin: "0 auto" }}>
+          <h1 style={{ letterSpacing: "-1px", lineHeight: "60px", fontSize: "60px", fontWeight: 100, margin: "0 0 50px 0", textShadow: "0 1px 0 #fff", color: "#333333" }}>
+            404
+          </h1>
+          <p style={pStyle}>
+            <strong>There isn&apos;t a GitHub Pages site here.</strong>
+          </p>
+          <p style={pStyle}>
+            If you&apos;re trying to publish one,{" "}
+            <a href="https://help.github.com/pages/" style={linkStyle}>
+              read the full documentation
+            </a>{" "}
+            to learn how to set up <strong>GitHub Pages</strong> for your repository, organization, or user account.
+          </p>
+          <div style={{ marginTop: "35px", color: "#595959" }}>
+            <a href="https://githubstatus.com" style={{ ...linkStyle, color: "#595959", fontWeight: 200, fontSize: "14px", margin: "0 10px" }}>
+              GitHub Status
+            </a>{" "}
+            &mdash;{" "}
+            <a href="https://twitter.com/githubstatus" style={{ ...linkStyle, color: "#595959", fontWeight: 200, fontSize: "14px", margin: "0 10px" }}>
+              @githubstatus
+            </a>
+          </div>
+          <a href="https://github.com" style={{ display: "inline-block", marginTop: "35px" }}>
+            <img
+              width="32"
+              height="32"
+              alt="GitHub"
+              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpEQUM1QkUxRUI0MUMxMUUyQUQzREIxQzRENUFFNUM5NiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpEQUM1QkUxRkI0MUMxMUUyQUQzREIxQzRENUFFNUM5NiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkUxNkJENjdGQjNGMDExRTJBRDNEQjFDNEQ1QUU1Qzk2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkUxNkJENjgwQjNGMDExRTJBRDNEQjFDNEQ1QUU1Qzk2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+hfPRaQAAB6lJREFUeNrsW2mME2UYbodtt+2222u35QheoCCYGBQligIJgkZJNPzgigoaTEj8AdFEMfADfyABkgWiiWcieK4S+QOiHAYUj2hMNKgYlEujpNttu9vttbvdw+chU1K6M535pt3ubHCSyezR+b73eb73+t7vrfXsufOW4bz6+vom9/b23ovnNNw34b5xYGAgODg46Mbt4mesVmsWd1qSpHhdXd2fuP/Afcput5/A88xwymcdBgLqenp6FuRyuWV4zu/v759QyWBjxoz5t76+/gun09mK5xFyakoCAPSaTCazNpvNPoYVbh6O1YKGRF0u13sNDQ27QMzfpiAAKj0lnU6/gBVfAZW2WWpwwVzy0IgP3G73FpjI6REhAGA9qVRqA1b9mVoBVyIC2tDi8Xg24+dUzQiAbS/s7Ox8G2o/3mKCC+Zw0efzPQEfcVjYrARX3dbV1bUtHo8fMgt42f+Mp0yUTVQbdWsAHVsikdiHkHaPxcQXQufXgUBgMRxme9U0AAxfH4vFvjM7eF6UkbJS5qoQwEQGA57Ac5JllFyUVZZ5ckUEgMVxsK2jlSYzI+QXJsiyjzNEAJyJAzb/KQa41jJKL8pODMQiTEAymXw5n8/P0IjD3bh7Rgog59aanxiIRTVvV/oj0tnHca/WMrVwODwB3raTGxzkBg/gnZVapFV62Wy2n5AO70HM/5wbJ0QnXyQSaVPDIuNZzY0V3ntHMwxiwHA0Gj2Np7ecIBDgaDAYXKCQJM1DhrgJ3nhulcPbl8j4NmHe46X/g60fwbz3aewjkqFQaAqebWU1AOqyQwt8Id6qEHMc97zu7u7FGGsn7HAiVuosVw7P35C1nccdgSCxop1dHeZswmfHMnxBo6ZTk+jN8dl/vF7vWofDsa+MLN9oEUBMxOb3+1eoEsBVw6Zmua49r8YmhAKDiEPcMwBsxMiqQ+ixzPFxZyqRpXARG/YOr1ObFJ0gUskXBbamcR1OKmMUvDxHRAu8/LmY3jFLMUpFqz9HxG65smYJdyKyECOxDiEAe/p1gjF2oonivZAsxVgl2daa4EQWCW6J55qFAFFZiJWYLxNQy2qOSUzGRsyXCUDIeliwAHEO4WSlWQBRFoZakXcKmCXmyXAKs0Ve9vl8q42WoIYpJU4hV3hKcNs8m9gl7p/xQ73eF5kB4j5mNrWmTJRNwAzqiV1CxjVTZCIkEq+Z1bZFZSN2CenmVAFVy4Plz8xKAGWjjAKFk6lCBMDR/MJjLLMSQNm43xAiQKTaA+9/wewhDjL+JVI1kkTSSOTcKbMTwPqESAot6dn6Fr1gHwVJju6IRuyiByPuUUBAg5DGkAgBmxlvdgIEK9gDkohdY/BJo4CAG0R8miRSsGABkgVQs4KXu098IgUXSSRsFAoKZiVAVDY2WUiiPTjYRi41KwGisrGsLtlsth8Fiwnz2fBkQvWfRtlE3iF2yW63/yCacXZ1dW02GwGyTFaRd4idJnCKHRaCxYRHoG5LTKT6SyiToP1fJHbmAYPYRR0UnZQtMnA6s0zg+GZBlt0Gdo7EPHgpE3Q6nZ8YyLhc8Xj8MJh/aKTAY+5FPAKHLE7RdwuYJZmNwzyCMkBCYyKROJBMJl9B/PXXCjjmCmDOVzH3fiPpObEWGqoKe4EBl8v1hlqsdLvd23mkxHM9pc9kMpmno9HoeTii7ewbHEZPPx1ztLS1tV3AnGuMjiNjvbQFuHw6zDo5By7dTPAQNBgMLrRarTkSls1mnwT7uwp9virx9QzbW/HuV/j5d/b+6jniKlllP8lkeONJDk+dq9GsQTnC4fB1heO0K47Hwe7WdDr9nAKgXwOBwHI+C45Htj1d6sd429TUNEcmUdc+PRaLHcvn87dXW4ugzdsaGxufL94NFv9zi1J7GVbhlvb2dnaJ3SVrxfc+n2+NTsZ7/H7/Mr3g5XdSIHyJSH1PZ+7fToyl2+ErqilgZ4NaLYB9goVGaHjR93Hv1ZrU4XDsFT20kH3PObzbWk0CgG1jacVIUnAQb9F+VexyLMzkpcLv0IJV7AHQIOCAUYHx7v5qgScmYHtTqSAyZLEJTK22Bie4iq3xsqpm4SAf9Hq9a2DnJ4uLK3SEULcdRvp3i3zHySqpficxEdsQc1NrlYXXvR+O7qASSezXB+h1SuUomgg9LL8BUoV4749EIolKh+EiqWmqVEZlDgHks2pxHw7xTqUQw9J5NcAXOK10AGIoZ6Zli6JY6Z1Q461KoZ4NiKLHarW+KDsxlDUPHZ5zPQZqUVDPJsTqb5n9malbpAh8C2XXDLl62+WZIDFRUlNVOiwencnNU3aQEkL+cDMSoLvZo2fQB7AJssNAuFuvorlDVVkkg2I87+jo2K2QAVphDrfyViK5VqtO34OkaxXCp+7drdDBCAdubm6eidX+2WwqT5komwh4YQLk+H4aE93h8Xg2gvHekQZOGSgLZTLyDTLJ4Lx9/KZWKBSainT4Iy3FqQBfnUZR42PKQFksBr9QKVXCPusD3OiA/RkQ5kP8qV/Jl1WywAp/6+dcmPM2zL1UrUahe4JqfnWWKXIul3uUbfP8njAFLW1OFr3gdFtZ72cNH+PtQT7/brW+NXqJAHh0y9V8/U/A1U7AfwIMAD7mS3pCbuWJAAAAAElFTkSuQmCC"
+            />
+          </a>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <video controls width="80%" aria-label={label} onError={() => setHasError(true)}>
+      <source src={src} type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  );
+}
+
 export default function Starter() {
   const navigate = useNavigate();
 
@@ -119,7 +180,9 @@ export default function Starter() {
                   <ul>
                     <li>Participant identifiers</li>
                     <li>ICD-10 codes</li>
-                    <li>ICD-O-3 morphology and/or site codes</li>
+                    <li>ICD-11 codes</li>
+                    <li>ICD-O-3 morphology and/or topography codes</li>
+                    <li>ICD-O-4 morphology and/or topography codes</li>
                     <li>Text diagnoses [available for <a href="javascript:void(0);" onClick={() => { navigate("/search") }}>"Search"</a> (single query) only]</li>
                   </ul>
                 </li>
@@ -141,7 +204,7 @@ export default function Starter() {
                 </h2>
                 <h3 style={{ fontWeight: "bold" }}>Single Query</h3>
                 <p>
-                  Single query accepts text, numeric (ICD-O-3 morphology or site codes), and alphanumeric (ICD-10 codes) queries. You can explore disease descriptions and the coding hierarchy (i.e., parent nodes and child nodes). Only one search term can be entered at a time. Ensure text diagnoses are in American English and not British English.{" "}
+                  Single query accepts individual text, numeric (ICD-O-3 and ICD-O-4 morphology or topography codes), or alphanumeric (ICD-10 or ICD-11 codes) queries. You can explore disease descriptions and the coding hierarchy (i.e., parent nodes and child nodes). Only one search term can be entered at a time. Ensure text diagnoses are in American English and not British English (e.g., tumor as opposed to tumour).{" "}
                 </p>
                 <h3 style={{ fontWeight: "bold" }}>Batch Query</h3>
                 <p>
@@ -192,7 +255,7 @@ export default function Starter() {
               <h2 id="formatting" className="my-4 text-uppercase blue-subheader">
                 Formatting ICD Codes
               </h2>
-              <h3 style={{ fontWeight: "bold" }}>ICD-10 Codes</h3>
+              <h3 style={{ fontWeight: "bold" }}>ICD-10-CM Codes</h3>
               <div>
                 <strong>Example Code:</strong> W56.29 (translation: other contact with an orca)
               </div>
@@ -202,6 +265,27 @@ export default function Starter() {
                 <li>First character is always a letter (except "U")</li>
                 <li>Second and third characters are always a number</li>
                 <li>Characters 4 through 6: either a number or letter</li>
+              </ul>
+              <h3 style={{ fontWeight: "bold" }}>ICD-10-PCS Codes</h3>
+              <div>
+                <strong>Example Code:</strong> 0DTJ0ZZ (translation: Resection of appendix, open approach)
+              </div>
+              <ul>
+                <li>Alphanumeric</li>
+                <li>Always 7 characters without a decimal point</li>
+                <li>Each character can be a number or a letter</li>
+                <li>The letters "O" and "I" are omitted to prevent confusion with the numbers "0" and "1"</li>
+                <li>Each character represents a specific component of the procedure (e.g., Character 1: Section, Character 2: Body system)</li>
+              </ul>
+              <h3 style={{ fontWeight: "bold" }}>ICD-11 Codes</h3>
+              <div>
+                <strong>Example Code:</strong> 2F80.0 (translation: Kaposi sarcoma of skin)
+              </div>
+              <ul>
+                <li>Alphanumeric</li>
+                <li>First character may be a letter or a number</li>
+                <li>Second character is always a letter, which differentiates ICD-11 from ICD-10</li>
+                <li>The letters "O" and "I" are omitted to prevent confusion with the numbers "0" and "1"</li>
               </ul>
               <h3 style={{ fontWeight: "bold" }}>ICD-O-3 Codes</h3>
               <div>
@@ -214,6 +298,20 @@ export default function Starter() {
               </ul>
               <div>
                 <strong>Example Site Code:</strong> C71.9
+              </div>
+              <ul>
+                <li>Alphanumeric; begins with “C” followed by 2 numbers, a period, and at least one more number</li>
+              </ul>
+              <h3 style={{ fontWeight: "bold" }}>ICD-O-4 Codes</h3>
+              <div>
+                <strong>Example Morphology Code:</strong> 80700/3
+              </div>
+              <ul>
+                <li>Alphanumeric</li>
+                <li>Must have a forward slash after the fifth number (i.e., "/")</li>
+              </ul>
+              <div>
+                <strong>Example Topography Code:</strong> C72.3 (translation: optic nerve)
               </div>
               <ul>
                 <li>Alphanumeric; begins with “C” followed by 2 numbers, a period, and at least one more number</li>
@@ -313,7 +411,7 @@ export default function Starter() {
                 How Do I Use ICDGenie
               </h2>
               <h3 style={{ fontWeight: "bold" }}>Single Query</h3>
-              <p>Submit a single text, ICD-O-3, or ICD-10 query, click “submit,” and check both the ICD-O-3 and ICD-10 tabs on the screen for query results.</p>
+              <p>Submit a single text or ICD code, click “submit,” and select the relevant tab (e.g., ICD-10 vs. ICD-11, ICD-O-3 vs. ICD-O-4) for query results.</p>
               <h3 style={{ fontWeight: "bold" }}>Batch Query</h3>
               <ul>
                 <li>Upload a tab-delimited file, suffixed “.tsv,” of {"<"}5,000 rows (of the medical codes) by </li>
@@ -360,24 +458,18 @@ export default function Starter() {
                   <li>Identifying what kind of ICD codes you have</li>
                   <li>Formatting data in excel or a text editor</li>
                 </ul>
-                <iframe
-                  title="formatting"
-                  width="80%"
-                  height="400vw"
-                  src="https://cbiit.github.io/nci-webtools-dceg-icdgenie/22-1202-Checking_ICD_O_3_ICD_10_Codes.mp4"
-                  allowFullScreen
-                ></iframe>
+                <VideoTutorial
+                  src={`${process.env.PUBLIC_URL}/videos/22-1202-Checking_ICD_O_3_ICD_10_Codes.mp4`}
+                  label="Formatting your data video tutorial"
+                />
                 <h3 style={{ fontWeight: "bold" }}>Using the Tool</h3>
                 <ul>
                   <li>Step by step guide for using batch query</li>
                 </ul>
-                <iframe
-                  title="batch"
-                  width="80%"
-                  height="400vw"
-                  src="https://cbiit.github.io/nci-webtools-dceg-icdgenie/22-1201-How_to_Use_ICDgenie_s_Batch_Query_Tool.mp4"
-                  allowFullScreen
-                ></iframe>
+                <VideoTutorial
+                  src={`${process.env.PUBLIC_URL}/videos/22-1201-How_to_Use_ICDgenie_s_Batch_Query_Tool.mp4`}
+                  label="How to use Batch Query video tutorial"
+                />
               </Container>
             </Col>
           </Row>

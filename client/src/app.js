@@ -14,6 +14,7 @@ import Resources from "./modules/about/resources";
 import FAQ from "./modules/about/faq";
 import Started from "./modules/about/getting-started";
 import BatchQuery from "./modules/batch-query/batch-query";
+import Translate from "./modules/translate/translate";
 import "./styles/main.scss";
 
 export default function App() {
@@ -37,6 +38,11 @@ export default function App() {
       route: "/batch-query",
       title: "Batch Query",
       component: BatchQuery,
+    },
+    {
+      route: "/translate",
+      title: "Translate",
+      component: Translate,
     },
     {
       route: "/api-access",

@@ -7,16 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
       - name: Initialize the CodeQL tools for scanning
-        uses: github/codeql-action/init@v1.0.20
+        uses: github/codeql-action/init@v4
         with:
           languages: "javascript"
           queries: security-and-quality
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v4
 
   ScanBackendImage:
     runs-on: ubuntu-latest
@@ -25,7 +25,7 @@ jobs:
       IMAGE_NAME: backend-${{ github.sha }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
       - name: Build image
         run: |
@@ -36,7 +36,7 @@ jobs:
             ${{ github.workspace }}
 
       - name: Scan image
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: "${{ env.IMAGE_NAME }}"
           format: "template"
@@ -49,7 +49,7 @@ jobs:
           output: "trivy-results-backend.sarif"
 
       - name: Upload Trivy scan results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: "trivy-results-backend.sarif"
 
@@ -60,7 +60,7 @@ jobs:
       IMAGE_NAME: frontend-${{ github.sha }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
 
       - name: Build image
         run: |
@@ -71,7 +71,7 @@ jobs:
             ${{ github.workspace }}
 
       - name: Scan image
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: "${{ env.IMAGE_NAME }}"
           format: "template"
@@ -84,6 +84,6 @@ jobs:
           output: "trivy-results-frontend.sarif"
 
       - name: Upload Trivy scan results to GitHub Security
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: "trivy-results-frontend.sarif"

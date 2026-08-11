@@ -32,10 +32,10 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5.1.0
+        uses: aws-actions/configure-aws-credentials@v6.2.0
         with:
           role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/power-user-github-actions-cicd
           aws-region: ${{ env.AWS_REGION }}
@@ -83,14 +83,16 @@ jobs:
         run: aws ecr get-login-password | docker login --username AWS --password-stdin ${{ env.DOCKER_REGISTRY }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build and push backend image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: docker/backend.dockerfile
           push: true
+          build-args: |
+            CACHEBUST=${{ env.DATETIME }}
           tags: |
             ${{ env.BACKEND_IMAGE }}
             ${{ env.BACKEND_IMAGE_LATEST }}
@@ -98,13 +100,14 @@ jobs:
           cache-to: type=inline
 
       - name: Build and push frontend image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: docker/frontend.dockerfile
           push: true
           build-args: |
             APP_PATH=${{ env.FRONTEND_APP_PATH }}
+            CACHEBUST=${{ env.DATETIME }}
           tags: |
             ${{ env.FRONTEND_IMAGE }}
             ${{ env.FRONTEND_IMAGE_LATEST }}

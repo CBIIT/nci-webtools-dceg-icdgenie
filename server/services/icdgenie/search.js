@@ -2,6 +2,10 @@ const { Client } = require("@opensearch-project/opensearch")
 const { APP_BASE_URL, ADMIN, PASSWORD, DOMAIN } = process.env;
 const host = `https://${ADMIN}:${PASSWORD}@${DOMAIN}`;
 
+//Max results returned per code set. Broad terms can match many thousands of rows; we cap the
+//returned set and surface the true total so the UI can tell the user results were truncated.
+const RESULT_LIMIT = 2000;
+
 async function fuzzySearch(options, client, index) {
   var results = []
   await Promise.all(options.map(async (e) => {
@@ -57,6 +61,9 @@ async function opensearch(request, response) {
     }
   })
   var { search } = request.body
+  //Trim leading/trailing whitespace so a stray space (e.g. "C73.9 ") doesn't turn a
+  //single-token code lookup into a multi-token phrase (which skips wildcard + code handling).
+  search = (search ?? "").trim()
   const splitSearch = search.split(" ")
 
   //Handle [organ] cancer search
@@ -67,6 +74,12 @@ async function opensearch(request, response) {
 
   //Prefix and suffix search for single words, exact match for icdo-3 and multi word queries
   const query = search.split(" ").length === 1 && !search.includes("/") ? "*" + search + "*" : "\"" + search + "\""
+
+  //A single-token query containing a digit is a code lookup (e.g. 8100, 8700/0, C44.0).
+  //Codes never need spell-correction, so skip the fuzzy spell-check fallback for them.
+  //Otherwise the term suggester maps codes to unrelated word tokens (8100 -> "800")
+  //and the follow-up fuzzy search returns unrelated results across other code sets.
+  const isCodeSearch = splitSearch.length === 1 && /\d/.test(search)
 
   logger.info(query)
 
@@ -112,17 +125,21 @@ async function opensearch(request, response) {
         }
       }
     ],
-    "size": 500
+    "size": RESULT_LIMIT,
+    //Count all matches (not just the default 10k window) so the "showing N of M" signal is accurate.
+    "track_total_hits": true
   }
 
-  const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result] = await Promise.all([
+  const [tabularResult, neoplasmResult, drugResult, injuryResult, icdo3Result, icd10pcsResult, icd11Result, icdo4Result] = await Promise.all([
     client.search({ index: "tabular", body }),
     client.search({ index: "neoplasm", body }),
     client.search({ index: "drug", body }),
     client.search({ index: "injury", body }),
-    client.search({ index: "icdo3", body })
+    client.search({ index: "icdo3", body }),
+    client.search({ index: "icd10pcs", body }),
+    client.search({ index: "icd11", body }),
+    client.search({ index: "icdo4", body }),
   ])
-
 
   var results = {
     tabular: tabularResult.body.hits.hits,
@@ -130,23 +147,44 @@ async function opensearch(request, response) {
     drug: drugResult.body.hits.hits,
     injury: injuryResult.body.hits.hits,
     icdo3: icdo3Result.body.hits.hits,
+    icd10pcs: icd10pcsResult.body.hits.hits,
+    icd11: icd11Result.body.hits.hits,
+    icdo4: icdo4Result.body.hits.hits,
     showSuggestions: true,
     fuzzyTerms: [],
+    //Per-index true match count (before the RESULT_LIMIT cap) so the UI can show a truncation notice.
+    resultLimit: RESULT_LIMIT,
+    totals: {
+      tabular: tabularResult.body.hits.total.value,
+      neoplasm: neoplasmResult.body.hits.total.value,
+      drug: drugResult.body.hits.total.value,
+      injury: injuryResult.body.hits.total.value,
+      icdo3: icdo3Result.body.hits.total.value,
+      icd10pcs: icd10pcsResult.body.hits.total.value,
+      icd11: icd11Result.body.hits.total.value,
+      icdo4: icdo4Result.body.hits.total.value,
+    },
   }
 
-  const tabularOptions = tabularResult.body.suggest["spell-check"][0].options;
-  const neoplasmOptions = neoplasmResult.body.suggest["spell-check"][0].options;
-  const drugOptions = drugResult.body.suggest["spell-check"][0].options;
-  const injuryOptions = injuryResult.body.suggest["spell-check"][0].options;
-  const icdo3Options = !search.includes("/") ? icdo3Result.body.suggest["spell-check"][0].options : []
+  const tabularOptions = isCodeSearch ? [] : tabularResult.body.suggest["spell-check"][0].options;
+  const neoplasmOptions = isCodeSearch ? [] : neoplasmResult.body.suggest["spell-check"][0].options;
+  const drugOptions = isCodeSearch ? [] : drugResult.body.suggest["spell-check"][0].options;
+  const injuryOptions = isCodeSearch ? [] : injuryResult.body.suggest["spell-check"][0].options;
+  const icdo3Options = isCodeSearch ? [] : icdo3Result.body.suggest["spell-check"][0].options;
+  const icd10pcsOptions = isCodeSearch ? [] : icd10pcsResult.body.suggest["spell-check"][0].options;
+  const icd11Options = isCodeSearch ? [] : icd11Result.body.suggest["spell-check"][0].options;
+  const icdo4Options = isCodeSearch ? [] : icdo4Result.body.suggest["spell-check"][0].options;
 
-  if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length) {
-    const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy] = await Promise.all([
+  if (results.tabular.length || results.neoplasm.length || results.drug.length || results.injury.length || results.icdo3.length || results.icd10pcs.length || results.icd11.length || results.icdo4.length) {
+    const [tabularFuzzy, neoplasmFuzzy, drugFuzzy, injuryFuzzy, icdo3Fuzzy, icd10pcsFuzzy, icd11Fuzzy, icdo4Fuzzy] = await Promise.all([
       fuzzySearch(tabularOptions, client, "tabular"),
       fuzzySearch(neoplasmOptions, client, "neoplasm"),
       fuzzySearch(drugOptions, client, "drug"),
       fuzzySearch(injuryOptions, client, "injury"),
-      fuzzySearch(icdo3Options, client, "icdo3")
+      fuzzySearch(icdo3Options, client, "icdo3"),
+      fuzzySearch(icd10pcsOptions, client, "icd10pcs"),
+      fuzzySearch(icd11Options, client, "icd11"),
+      fuzzySearch(icdo4Options, client, "icdo4"),
     ])
 
     results.tabular = results.tabular.concat(tabularFuzzy)
@@ -154,6 +192,9 @@ async function opensearch(request, response) {
     results.drug = results.drug.concat(drugFuzzy)
     results.injury = results.injury.concat(injuryFuzzy)
     results.icdo3 = results.icdo3.concat(icdo3Fuzzy)
+    results.icd10pcs = results.icd10pcs.concat(icd10pcsFuzzy)
+    results.icd11 = results.icd11.concat(icd11Fuzzy)
+    results.icdo4 = results.icdo4.concat(icdo4Fuzzy)
     results.showSuggestions = false
   }
   else {
@@ -163,7 +204,10 @@ async function opensearch(request, response) {
       ...neoplasmOptions.filter(e => e.score >= minScore).map(e => e.text),
       ...drugOptions.filter(e => e.score >= minScore).map(e => e.text),
       ...injuryOptions.filter(e => e.score >= minScore).map(e => e.text),
-      ...icdo3Options.filter(e => e.score >= minScore).map(e => e.text)
+      ...icdo3Options.filter(e => e.score >= minScore).map(e => e.text),
+      ...icd10pcsOptions.filter(e => e.score >= minScore).map(e => e.text),
+      ...icd11Options.filter(e => e.score >= minScore).map(e => e.text),
+      ...icdo4Options.filter(e => e.score >= minScore).map(e => e.text),
     ])]
   }
 
