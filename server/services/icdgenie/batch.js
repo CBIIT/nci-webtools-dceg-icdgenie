@@ -39,6 +39,10 @@ async function batchQuery(request, response) {
     .filter((e) => e.length > 0)
     .map((e) => e.split("\t").map((f) => f.trim().replace(/\"/g, "")))
 
+  if (!Array.isArray(inputs)) {
+    return response.status(400).json({ message: "Invalid input." })
+  }
+
   inputs = _.chunk(inputs, 20)
   var results = [];
 
