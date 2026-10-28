@@ -1,14 +1,15 @@
 # ---- Builder: compile the React app ----
 FROM --platform=linux/amd64 public.ecr.aws/amazonlinux/amazonlinux:2023 AS builder
 
-# Pin Node to a specific major (nodejs20) instead of the unpinned `nodejs` package, whose version
+# Pin Node to a specific major (nodejs24; nodejs20 is EOL and unpatched for the Brotli RCE
+# CVE-2026-111497) instead of the unpinned `nodejs` package, whose version
 # drifts as the base image updates and previously broke the build (ReferenceError: crypto is not
 # defined) with no code change. On Amazon Linux 2023, node + npm for a major come from the
 # nodejs<major> and nodejs<major>-npm packages.
 RUN dnf -y install \
     make \
-    nodejs20 \
-    nodejs20-npm \
+    nodejs24 \
+    nodejs24-npm \
  && dnf clean all
 
 WORKDIR /app/client
