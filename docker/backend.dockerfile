@@ -38,6 +38,11 @@ RUN dnf -y update \
  && dnf -y install --setopt=install_weak_deps=False nodejs24 \
  && dnf clean all
 
+# python3 (3.9) cannot be removed from the base image and AL2023 ships no build that clears the
+# application-level CVE-2025-12781 finding. Agreed mitigation: make the interpreter executable by
+# root only so the service process cannot invoke it. Nothing at runtime uses python.
+RUN chmod 700 /usr/bin/python3.9
+
 RUN mkdir -p /app/server /app/database /app/logs
 
 WORKDIR /app/server
