@@ -18,6 +18,10 @@ async function batchTranslate(request, response) {
       .filter((e) => e.length > 0)
       .map((e) => e.split("\t").map((f) => f.trim().replace(/"/g, "")));
 
+    if (!Array.isArray(rows)) {
+      return response.status(400).json({ message: "Invalid input." });
+    }
+
     const results = [];
     // Chunk so we don't fan out thousands of queries at once (mirrors the batch.js chunk size).
     for (const chunk of _.chunk(rows, 20)) {
