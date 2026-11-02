@@ -1,14 +1,15 @@
 # ---- Builder: compile the React app ----
 FROM --platform=linux/amd64 public.ecr.aws/amazonlinux/amazonlinux:2023 AS builder
 
-# Pin Node to a specific major (nodejs20) instead of the unpinned `nodejs` package, whose version
+# Pin Node to a specific major (nodejs24; nodejs20 is EOL and unpatched for the Brotli RCE
+# CVE-2026-111497) instead of the unpinned `nodejs` package, whose version
 # drifts as the base image updates and previously broke the build (ReferenceError: crypto is not
 # defined) with no code change. On Amazon Linux 2023, node + npm for a major come from the
 # nodejs<major> and nodejs<major>-npm packages.
 RUN dnf -y install \
     make \
-    nodejs20 \
-    nodejs20-npm \
+    nodejs24 \
+    nodejs24-npm \
  && dnf clean all
 
 WORKDIR /app/client
@@ -34,6 +35,11 @@ ARG CACHEBUST=unset
 RUN dnf -y update \
  && dnf -y install httpd \
  && dnf clean all
+
+# python3 (3.9) cannot be removed from the base image and AL2023 ships no build that clears the
+# application-level CVE-2025-12781 finding. Agreed mitigation: make the interpreter executable by
+# root only so the httpd worker processes (user apache) cannot invoke it. Nothing at runtime uses python.
+RUN chmod 700 /usr/bin/python3.9
 
 COPY --from=builder /app/client/build/ /var/www/html/
 COPY docker/frontend.conf /etc/httpd/conf.d/frontend.conf
